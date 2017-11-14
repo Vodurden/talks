@@ -1,0 +1,456 @@
+* Blurb
+
+Functional Programming - Functors: More then `map`
+
+It's time we had _the talk_. No, not that talk, the talk about _Functors_. There come a time in every young functional
+programmers life where things start to _change_, where they start to get _weird_. And that time starts with the word "Functor".
+
+Now all your friends are talking about "Functors" but what is a functor? It sounds weird! What does it do? Does it have something
+do to with maps? No? Maybe? What?
+
+This talk is specifically aimed at *beginners*. We're going to talk about Functors but we're _also_ going to talk
+about the mindset that motivates Functors. If you've ever thought "yeah `map` seems cool but I don't understand why we're
+talking about this weird Functor stuff" then this is the talk for you!
+
+(Also, don't worry if you don't know _anything_ about functors. We're going to start from scratch and build our way up)
+
+As with all of my talks it's time to set expectations: I'm *only* going to talk about Functor. We're not going to talk about
+Applicative, Monad or any of the other members of the functional justice league. And if you're thinking "Jake, how are you
+going to talk about Functor for an hour!?" well you're just going to have to come to the talk to find out!
+
+If that sounds like fun then join me this afternoon at the Functional Guild.
+
+* Why
+
+See `fp-why-bother`: We want to be able to use pure functions on more things
+
+* Prelude
+
+How do functional programmers think about functions & types.
+
+Consider the function:
+
+    #+BEGIN_SRC scala
+
+    def plusOne(i: Int): Int => i + 1
+
+    #+END_SRC
+
+With FP we're very interested in the "domain" and "codomain" of this function.
+
+Wat?
+
+[[file:plusOne.png]]
+
+Let's look at another one. Consider:
+
+    #+BEGIN_SRC scala
+
+    sealed trait Decision
+    case object Yes extends Decision
+    case object Maybe extends Decision
+
+    def isGreat(name: String): Decision = name match {
+      case "jake" => Yes
+      case _ => Maybe
+    }
+
+    #+END_SRC
+
+[[file:isGreat.png]]
+
+* How
+
+Functors level up your functions so you can use them on more things.
+
+** Consider a normal function:
+
+    #+BEGIN_SRC scala
+
+    val plusOne: (i: Int) => i + 1
+
+    #+END_SRC
+
+** What types of data can you use it on?
+
+Integers!
+
+      #+BEGIN_SRC scala
+
+      val someInteger = 2
+      plusOne(someInteger) // Returns 7
+
+      #+END_SRC
+
+** What about other types of data?
+
+*** Optional
+
+An Optional represents a value that may or may not exist. You can read `Option[Int]` as "An Int that may or may not exist".
+
+Can we call `plusOne` on an `Option[Int]`?
+
+    #+BEGIN_SRC scala
+
+    val someOptionalInteger: Option[Int] = Some(5)
+    plusOne(someOptionalInteger) // Doesn't work! plusOne needs an `Int` not an `Option[Int]`
+
+    #+END_SRC
+
+We can write another version of `plusOne` that works on options:
+
+    #+BEGIN_SRC scala
+
+    def plusOneOnOption(optionalInt: Option[Int]): Option[Int] = {
+      optionalInt match {
+        case Some(i: Int) => i + 1
+        case None => None
+      }
+
+    }
+    val someOptionalInteger: Option[Int] = Some(7)
+    plusOneOnOption(someOptionalInteger) // Returns Some(8)
+
+    val someOptionalIntegerThatDoesntExist = None
+    plusOneOnOption(someOptionalIntegerThatDoesntExist) // Returns None
+
+    #+END_SRC
+
+What does that look like?
+
+[[file:plusOneOnOption.png]]
+
+*** Future
+
+How about `Future[Int]` which represents a "Int that is computed asynchronously"?
+
+    #+BEGIN_SRC scala
+
+    val someAsyncInteger: Future[Int] = Future.succesful(100)
+    plusOne(someOptionalInteger) // Doesn't work! plusOne needs an `Int` not a `Future[Int]`
+
+    #+END_SRC
+
+We can do it again: Write another version of `plusOne` that works on futures:
+
+    #+BEGIN_SRC scala
+
+    val plusOneOnFuture: (futureInt: Future[Int]) => futureInt match {
+      case FinishedFuture(i: Int) => i + 1
+      case StillRunningFuture() => SomeAsyncMagic()
+      case FailedFuture(error: Error) => FailedFuture(error)
+    }
+
+    val someFinishedFuture: Future[Int] = Future.successful(11)
+    plusOneOnFuture(someFinishedFuture) // Returns FinishedFuture(12)
+
+    val someStillRunningFuture: Future[Int] = Future.doSomeAsyncMagicAndReturn(77)
+    plusOneOnFuture(someStillRunningFuture) // Returns StillRunningFuture() that will eventually do the plusOne using the async magic
+
+    val someFailedFuture: Future[Int] = Future.failed("I failed :(")
+    plusOneOnFuture(someFailedFuture) // Returns the failed future
+
+    #+END_SRC
+
+*** List
+
+Maybe a `List[Int]` which represents "a collection of Integers"?
+
+    #+BEGIN_SRC scala
+
+    val someListOfInt: List[Int] = List(5, 10, 15, 20, 25)
+    plusOne(someListOfInt) // Doesn't work! plusOne needs an `Int` not a `List[Int]`
+
+    #+END_SRC
+
+
+But we can do it again!: `plusOne` that works on `List`s:
+
+    #+BEGIN_SRC scala
+
+    def plusOneOnList(ints: List[Int]): List[Int] = {
+      // I'm cheating and using a mutable value! You could do this with
+      // recursion but it's not important for the talk
+      var newList = List()
+      foreach(val int in ints) {
+        newList.append(int + 1)
+      }
+      newList
+    }
+
+    val emptyList = List()
+    plusOneOnList(emptyList) // Returns List()
+
+    val someNumbers = List(5, 6, 7, 10)
+    plusOneOnList(someNumbers) // Returns List(6, 7, 8, 11)
+
+    #+END_SRC
+
+What does this look like?
+
+[[file:plusOneOnList.png]]
+
+** The punchline
+
+`Functor` let's you go from `plusFive` to `plusFiveOnSomething` *automatically*
+
+Check it out:
+
+    #+BEGIN_SRC scala
+
+    val plusFive = (i: Int) => i + 5
+
+    // Option
+    val plusFiveOnOption: Option[Int] => Option[Int]  = Functor[Option].lift(plusFive)
+
+    val someOption = Some(7)
+    plusFiveOnOption(someOption) // Some(12)
+
+    // Future
+    val plusFiveOnFuture = Functor[Future].lift(plusFive)
+
+    val someFuture = Future.successful(20)
+    plusFiveOnFuture(someFuture) // FinishedFuture(25)
+
+    object FunctorList {
+      def lift(f: A  => B): List[A] => List[B]
+    }
+
+    class List {
+      def map(f: A => B) = List.map(this, f)
+    }
+
+    List(1,2,3).map(i => i + 1)
+    map(List(1,2,3), i => i + 1)
+
+    Option = Some(value) | None | Foobar
+
+    Verb = Post | Put | Get(data) | Patch | Delete
+
+    for {
+      a <- List(1, 2, 3)
+      b <- List(5, 6, 7)
+    }  yield a ++ b
+
+
+    Some(5).flatMap
+
+
+    // List
+    val plusFiveOnList = FunctorList.lift(plusFive)
+    val someList = List(6, 7, 8)
+    plusFiveOnList(someList) // List(11, 12, 13)
+
+    List(Option(1), None, Option(2)).sequence == None
+    List(Option(1), Option(5), Option(2)).sequence == Some(List(1, 5, 2))
+
+    val inputs = List(10, 50, 20)
+    val doWork = (i: Int) => Future[Output]
+    val results: List[Future[Output]] = inputs.map(doWork)
+    results.sequence : Future[List[Output]]
+
+
+    #+END_SRC
+
+It *levels up your functions*
+
+[[file:plusOneFunctor.png]]
+
+** The real punchline
+
+Because this is so useful there's even a handy helper method to let you apply `plusFive` directly without calling `lift`.
+
+That helper's name is `map`:
+
+    #+BEGIN_SRC scala
+
+    val plusFive = (i: Int) => i + 5
+
+    // Option
+    val someOption = Some(7)
+    someOption.map(plusFive) // Some 12
+
+    // Future
+    val someFuture = Future.successful(20)
+    someFuture.map(plusFive) // FinishedFuture(25)
+
+    // List
+    val someList = List(6, 7, 8)
+    someList.map(plusFive) // List(11, 12, 13)
+
+    #+END_SRC
+
+** Getting into the details
+
+foo(1)
+foo[Int]
+Option[A], Future[A], List[A]
+
+Int
+String[A]
+
+`Option[Int]`, `Future[Int]` and `List[Int]` all have the same shape: `Something[Int]`
+
+`plusFiveOnOption`, `plusFiveOnFuture` and `plusFiveOnList` all had some way of getting an `Int` out of the wrapper type:
+
+`plusFiveOnOption` knows how to get an `Int` from an `Option[Int]`
+`plusFiveOnFuture` knows how to get an `Int` from a `Future[Int]`
+`plusFiveOnList` knows how to get an `Int` from a `List[Int]`
+
+All of our `plusFive` methods knew how to handle cases where an `Int` wasn't available
+
+All of our `plusFive` methods had the same shape: `Something[Int] => Something[Int]`
+
+* Bringing it all together
+
+Lets you take a function like `A => B` and level it up into a function like `Something[A] => Something[B]` where `Something` is a type that takes a single generic parameter like `Option`, `Future` or `List`
+
+Enables the super-useful `map` function which is a shortcut for the above.
+
+If you have something a `Option[Anything]`, `Future[Anything]`, `List[Anything]`, or `Something[Anything]` and you want to transform the inner `Anything` then you almost always want to use a *Functor*
+
+`Option` is *not* a functor, it's just dumb data. But there is a `Functor` for `Option` represented by `Functor[Option]`
+
+Many of your favourite types have a Functor. You only need to learn the concepts once but you can use it on many data types.
+
+* Bonus: Laws
+
+Functors have rules to their implementation.
+
+Rule 1: Identity
+
+    #+BEGIN_SRC scala
+    // If we have the following function:
+    val identity = a => a
+
+    // And we lift it to a F[A]
+    val identityOnOption = Functor[Option].lift(identity)
+
+    // If we call it on any value we should _always_ get an identical value back
+    val someF = Some(10)
+    someF == identityOnOption(someF)
+
+    // This must work for _all_ uses of Functor[F]
+    #+END_SRC
+
+Rule 2: Composition
+
+    #+BEGIN_SRC scala
+    // F (a compose b) == F(a) compose F(b)
+    // Suppose we have two functions:
+    val plusOne = (i: Int) => i + 1
+    val intToString = (i: Int) => i.toString
+
+    // We can plug functions together using `compose` or `andThen`
+    val plusOneAndToString = compose(intToString, plusOne)
+    val plusOneAndToString = plusOne `andThen` intToString
+
+    // What if we're using functors?
+    val plusOneOnOption = Functor[Option].lift(plusOne)
+    val intToStringOnOption = Functor[Option].lift(intToString)
+
+    // We can plug our lifted functions together in the same way:
+    val plusOneAndToStringOnOption = compose(intToStringOnOption, plusOneOnOption)
+    val plusOneAndToStringOnOption = plusOneOnOption `andThen` intToStringOnOption
+
+    // The Composition law tells us that the following must _always_ produce the same results
+    Functor[Option].lift(plusOne `andThen` intToString) == Functor[Option].lift(plusOne) `andThen` Functor[Option].lift(intToString)
+
+    // I.e.
+    FunctorEither[String]
+    FunctorList
+    FunctorOption.lift(plusOneAndToString) == plusOneAndToStringOnOption
+
+    functorOptionLift(plusOne)
+
+    def functorOptionLift[A,B](f: A => B): Option[A] => Option[B] =
+      (input: Option[A]) => {
+        input match {
+          case Some(a) => Some(f(a))
+          case None => None
+        }
+      }
+
+    def plusOneOnList(f: A => B, ints: List[Int]): List[Int] = {
+      // I'm cheating and using a mutable value! You could do this with
+      // recursion but it's not important for the talk
+      var newList = List()
+      foreach(val int in ints) {
+        newList.append(f(int))
+      }
+      newList
+    }
+    #+END_SRC
+
+
+
+Anything[T]
+Either[String, T]
+
+* Bonus: Broken Functors
+
+Imagine a data type that keeps track of how many times you've mapped something. Here's an imaginary interface:
+
+
+    #+BEGIN_SRC scala
+
+    // need new example, this one breaks the functor laws
+    val intWithTracking: TransformTracker[Int] = TransformTracker(20)
+
+    intWithTracking.value // Returns 20
+    intWithTracking.transformCount // Returns 0, we haven't done any transformations!
+
+    val transformedIntWithTracking = intWithTracking
+      .map(i => i + 1)
+      .map(i => i * 2)
+      .map(i => i - 10)
+
+    transformedIntWithTracking.value // Returns 32
+    transformedIntWithTracking.transformCount // Returns 3, we did three transformations!
+
+    #+END_SRC
+
+This is useful but it's not a Functor.
+
+** Why?
+
+It breaks both of the functor laws.
+
+Identity law:
+
+    #+BEGIN_SRC scala
+
+    val intWithTracking: TransformTracker[Int] = TransformTracker(20)
+
+    val transformedIntWithTracking = intWithTracking.map(i => i)
+
+    // `map` with identity function must return the exact same thing.
+
+    intWithTracking == transformedIntWithTracking
+    > false
+
+    #+END_SRC
+
+Composition law:
+
+    #+BEGIN_SRC
+
+    val intWithTracking: TransformTracker[Int] = TransformTracker(20)
+
+    val addOne = (i: Int) => i + 1
+    val addTwo = (i: Int) => i + 2
+
+    val transformedOneWay = intWithTracking.map(addOne).map(addTwo)
+    val transformedAnotherWay = intWithTracking.map(addOne andThen addTwo)
+
+    // transformedOneWay and transformedAnotherWay should be identical
+    transformedOneWay == transformedAnotherWay
+    > false
+
+    #+END_SRC
+
+* Bonus: Googling functors
+
+Watch out! C++ stole the name "Functor" and uses it to mean "Object that behaves like a function". *This is not the same thing*
+
+Make sure you're talking about functional functors, if you see anything about `map` or `lift` or "Category theory" then you're good. If you see anything about `operator()` you're probably in the wrong place.

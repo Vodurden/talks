@@ -1,0 +1,679 @@
+* Notes
+
+Replace POJO/POJO
+Consider "scala flavoured psudeocode"
+
+Can we do smaller code examples?
+"Why do we care if we break the laws?"
+
+
+* Prelude: Functions & Data
+
+To understand Functors we must first understand Functions
+
+If you're used to object oriented style thinking then you will think about programs as a collection of objects which do things.
+And a good object oriented program is one that contains a bunch of well named objects with clear responsibilities and dependencies.
+
+In a functional style we have different abstractions: Our programs are raw data with functions that manipulate and transform
+that data. A good functional program has a bunch of well structured bits of data and clearly specified functions to transform
+that data.
+
+By data we mean raw information. A class/struct with no methods. A POJO/POCO. A record.
+
+By functions we mean _pure functions_. Something that takes data in and produces a result with one key restriction: a functions
+behavior must _always_ be the same given the same inputs.
+
+#+BEGIN_SRC scala
+
+// Data:
+case class PersonData(
+  name: String,
+  age: Int
+)
+
+// Function:
+def canGoToThePub(person: PersonData): Boolean = {
+  person.age >= 18
+}
+
+#+END_SRC
+
+* Prelude: Types
+
+** Types
+
+To understand Functors we must first understand types
+
+I'm not going to make an argument for whether you should/shouldn't use types but I find understanding types makes it
+easier to understand Functors.
+
+So what is a Type?
+
+If we consider the following snippet:
+
+#+BEGIN_SRC scala
+val isAtThePub: Boolean = ???
+#+END_SRC
+
+We've defined a single value named `isAtThePub` of type `Boolean`. But when we say that something "is of type Boolean" what
+are we really saying?
+
+The way I like to think of it is we've restricted the possible states that `isAtThePub` can possibly be. Because the type is
+`Boolean` we know that `isAtThePub` _must_ be either `True` or `False`. There are no other possible states.
+
+What about this snippet:
+
+#+BEGIN_SRC scala
+def isThePubGood(peopleInThePub: Int): Boolean = ???
+#+END_SRC
+
+We have a function called `isThePubGood` of which consumes an `Int` and returns a `Boolean`. This is equivalent to a function
+with the type `Int => Boolean`. But what does saying this function has the type `Int => Boolean` really mean?
+
+As before we've restricted the possible states that `isThePubGood` can possibly be. We read this as "isThePubGood is a function
+that will accept _any_ int and return a boolean".
+
+This is an important assumption with typed function programming: If a function says it can accept any Int and always return a
+Boolean then we assume that holds true for _all_ integers. This means it should never throw regardless of what numbers I give it
+and it should _always_ return True/False.
+
+This assumption can be tricky because there are lots of functions in our code bases at REA today that don't follow this assumption.
+A common example is something like this:
+
+#+BEGIN_SRC scala
+case class Person(name: String, age: Int)
+
+def stringToPerson(input: String): Person = {
+  input.split(",") match {
+    case (name, age) => Person(name, age)
+    case _ => ???
+  }
+}
+#+END_SRC
+
+The `stringToPerson` function has the type `String => Person` which tells us that it can produce a `Person` for _any_ `String`
+you give it. This means it should work if we give it the empty string, a set of Emojis, any unicode, anything.
+
+But usually we can't satisfy that requirement. There's a much smaller set of Strings that we can accept to produce a `Person`.
+So what do we do?
+
+The answer is to use a more accurate type. Currently we have type `String => Person` but we really need `String => PersonOrFailure`.
+
+In Scala we could model that like this:
+
+
+#+BEGIN_SRC scala
+sealed trait PersonOrError
+case class Person(name: String, age: Int) extends PersonOrError
+case class Error(reason: String) extends PersonorError
+
+// This syntax means I can do:
+// val personA: PersonOrError = Person("something", 30)
+// val personB: PersonOrError = Error("failed")
+// i.e. Both `Person` and `Error` are valid states for the `PersonOrError` type
+
+def stringToPerson(input: String): PersonOrError = {
+  input.split(",") match {
+    case (name, age) => Person(name, age)
+    case _ => Error("Could not find name or age")
+  }
+}
+#+END_SRC
+
+Now our function makes sense again and our assumptions work!
+
+It turns out that we often need to augment our types like this. We have some "base" type which represents the data that is
+specific to our program. Then we have some extra states the we want to add to the type. In this case we wanted to add an
+extra `Error` state to the `Person` type.
+
+** Generic Types
+
+Because we often want to combine our "business" types with some extra states (such as an error state) we often extract the
+common pattern into a "Generic" type.
+
+A generic type is a type that takes another type as a parameter. For example:
+
+#+BEGIN_SRC scala
+case class GenericPerson[T](value: T)
+
+val intPerson: GenericPerson[Int] = GenericPerson(5) // Here `value` is of type `Int`
+val stringPerson: GenericPerson[String] = GenericPerson("hello world") // Here `value` is of type `String`
+#+END_SRC
+
+When we call `GenericPerson[Int]` you can imagine everywhere `T` is used in the case class is replaced by `Int`. This lets you write
+code that works on any type.
+
+But it's not a free lunch. If you have a function that accepts a `GenericPerson[T]` you can't do much with the `T` parameter as
+you don't know what type has been selected:
+
+#+BEGIN_SRC scala
+def useGenericPerson[T](p: GenericPerson[T]): Int = {
+  p.value + 1 // COMPILE ERROR, p.value is of type `T`. `T` doesn't have a + method
+}
+#+END_SRC
+
+So why are generic types useful? We can use them to automatically extend common patterns with our types.
+Consider our `PersonOrError` scenario from before, we can split the `OrError` part out into a common pattern:
+
+#+BEGIN_SRC scala
+sealed trait OrError[T]
+case class Success(result: T) extends OrError[T]
+case class Error(reason: String) extends OrError[T]
+
+case class Person(name: String, age: Int)
+
+// This syntax means I can do:
+// val personA: PersonOrError = Person("something", 30)
+// val personB: PersonOrError = Error("failed")
+// i.e. Both `Person` and `Error` are valid states for the `PersonOrError` type
+
+def stringToPerson(input: String): OrError[Person] = {
+  input.split(",") match {
+    case (name, age) => Success(Person(name, age))
+    case _ => Error("Could not find name or age")
+  }
+}
+#+END_SRC
+
+Now we have `OrError` as a generic reusable class. Which means we can represent the idea of `SomethingOrError` on any type.
+
+Luckily the standard library gives us a bunch of re-usable types so we don't have to define them ourselves:
+
+#+BEGIN_SRC scala
+case class BusinessData(something: Int)
+
+// Can be Some(BusinessData) or None. (Adds the `None` state to BusinessData)
+val dataOrNothing: Option[BusinessData] = ???
+
+// Can be Left(String) or Right(BusinessData). (Add the `Left(String)` state to BusinessData)
+// By convention `Left` is often used to hold Errors
+val dataOrError: Either[String, BusinessData] = ???
+
+// Can be Success(BusinessData), Processing(BusinessData) or Failed(Error).
+// I.e. it adds the `Processing` and `Failed` states to `BusinessData`
+// Represents some data that may or not be computed but will be computed in the Future
+val asynchronousData: Future[BusinessData] = ???
+
+// Can be List(), List(BusinessData), List(BusinessData, BusinessData, ...)
+// Adds infinite states to `BuisnessData`. I.e. a List of N business data
+val listOfData: List[BusinessData] = ???
+#+END_SRC
+
+Each of these types give us more flexibility and expressiveness in our type system which lets us specify
+more clearly what inputs a function will accept and what outputs it will produce.
+
+* Prelude Higher Order Functions
+
+Finally, to understand Functors we must first understand Higher Order Functions
+
+A higher order function is a function that accepts another function as a parameter. Consider:
+
+#+BEGIN_SRC scala
+def doSomethingOnInt(input: Int, something: Int => Int) = something(input)
+
+doSomethingOnInput(5, i => i + 20) // Returns 25
+#+END_SRC
+
+This is useful because it lets a function defer parts of it's behavior to the caller. Consider our `OrError` type from before:
+
+#+BEGIN_SRC scala
+sealed trait OrError[T]
+case class Success(result: T) extends OrError[T]
+case class Error(reason: String) extends OrError[T]
+#+END_SRC
+
+There was a problem writing functions that consume this type because you can't do anything with `T` because we don't know what
+type it will be called with. Higher order functions let us solve this problem:
+
+#+BEGIN_SRC scala
+def doSomethingOnSuccess[T](orError: OrError[T], doSomething: T => T) = {
+  orError match {
+    case Success(result) => Success(doSomething(result))
+    case Error(reason) => Error(reason)
+  }
+}
+
+// Usage:
+doSomethingOnSuccess(Success("hello"), input => input + " world") // Returns Success("hello world")
+#+END_SRC
+
+In the above example we moved the String specific code into the calling function which _knows that the function is being called
+with string_
+
+* Functors
+
+Now that we've got all that background out of the way
+
+** The Problem
+So now we've got lot of fancy types. `Option`, `OrError`, `Future` and any other generic patterns we can dream up.
+
+And we've got lots of useful functions like that operate on our business data.
+
+But we need some way to use our business data functions on data that has been combined with a generic type.
+
+For example:
+
+#+BEGIN_SRC scala
+case class Money(amount: Int)
+case class BusinessData(something: Int)
+case class ProcessedData(somethingUseful: Int)
+
+def processData(data: BusinessData): OrError[ProcessedData] = ???
+
+def makeLotsOfMoney(data: ProcessedData): Money = {
+  // Do stuff with `data`
+  // Return how much money we made
+  Money(data.somethingUseful + 10000210)
+}
+
+def doSomethingElse(data: ProcessedData): Money = {
+  // Even more money!
+  Money(data.somethingUseful + 5551)
+}
+
+def beABusiness(input: BusinessData): Money = {
+  val processedData: OrError[ProcessedData] = processData(input)
+
+  // COMPILE ERROR! `makeLotsOfMoney` and `doSomethingElse` need a `ProcessedData` not
+  // a `OrError[ProcessedData]`!
+  val firstMoney = makeLotsOfMoney(processedData)
+  val secondMoney = doSomethingElse(processedData)
+
+  return firstMoney + secondMoney
+}
+#+END_SRC
+
+If only there was some way to `makeLotsOfMoney` with a `OrError[ProcessedData]`.
+
+We could do it manually:
+
+#+BEGIN_SRC scala
+def makeLotsOfMoneyOrError(dataOrError: OrError[ProcessedData]): OrError[Money] = {
+  data match {
+    case Success(ProcessedData(somethingUseful)) => Success(somethingUseful + 10000210)
+    case Failure(error) => Failure(error)
+  }
+}
+
+def doSomethingElseOrError(dataOrError: OrError[ProcessedData]): OrError[Money] = {
+  data match {
+    case Success(ProcessedData(somethingUseful)) => Success(somethingUseful + 5551)
+    case Failure(error) => Failure(error)
+  }
+}
+#+END_SRC
+
+But that has a _lot_ of repeated code.
+
+And this comes up all the time in our programs. What if we want to makeLotsOfMoney with a `Future[ProcessedData]` or a
+`List[ProcessedData]`? We'd have to write all of the code to deal with those data structures ourselves.
+
+** The Solution
+Functors!
+
+A functor lets you transform `makeLotsOfMoney` into `makeLotsOfMoneyOrError` *automatically*.
+
+Check it out:
+
+#+BEGIN_SRC scala
+def makeLotsOfMoney(data: ProcessedData): Money = {
+  // Do stuff with `data`
+  // Return how much money we made
+  Money(data.somethingUseful + 10000210)
+}
+
+val makeLotsOfMoneyOrError: OrError[ProcessedData] => OrError[Money] = OrErrorFunctor.lift(makeLotsOfMoney)
+
+makeLotsOfMoneyOrError(Success(ProcessedData(50))) // Returns Success(10000260)
+makeLotsOfMoneyOrError(Error("bad data")) // Returns Error("bad data")
+#+END_SRC
+
+And the cool thing is that `lift` is defined for all sorts of types:
+
+
+#+BEGIN_SRC scala
+
+val plusFive = (i: Int) => i + 5
+
+// Option
+val plusFiveOnOption: Option[Int] => Option[Int]  = OptionFunctor.lift(plusFive)
+
+val someOption = Some(7)
+plusFiveOnOption(someOption) // Some(12)
+
+// Future
+val plusFiveOnFuture = FutureFunctor.lift(plusFive)
+
+val someFuture = Future.successful(20)
+plusFiveOnFuture(someFuture) // FinishedFuture(25)
+
+// List
+val plusFiveOnList = ListFunctor.lift(plusFive)
+val someList = List(6, 7, 8)
+plusFiveOnList(someList) // List(11, 12, 13)
+
+#+END_SRC
+
+** In Detail
+
+A Functor provides a single function: `lift` which transforms a function of type `A => B` into a function of type `F[A] => F[B]`
+where F is a generic type that takes a single generic argument.
+
+Let's unpack that a bit. Can we create a `Functor` for `OrError`?
+
+OrError:
+
+- Is a generic type
+- It takes a single generic argument: T
+
+So it looks like we should be able to define `lift` for `OrError`. But what is `lift`?
+
+`lift` is a _higher order function_ that takes a generic function of type `A => B` and returns a generic function
+of type `F[A] => F[B]` where F is the type we are defining the Functor for.
+
+For a concrete example let's look at the type signature of `lift` for `OrError`
+
+#+BEGIN_SRC scala
+object OrErrorFunctor {
+  def lift[A, B](transformAToB: A => B): OrError[A] => OrError[B]
+}
+#+END_SRC
+
+What does this type signature tell us? "Given a function that can transform A to B then I will give you a function that
+can transform OrError[A] to OrError[B]"
+
+And because A and B are type parameter this means that `transformAToB` will accept _any function that takes one argument_.
+
+So how can we implement `lift` for `OrError`?
+
+#+BEGIN_SRC scala
+object OrErrorFunctor {
+  def lift[A, B](transformAToB: A => B): OrError[A] => OrError[B] =
+    (orError: OrError[A]) => orError match {
+      case Success(value) => Success(transformAToB(value))
+      case Error(error) => Error(error)
+    }
+}
+#+END_SRC
+
+In this case if we have succeeded and have a value then we transform it to the new value and return Success.
+If we have an `Error` then we do nothing and just propagate the error.
+
+The details of each Functor will be different depending on the specifics of that Type. For example the `List` functor
+would iterate over all values in the list and transform them.
+
+Some examples:
+
+#+BEGIN_SRC scala
+val plusOne = (i: Int) => i + 1 // Has type Int => Int
+val plusOneOrError = lift[Int, Int](plusOne) // Has type OrError[Int] => OrError[Int]
+
+plusOneOrError(Success(5)) // Returns Success(6)
+plusOneOrError(Success("hello")) // COMPILE ERROR, `plusOneOrError` needs an `OrError[Int]` but we're giving it a `OrError[String]`
+
+val isEven = (i: Int) => i % 2 == 0  // Has type Int => Boolean
+val isEvenOrError = lift(isEven) // Has type OrError[Int] => OrError[Boolean]
+#+END_SRC
+
+** The Real Solution
+In most of our codebases no one uses lift! What!?
+
+Lift is so useful there's a handy helper method to let you lift and apply methods at the same time.
+
+That helper's name is `map`:
+
+#+BEGIN_SRC scala
+
+val plusFive = (i: Int) => i + 5
+
+// Option
+val someOption = Some(7)
+someOption.map(plusFive) // Some 12
+
+// Future
+val someFuture = Future.successful(20)
+someFuture.map(plusFive) // FinishedFuture(25)
+
+// List
+val someList = List(6, 7, 8)
+someList.map(plusFive) // List(11, 12, 13)
+
+#+END_SRC
+
+** Bringing it all together
+
+Functors let you take a function of type `A => B` (i.e. any function) and level it up into a function of type
+`Something[A] => Something[B]` where `Something` is a generic type that takes a single generic parameter like
+`Option`, `Future` or `List`
+
+If your type is a functor then you can also use the super-useful `map` function which is a shortcut for the above.
+
+If at any time you have a `Option[Anything]`, `List[Anything]` or `Something[Anything]` and you want to transform the
+`Anything` then you almost always want *Functor*
+
+* Bonus: Laws
+
+Functors have rules to their implementation.
+
+Rule 1: Identity
+
+    #+BEGIN_SRC scala
+    // If we have the following function:
+    val identity = a => a
+
+    // And we lift it to a F[A]
+    val identityOnOption = Functor[Option].lift(identity)
+
+    // If we call it on any value we should _always_ get an identical value back
+    val someF = Some(10)
+    someF == identityOnOption(someF)
+
+    // This must work for _all_ uses of Functor[F]
+    #+END_SRC
+
+Rule 2: Composition
+
+#+BEGIN_SRC scala
+// F (a compose b) == F(a) compose F(b)
+// Suppose we have two functions:
+val plusOne = (i: Int) => i + 1
+val intToString = (i: Int) => i.toString
+
+// We can plug functions together using `compose` or `andThen`
+val plusOneAndToString = compose(intToString, plusOne)
+val plusOneAndToString = plusOne `andThen` intToString
+
+// What if we're using functors?
+val plusOneOnOption = Functor[Option].lift(plusOne)
+val intToStringOnOption = Functor[Option].lift(intToString)
+
+// We can plug our lifted functions together in the same way:
+val plusOneAndToStringOnOption = compose(intToStringOnOption, plusOneOnOption)
+val plusOneAndToStringOnOption = plusOneOnOption `andThen` intToStringOnOption
+
+// The Composition law tells us that the following must _always_ produce the same results
+Functor[Option].lift(plusOne `andThen` intToString) == Functor[Option].lift(plusOne) `andThen` Functor[Option].lift(intToString)
+
+// I.e.
+FunctorEither[String]
+FunctorList
+FunctorOption.lift(plusOneAndToString) == plusOneAndToStringOnOption
+
+functorOptionLift(plusOne)
+
+def functorOptionLift[A,B](f: A => B): Option[A] => Option[B] =
+  (input: Option[A]) => {
+    input match {
+      case Some(a) => Some(f(a))
+      case None => None
+    }
+  }
+
+def plusOneOnList(f: A => B, ints: List[Int]): List[Int] = {
+  // I'm cheating and using a mutable value! You could do this with
+  // recursion but it's not important for the talk
+  var newList = List()
+  foreach(val int in ints) {
+    newList.append(f(int))
+  }
+  newList
+}
+#+END_SRC
+
+* Bonus: Broken Functors
+
+Imagine a data type that keeps track of how many times you've mapped something. Here's an imaginary interface:
+
+
+#+BEGIN_SRC scala
+
+val intWithTracking: TransformTracker[Int] = TransformTracker(20)
+
+intWithTracking.value // Returns 20
+intWithTracking.transformCount // Returns 0, we haven't done any transformations!
+
+val transformedIntWithTracking = intWithTracking
+  .map(i => i + 1)
+  .map(i => i * 2)
+  .map(i => i - 10)
+
+transformedIntWithTracking.value // Returns 32
+transformedIntWithTracking.transformCount // Returns 3, we did three transformations!
+
+#+END_SRC
+
+This is useful but it's not a Functor.
+
+** Why?
+
+It breaks both of the functor laws.
+
+Identity law:
+
+#+BEGIN_SRC scala
+
+val intWithTracking: TransformTracker[Int] = TransformTracker(20)
+
+val transformedIntWithTracking = intWithTracking.map(i => i)
+
+// `map` with identity function must return the exact same thing.
+
+intWithTracking == transformedIntWithTracking
+> false
+
+#+END_SRC
+
+Composition law:
+
+#+BEGIN_SRC
+
+val intWithTracking: TransformTracker[Int] = TransformTracker(20)
+
+val addOne = (i: Int) => i + 1
+val addTwo = (i: Int) => i + 2
+
+val transformedOneWay = intWithTracking.map(addOne).map(addTwo)
+val transformedAnotherWay = intWithTracking.map(addOne andThen addTwo)
+
+// transformedOneWay and transformedAnotherWay should be identical
+transformedOneWay == transformedAnotherWay
+> false
+
+#+END_SRC
+
+* Bonus: Googling functors
+
+Watch out! C++ stole the name "Functor" and uses it to mean "Object that behaves like a function". *This is not the same thing*
+
+Make sure you're talking about functional functors, if you see anything about `map` or `lift` or "Category theory" then you're good. If you see anything about `operator()` you're probably in the wrong place.
+
+* Bonus: Types and Sets
+
+If you've done any set theory you're probably used to seeing lots of diagrams with circles and arrows. Well it turns out that
+set theory is a good analog for types. You can think of the type `Boolean` as being represented by the set {True, False}
+
+Functions can be thought of as arrows which map from one set to another. Consider the function:
+
+#+BEGIN_SRC scala
+def plusOne(i: Int): Int => i + 1
+#+END_SRC
+
+We can visualize this as a set mapping: [[file:plusOne.png]]
+
+On the left we can see the set of all Integers. Though in reality integers go from MIN_INT to MAX_INT but we'll handwave that away
+for now.
+
+The `plusOne` function maps each integer in the input set to another integer in the output set. For this example they happen to be
+the same set but that doesn't need to be the case.
+
+How about this function:
+
+#+BEGIN_SRC scala
+
+sealed trait Decision
+case object Yes extends Decision
+case object Maybe extends Decision
+
+def isGreat(name: String): Decision = name match {
+  case "jake" => Yes
+  case _ => Maybe
+}
+
+#+END_SRC
+
+We can visualize this in the same way:
+
+[[file:isGreat.png]]
+
+How about composite types like `Option`?
+
+#+BEGIN_SRC scala
+
+def plusOneOnOption(optionalInt: Option[Int]): Option[Int] = {
+  optionalInt match {
+    case Some(i: Int) => i + 1
+    case None => None
+  }
+
+}
+val someOptionalInteger: Option[Int] = Some(7)
+plusOneOnOption(someOptionalInteger) // Returns Some(8)
+
+val someOptionalIntegerThatDoesntExist = None
+plusOneOnOption(someOptionalIntegerThatDoesntExist) // Returns None
+
+#+END_SRC
+
+It looks very similar to `plusOne` with an additional "None" state: [[file:plusOneOnOption.png]]
+
+What about list?
+
+#+BEGIN_SRC scala
+
+def plusOneOnList(ints: List[Int]): List[Int] = {
+  // I'm cheating and using a mutable value! You could do this with
+  // recursion but it's not important for the talk
+  var newList = List()
+  foreach(val int in ints) {
+    newList.append(int + 1)
+  }
+  newList
+}
+
+val emptyList = List()
+plusOneOnList(emptyList) // Returns List()
+
+val someNumbers = List(5, 6, 7, 10)
+plusOneOnList(someNumbers) // Returns List(6, 7, 8, 11)
+
+#+END_SRC
+
+Now we have infinitely more integers  as lists are an infinite data structure: [[file:plusOneOnList.png]]
+
+What's the point of all of these sets?
+
+It's time to unveil the *Functor Crab*:
+
+[[file:plusOneFunctor.png]]
+
+Functors are functions from the _set of functions A => B_ to the _set of functions F[A] => F[B]_.
