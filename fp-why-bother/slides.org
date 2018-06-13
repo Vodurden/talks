@@ -159,13 +159,6 @@
    - ... to make computers do stuff
    - ... to make it easier to solve problems
 
-** What's common?
-  Functional programmers want the same things as all of you:
-
-   - Solve problems
-   - Have fun
-   - Express things in a way that is *easy* for you
-
 ** It's not a competition
    Functional programming *is not* morally better
 
@@ -182,9 +175,9 @@ Short answer: Because we think pure functions are gods gift to the mortal world.
 ** A totally legitimate description of pure functions
 
 #+ATTR_REVEAL: :frag (appear)
-  - Behavior should only depend on it's parameters
-  - Output should only be provided by returning.
-  - Should not perform any visible effect
+  - Behavior *only* depends on parameters
+  - Output *only* by returning a value
+  - No user-detectable changes to the computer
     - No logs, no drawing things, no network access, nothing!
 
 ** Impure example (Scala)
@@ -331,7 +324,7 @@ Short answer: Because we think pure functions are gods gift to the mortal world.
 - Objects start to look a lot less useful
 - Since you've got lots of pure functions you need new techniques to manage them
 
-* Lock the doors it's _Monad_ time
+* Lock the doors, it's _Monad_ time
 
 #+ATTR_REVEAL: :frag (appear)
 Just kidding
@@ -413,7 +406,63 @@ Make it easier to pick which function to apply to some data
 
 ** They're all solutions to _real world problems_
 
-** But it all comes back to pure functions!
+* But Jake - Why do _you_ bother!?
+
+** I wanted to make *Video Games*!
+   #+ATTR_REVEAL: :frag (appear)
+   - So I learned Visual Basic 6
+   - And used it to build crappy games
+
+** Then I learned about _OOP_!
+   #+ATTR_REVEAL: :frag (appear)
+   - Lots of C++
+   - Lots of objects
+   - Everything was great!
+
+** And then _it_ happened
+   #+ATTR_REVEAL: :frag (appear)
+   - I had a spaceship game with asteroids, bullets and rocks
+   - And I asked the question:
+   - "Where should the collide method go?"
+
+** Boom!
+   #+ATTR_REVEAL: :frag (appear)
+   - None of the answers that I had at the time were satisfactory.
+   - Double dispatch!? That's insane!
+   - Let's change *everything*. That'll solve it!
+
+** Then I learned about Haskell
+   #+ATTR_REVEAL: :frag (appear)
+   - I install ghc!
+   - And I completely fail to become productive
+   - But I learn about the concept of purity and I *love* it!
+
+** A year passes
+   #+ATTR_REVEAL: :frag (appear)
+   - "Maybe I should give Haskell another go!"
+   - I install ghc!
+   - And I learn a _little bit_ more, apparently Monads are what the cool kids use
+   - I fail to become productive again
+   - Repeat for several years
+
+** Scala? I think?
+   #+ATTR_REVEAL: :frag (appear)
+   - At some point I learn about Scala
+   - I try to do FP in it
+   - I fail
+   - I go back to Haskell again
+   - I fail
+
+** I apply at REA
+   #+ATTR_REVEAL: :frag (appear)
+   - My toy robot is the first Scala code I've ever written. It's fully functional though!
+   - I get in somehow
+   - *Suckers*
+   - All that failing turns into a modest amount of knowledge!
+   - Things happen
+   - Now I'm giving this talk
+
+** That's my story!
 
 * If you're just getting started
 
