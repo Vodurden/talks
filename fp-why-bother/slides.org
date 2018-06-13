@@ -1,0 +1,427 @@
+#+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
+#+REVEAL_HLEVEL: 1
+
+#+Title: FP: why bother?
+#+Author: Jake Woods
+
+#+OPTIONS: reveal_title_slide:"<h1>%t</h1><h2>%a</h2>"
+#+OPTIONS: toc:nil
+#+OPTIONS: num:nil
+
+* What are we going to learn today?
+
+** Nothing!
+   I'm not going to teach you anything.
+
+   No sales pitches!
+
+* Instead! We're going to explore
+
+** How do functional programmers think about problems?
+** Why do functional programmers bother with all this arcana?
+
+* Caveat
+
+** My experience is with *statically typed* FP
+   I.e. Haskell and Scala
+
+** Dynamically typed FP is perfectly valid!
+   I.e. Clojure and... Ruby?
+
+   I just don't do much of it so my examples are going to be biased
+
+   Sorry!
+
+* Learning FP
+
+** Purity
+
+    #+BEGIN_SRC scala
+    def add(a: Int, b: Int): Int = {
+      a + b
+    }
+    #+END_SRC
+
+    #+ATTR_REVEAL: :frag (appear)
+    #+BEGIN_SRC scala
+    add(1, 1) // It returns 2! Purely!!
+    #+END_SRC
+
+** Recursion
+
+    #+BEGIN_SRC scala
+    def fib(n: Int): Int = {
+      if(n == 0) {
+        0
+      } else {
+        n + fib(n - 1)
+      }
+    }
+    #+END_SRC
+
+    #+ATTR_REVEAL: :frag (appear)
+    #+BEGIN_SRC scala
+    fib(4) // returns 10!
+    #+END_SRC
+
+** Currying
+
+    #+BEGIN_SRC scala
+    val add = (a: Int) => {
+      (b: Int) => {
+        a + b
+      }
+    }
+    #+END_SRC
+
+    #+ATTR_REVEAL: :frag (appear)
+    #+BEGIN_SRC scala
+    add(1)(2) // Returns 3! Cool!
+    #+END_SRC
+
+** List processing
+
+    #+BEGIN_SRC scala
+    // List processing:
+    val numbers = [1, 1, 1]
+
+    numbers.map(i => i + 1).sum // Returns 6! Cool!
+    #+END_SRC
+
+* Back to reality
+
+    #+BEGIN_SRC scala
+    // Making decisions & causing side effects:
+    def makeLotsOfMoney(database: DbConnection): Unit = {
+      val monies: Array[Float] = database.getMoney()
+
+      val isThereEnoughMoney = true
+      monies.foreach { money =>
+        if(money < 1000000) {
+          isThereEnoughMoney = false
+        }
+      }
+
+      if(!isThereEnoughMoney && someBusinessThing() && !globalVariable) {
+        doSomethingWithAWS()
+      } else {
+        globalVariable = true
+
+        log.error(
+          "Something bad happened but it's been happening for years so don't worry!"
+        )
+
+        doSomethingElseWithAWS()
+      }
+    }
+    #+END_SRC
+
+** They look completely different!
+** How does this arcana relate to me?
+** Why bother!?
+
+* Why bother with anything?
+
+** Programming
+#+ATTR_REVEAL: :frag (appear)
+   - Express problems to a computer
+   - ... to make it do stuff
+   - ... and maybe have some fun!
+
+** Algorithms
+#+ATTR_REVEAL: :frag (appear)
+   - Express problems with math
+   - ... to make it do new things it couldn't do before
+   - ... to make it easier to solve problems
+
+** Design patterns
+#+ATTR_REVEAL: :frag (appear)
+   - Express problems with unthinking cargo cult code copying
+   - ... to suck the fun out of everything
+   - ... to make it easier to solve problems??
+   - ... I'm looking at you ProxyAbstractFactorySingletonBeanManagerDecorator!
+
+** Imperative programming
+#+ATTR_REVEAL: :frag (appear)
+   - Express problems in terms of imperative statements
+   - ... to make computers do stuff
+   - ... to make it easier to solve problems
+
+** Object Oriented Programming
+#+ATTR_REVEAL: :frag (appear)
+   - Express problems in terms of objects
+   - ... to make computers do stuff
+   - ... to make it easier to solve problems
+
+** Functional Programming
+#+ATTR_REVEAL: :frag (appear)
+   - Express problems in terms of functions
+   - ... to make computers do stuff
+   - ... to make it easier to solve problems
+
+** What's common?
+  Functional programmers want the same things as all of you:
+
+   - Solve problems
+   - Have fun
+   - Express things in a way that is *easy* for you
+
+** It's not a competition
+   Functional programming *is not* morally better
+
+   We just think it's a great way to:
+
+   - Solve problems
+   - Have fun
+   - Express ourselves
+
+* Why bother with FP?
+
+Short answer: Because we think pure functions are gods gift to the mortal world.
+
+** A totally legitimate description of pure functions
+
+#+ATTR_REVEAL: :frag (appear)
+  - Behavior should only depend on it's parameters
+  - Output should only be provided by returning.
+  - Should not perform any visible effect
+    - No logs, no drawing things, no network access, nothing!
+
+** Impure example (Scala)
+
+    #+BEGIN_SRC scala
+    // Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]
+    var gameDatabase = gameServer.getGameDatabase
+
+    // Impure
+    def filterBadGames(): Unit = {
+      gameDatabase.remove("Duke Nukem Forever")
+      gameDatabase.remove("E.T.")
+    }
+
+    filterBadGames()
+    println(gameDatabase) // ["Dwarf Fortress", "Prey"]!
+    #+END_SRC
+
+** Impure example (Haskell)
+
+   I started writing this example and it was so ugly I gave up.
+
+** Impure example (JavaScript)
+
+   #+BEGIN_SRC javascript
+   // Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]
+   var gameDatabase = gameServer.getGameDatabase
+
+   // Impure
+   function filterBadGames() {
+     gameDatabase.remove("Duke Nukem Forever");
+     gameDatabase.remove("E.T.");
+   }
+
+   filterBadGames()
+   console.log(gameDatabase) // ["Dwarf Fortress", "Prey"]!
+   #+END_SRC
+
+** Pure Example (Scala)
+
+    #+BEGIN_SRC scala
+    // Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]
+    val gameDatabase = gameServer.getGameDatabase
+
+    // Pure
+    def filterBadGames(games: Array[String]): Array[String] = {
+      games
+        .filter(_ ==  "Duke Nukem Forever")
+        .filter(_ == "E.T.")
+    }
+
+    val goodGames = filterBadGames(gameDatabase)
+    println(goodGames) // ["Dwarf Fortress", "Prey"]
+    #+END_SRC
+
+** Pure Example (Haskell)
+
+    #+BEGIN_SRC haskell
+    -- Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]
+    gameDatabase :: IO [String]
+    gameDatabase = getGameDatabase
+
+    -- Pure
+    filterBadGames :: [String] -> [String]
+    filterBadGames = (delete "Duke Nukem Forever") . (delete "E.T.")
+
+    main :: IO ()
+    main = do
+      games <- gameDatabase
+      let goodGames = filterBadGames games
+      putStrLn goodGames  -- ["Dwarf Fortress", "prey"]
+    #+END_SRC
+
+** Pure Example (JavaScript)
+
+    #+BEGIN_SRC javascript
+    // Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]
+    const gameDatabase = gameServer.getGameDatabase
+
+    // Pure
+    function filterBadGames(games) {
+      games.filter(_ ==  "Duke Nukem Forever")
+        .filter(_ == "E.T.");
+    }
+
+    const goodGames = filterBadGames(gameDatabase)
+    println(goodGames) // ["Dwarf Fortress", "Prey"]
+    #+END_SRC
+
+** Benefits of purify
+
+  Super easy to test
+
+  #+BEGIN_SRC scala
+  "filterBadGames" should {
+    "keep Prey" in {
+      filterBadGames(["Prey"]) must beEqualTo(["Prey"])
+    }
+
+    "filter out Duke Nukem Forever" in {
+      filterBadGames(["Duke Nukem Forever"]) must beEmpty
+    }
+  }
+  #+END_SRC
+
+  Bam!
+
+** More benefits of purity
+
+  Everything you need to know is in one place.
+
+  #+BEGIN_SRC scala
+    def filterBadGames(games: Array[String]): Array[String] = {
+      games
+        .filter(_ ==  "Duke Nukem Forever")
+        .filter(_ == "E.T.")
+    }
+  #+END_SRC
+
+  I _know_ for a fact that ~filterBadGames~ only uses an array of strings. *Nothing else*!
+
+  I also know it's not going to do something unexpected!
+
+** Even _more_ benefits of purity
+
+  The static typing is actually telling the truth!
+
+  #+BEGIN_SRC scala
+  def filterBadGames(games: Array[String]): Array[String]
+  #+END_SRC
+
+  This function is making a promise: Give me some strings and I will give you back some strings. *Nothing more, nothing less*
+
+  Pure functions are good friends: *They keep their promises*
+
+** Drawbacks
+
+  Pure functions can't do anything!
+
+** Things of note if you accept pure functions as your lord and saviour
+
+#+ATTR_REVEAL: :frag (appear)
+- Immutability becomes an obvious choice
+- Objects start to look a lot less useful
+- Since you've got lots of pure functions you need new techniques to manage them
+
+* Lock the doors it's _Monad_ time
+
+#+ATTR_REVEAL: :frag (appear)
+Just kidding
+
+** How many of you had a fear response just then?
+
+** The functional arcana is scary
+
+** It looks impenetrable
+
+** So why do we do it?
+
+** Each scary buzzword is a _solution to a problem_
+A solution that leverages pure functions
+
+*** Immutability
+Makes it possible to write pure functions
+
+*** Functors
+Makes it easier to apply functions to different types of containers
+
+#+ATTR_REVEAL: :frag (appear)
+#+BEGIN_SRC scala
+def add5(input: Int): Int = input + 5
+#+END_SRC
+
+#+ATTR_REVEAL: :frag (appear)
+#+BEGIN_SRC scala
+// add5 works on ints!
+add5(10) // Returns 15
+#+END_SRC
+
+#+ATTR_REVEAL: :frag (appear)
+#+BEGIN_SRC scala
+// Functor lets us use it on lists!
+List(1,2,3).map(add5) // returns List(6,7,8)
+#+END_SRC
+
+#+ATTR_REVEAL: :frag (appear)
+#+BEGIN_SRC scala
+// And Options
+Some(20).map(add5) // Returns List(25)
+#+END_SRC
+
+#+ATTR_REVEAL: :frag (appear)
+#+BEGIN_SRC scala
+// And Future!
+Future(1).map(add5) // Returns Future(6)
+#+END_SRC
+
+#+ATTR_REVEAL: :frag (appear)
+And lots of other stuff!
+
+*** Applicatives
+Combine functions in parallel
+
+*** Monads
+Sequence functions together
+
+#+ATTR_REVEAL: :frag (appear)
+This happens to be used for IO in FP since IO is sequential!
+
+#+ATTR_REVEAL: :frag (appear)
+But Monads are _not_ the core of FP and you can do FP without monads.
+
+*** Fold
+Makes it easier to apply functions to recursive data
+
+*** Traverse
+Makes it easier to apply functions to nested data structures
+
+*** Typeclasses
+Make it easier to pick which function to apply to some data
+
+*** Free/Eff
+
+- Compile functions into more functions
+- Compose monads
+
+** They're all solutions to _real world problems_
+
+** But it all comes back to pure functions!
+
+* If you're just getting started
+
+#+ATTR_REVEAL: :frag (appear)
+- You *don't* need to start with monads/functors/applicatives.
+- Just look for opportunities to write more pure functions
+- See how they make you feel! :)
+
+* Thank you!
+
+Questions?

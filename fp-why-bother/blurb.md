@@ -1,4 +1,7 @@
-*This Wednesday, 4pm GF Festival Hall*: Functional Programming - Why bother?
+*Today, 4pm GF Festival Hall*: Functional Programming - Why bother?
+
+This is the *newly revamped version 2.0 of this talk*. It has _slides_ which I *never* do, so you know it's going
+to be good.
 
 Anyone who has touched a functional programming tutorial would agree: Learning functional programming is _hard_.
 
