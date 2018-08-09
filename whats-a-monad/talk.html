@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>What's a Monad?</title>
+<meta name="author" content="(Jake Woods)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/reveal.css"/>
+
+<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/theme/moon.css" id="theme"/>
+
+<link rel="stylesheet" href="./talk.css"/>
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'http://cdn.jsdelivr.net/reveal.js/3.0.0/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1>What's a Monad?</h1><h2>Jake Woods</h2>
+</section>
+
+<section>
+<section id="slide-org88a0eef">
+<h2 id="org88a0eef">What's this talk about?</h2>
+<p class="fragment (appear)">
+Monads!
+</p>
+
+<p class="fragment (appear)">
+Notoriously tricky to understand.
+</p>
+
+<p class="fragment (appear)">
+Impossible to explain!
+</p>
+
+<p class="fragment (appear)">
+&#x2026; I'm <font color="red"> not</font> going to teach you how to use them.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orge989490">
+<h2 id="orge989490">What's this talk about?</h2>
+<p class="fragment (appear)">
+Monads?
+</p>
+
+<p class="fragment (appear)">
+What <font color="green"> are</font> they?
+</p>
+
+<p class="fragment (appear)">
+What <font color="red"> aren't</font> they?
+</p>
+
+<p class="fragment (appear)">
+Should I care?
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org0ca062c">
+<h2 id="org0ca062c">So what's a Monad?</h2>
+<div class="outline-text-2" id="text-org0ca062c">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org870850f">
+<h3 id="org870850f">Something that's hard to learn!</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf852bb9">
+<h3 id="orgf852bb9">Why?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org3f1c3db">
+<h3 id="org3f1c3db">"Monad" refers to <span class="underline">lots</span> of different concepts.</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org2fd587e">
+<h3 id="org2fd587e">It's an overloaded term!</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org2c9f97c">
+<h3 id="org2c9f97c">It's like trying to learn "Science"</h3>
+<p class="fragment (appear)">
+You need to learn it bit-by-bit
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org6699234">
+<h2 id="org6699234">Let's look at some types of "Monads"</h2>
+<div class="outline-text-2" id="text-org6699234">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org54546ef">
+<h3 id="org54546ef">An object with a flatMap method</h3>
+<div class="org-src-container">
+
+<pre  class="src src-javascript"><span style="color: #2aa198;">[</span><span style="color: #6c71c4;">1</span>,<span style="color: #6c71c4;">2</span>,<span style="color: #6c71c4;">3</span><span style="color: #2aa198;">]</span>.flatMap<span style="color: #2aa198;">(</span>a =&gt; <span style="color: #b58900;">[</span>a, a<span style="color: #b58900;">]</span><span style="color: #2aa198;">)</span>
+<span style="color: #586e75;">// </span><span style="color: #586e75;">Returns [1,1,2,2,3,3]</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org208c497">
+<h3 id="org208c497">A type with a bind function</h3>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">&gt;&gt;= is pronounced bind in Haskell. Wat!</span>
+<span style="color: #2aa198;">[</span><span style="color: #6c71c4;">1</span>,<span style="color: #6c71c4;">2</span>,<span style="color: #6c71c4;">3</span><span style="color: #2aa198;">]</span> <span style="color: #268bd2;">&gt;&gt;=</span> <span style="color: #268bd2;">\</span>a <span style="color: #268bd2;">-&gt;</span> <span style="color: #2aa198;">[</span>a, a<span style="color: #2aa198;">]</span>
+<span style="color: #586e75;">-- </span><span style="color: #586e75;">Returns [1,1,2,2,3,3]</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org8216dfc">
+<h3 id="org8216dfc">Something I can use For/Do comprehension on</h3>
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Scala</span>
+<span style="color: #859900; font-weight: bold;">for</span> <span style="color: #2aa198;">{</span>
+  a <span style="color: #859900; font-weight: bold;">&lt;-</span> <span style="color: #268bd2; font-weight: bold;">Some</span><span style="color: #b58900;">(</span><span style="color: #6c71c4;">5</span><span style="color: #b58900;">)</span>
+  b <span style="color: #859900; font-weight: bold;">&lt;-</span> <span style="color: #268bd2; font-weight: bold;">Some</span><span style="color: #b58900;">(</span><span style="color: #6c71c4;">10</span><span style="color: #b58900;">)</span>
+<span style="color: #2aa198;">}</span> <span style="color: #859900; font-weight: bold;">yield</span> a + b
+
+<span style="color: #586e75;">// </span><span style="color: #586e75;">Returns: Some(15)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Haskell</span>
+<span style="color: #859900; font-weight: bold;">do</span>
+  a <span style="color: #268bd2;">&lt;-</span> <span style="color: #b58900;">Just</span> <span style="color: #6c71c4;">5</span>
+  b <span style="color: #268bd2;">&lt;-</span> <span style="color: #b58900;">Just</span> <span style="color: #6c71c4;">10</span>
+  pure a <span style="color: #268bd2;">+</span> b
+
+<span style="color: #586e75;">-- </span><span style="color: #586e75;">Returns: Just 15</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc32af47">
+<h3 id="orgc32af47">An interface/typeclass defining: join and pure</h3>
+<div class="org-src-container">
+
+<pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
+<span style="color: #b58900;">Monad</span><span style="color: #2aa198;">&lt;</span>A<span style="color: #2aa198;">&gt;</span> <span style="color: #268bd2;">join</span><span style="color: #2aa198;">(</span><span style="color: #b58900;">Monad</span><span style="color: #b58900;">&lt;</span><span style="color: #b58900;">Monad</span><span style="color: #268bd2;">&lt;</span>A<span style="color: #268bd2;">&gt;</span><span style="color: #b58900;">&gt;</span> <span style="color: #268bd2;">nested</span><span style="color: #2aa198;">)</span>;
+<span style="color: #b58900;">Monad</span><span style="color: #2aa198;">&lt;</span>A<span style="color: #2aa198;">&gt;</span> <span style="color: #268bd2;">pure</span><span style="color: #2aa198;">(</span><span style="color: #b58900;">A</span> <span style="color: #268bd2;">a</span><span style="color: #2aa198;">)</span>;
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Scala</span>
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">join</span><span style="color: #2aa198;">(</span>nested<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Monad</span><span style="color: #b58900;">[</span><span style="color: #268bd2; font-weight: bold;">Monad</span><span style="color: #268bd2;">[</span><span style="color: #268bd2; font-weight: bold;">A</span><span style="color: #268bd2;">]</span><span style="color: #b58900;">]</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Monad</span><span style="color: #2aa198;">[</span><span style="color: #268bd2; font-weight: bold;">A</span><span style="color: #2aa198;">]</span>
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">pure</span><span style="color: #2aa198;">(</span>a<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">A</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Monad</span><span style="color: #2aa198;">[</span><span style="color: #268bd2; font-weight: bold;">A</span><span style="color: #2aa198;">]</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Haskell</span>
+<span style="color: #268bd2;">join</span> <span style="color: #268bd2;">::</span> <span style="color: #2aa198;">(</span><span style="color: #b58900;">Monad</span> m<span style="color: #2aa198;">)</span> <span style="color: #268bd2;">=&gt;</span> m <span style="color: #2aa198;">(</span>m a<span style="color: #2aa198;">)</span> <span style="color: #268bd2;">-&gt;</span> m a
+<span style="color: #268bd2;">pure</span> <span style="color: #268bd2;">::</span> <span style="color: #2aa198;">(</span><span style="color: #b58900;">Monad</span> m<span style="color: #2aa198;">)</span> <span style="color: #268bd2;">=&gt;</span> a <span style="color: #268bd2;">-&gt;</span> m a
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgfcd8fd4">
+<h4 id="orgfcd8fd4">Example</h4>
+<p>
+For any Monad:
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-javascript">pure<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span><span style="color: #2aa198;">)</span>             <span style="color: #586e75;">// </span><span style="color: #586e75;">type: Monad&lt;Int&gt;</span>
+
+pure<span style="color: #2aa198;">(</span>pure<span style="color: #b58900;">(</span><span style="color: #6c71c4;">1</span><span style="color: #b58900;">)</span><span style="color: #2aa198;">)</span>       <span style="color: #586e75;">// </span><span style="color: #586e75;">type: Monad&lt;Monad&lt;Int&gt;&gt;</span>
+
+join<span style="color: #2aa198;">(</span>pure<span style="color: #b58900;">(</span>pure<span style="color: #268bd2;">(</span><span style="color: #6c71c4;">1</span><span style="color: #268bd2;">)</span><span style="color: #b58900;">)</span><span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">type: Monad&lt;Int&gt;</span>
+</pre>
+</div>
+
+<p>
+For a concrete Monad:
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-javascript">List.pure<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span><span style="color: #2aa198;">)</span>                        <span style="color: #586e75;">// </span><span style="color: #586e75;">type: List&lt;Int&gt;</span>
+
+List.pure<span style="color: #2aa198;">(</span>List.pure<span style="color: #b58900;">(</span><span style="color: #6c71c4;">1</span><span style="color: #b58900;">)</span><span style="color: #2aa198;">)</span>             <span style="color: #586e75;">// </span><span style="color: #586e75;">type: List&lt;List&lt;Int&gt;&gt;</span>
+
+List.join<span style="color: #2aa198;">(</span>List.pure<span style="color: #b58900;">(</span>List.pure<span style="color: #268bd2;">(</span><span style="color: #6c71c4;">1</span><span style="color: #268bd2;">)</span><span style="color: #b58900;">)</span>   <span style="color: #586e75;">// </span><span style="color: #586e75;">type: List&lt;Int&gt;</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org5d95cfc">
+<h3 id="org5d95cfc">An interface/typeclass defining: bind and pure</h3>
+<div class="org-src-container">
+
+<pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
+<span style="color: #b58900;">Monad</span><span style="color: #2aa198;">&lt;</span>B<span style="color: #2aa198;">&gt;</span> <span style="color: #268bd2;">bind</span><span style="color: #2aa198;">&lt;</span>A,B<span style="color: #2aa198;">&gt;(</span><span style="color: #b58900;">Monad</span><span style="color: #b58900;">&lt;</span>A<span style="color: #b58900;">&gt;</span> <span style="color: #268bd2;">a</span>, <span style="color: #b58900;">Function</span><span style="color: #b58900;">&lt;</span>A, <span style="color: #b58900;">Monad</span><span style="color: #268bd2;">&lt;</span>B<span style="color: #268bd2;">&gt;</span><span style="color: #b58900;">&gt;</span> <span style="color: #268bd2;">fn</span><span style="color: #2aa198;">)</span>;
+<span style="color: #b58900;">Monad</span><span style="color: #2aa198;">&lt;</span>A<span style="color: #2aa198;">&gt;</span> <span style="color: #268bd2;">pure</span><span style="color: #2aa198;">&lt;</span>A<span style="color: #2aa198;">&gt;(</span><span style="color: #b58900;">A</span> <span style="color: #268bd2;">a</span><span style="color: #2aa198;">)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Scala</span>
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">bind</span><span style="color: #2aa198;">[</span><span style="color: #268bd2; font-weight: bold;">A</span>,<span style="color: #268bd2; font-weight: bold;">B</span><span style="color: #2aa198;">](</span>m<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Monad</span><span style="color: #b58900;">[</span><span style="color: #268bd2; font-weight: bold;">A</span><span style="color: #b58900;">]</span>, fn<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">A</span> <span style="color: #859900; font-weight: bold;">=&gt;</span> <span style="color: #268bd2; font-weight: bold;">Monad</span><span style="color: #b58900;">[</span><span style="color: #268bd2; font-weight: bold;">B</span><span style="color: #b58900;">]</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Monad</span><span style="color: #2aa198;">[</span><span style="color: #268bd2; font-weight: bold;">B</span><span style="color: #2aa198;">]</span>
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">pure</span><span style="color: #2aa198;">[</span><span style="color: #268bd2; font-weight: bold;">A</span><span style="color: #2aa198;">](</span>a<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">A</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Monad</span><span style="color: #2aa198;">[</span><span style="color: #268bd2; font-weight: bold;">A</span><span style="color: #2aa198;">]</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Haskell</span>
+<span style="color: #268bd2;">bind</span> <span style="color: #268bd2;">::</span> <span style="color: #2aa198;">(</span><span style="color: #b58900;">Monad</span> m<span style="color: #2aa198;">)</span> <span style="color: #268bd2;">=&gt;</span> m a <span style="color: #268bd2;">-&gt;</span> <span style="color: #2aa198;">(</span>a <span style="color: #268bd2;">-&gt;</span> m b<span style="color: #2aa198;">)</span> <span style="color: #268bd2;">-&gt;</span> m b
+<span style="color: #268bd2;">pure</span> <span style="color: #268bd2;">::</span> <span style="color: #2aa198;">(</span><span style="color: #b58900;">Monad</span> m<span style="color: #2aa198;">)</span> <span style="color: #268bd2;">=&gt;</span> a <span style="color: #268bd2;">-&gt;</span> m a
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org3d916f0">
+<h4 id="org3d916f0">Example</h4>
+<p>
+For any Monad:
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-javascript">bind<span style="color: #2aa198;">(</span>pure<span style="color: #b58900;">(</span><span style="color: #6c71c4;">1</span><span style="color: #b58900;">)</span>, <span style="color: #859900; font-weight: bold;">function</span><span style="color: #b58900;">(</span><span style="color: #268bd2;">value</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+  <span style="color: #859900; font-weight: bold;">return</span> pure<span style="color: #268bd2;">(</span>value + <span style="color: #6c71c4;">1</span><span style="color: #268bd2;">)</span>
+<span style="color: #b58900;">}</span><span style="color: #2aa198;">)</span>;
+
+<span style="color: #586e75;">// </span><span style="color: #586e75;">Returns Monad(2)</span>
+</pre>
+</div>
+
+<p>
+For a concrete Monad:
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-javascript">List.bind<span style="color: #2aa198;">(</span>List.pure<span style="color: #b58900;">(</span><span style="color: #6c71c4;">1</span><span style="color: #b58900;">)</span>, <span style="color: #859900; font-weight: bold;">function</span><span style="color: #b58900;">(</span><span style="color: #268bd2;">value</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+  <span style="color: #859900; font-weight: bold;">return</span> List.pure<span style="color: #268bd2;">(</span><span style="color: #2aa198;">"Hello"</span><span style="color: #268bd2;">)</span>;
+<span style="color: #b58900;">}</span><span style="color: #2aa198;">)</span>;
+<span style="color: #586e75;">// </span><span style="color: #586e75;">Returns ["Hello"]</span>
+
+List.bind<span style="color: #2aa198;">(</span><span style="color: #b58900;">[</span><span style="color: #6c71c4;">1</span>, <span style="color: #6c71c4;">2</span>, <span style="color: #6c71c4;">3</span><span style="color: #b58900;">]</span>, <span style="color: #859900; font-weight: bold;">function</span><span style="color: #b58900;">(</span><span style="color: #268bd2;">value</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+  <span style="color: #859900; font-weight: bold;">return</span> pure<span style="color: #268bd2;">(</span><span style="color: #2aa198;">"Hello "</span> + value.toString<span style="color: #268bd2;">)</span>
+<span style="color: #b58900;">}</span><span style="color: #2aa198;">)</span>;
+<span style="color: #586e75;">// </span><span style="color: #586e75;">Returns ["Hello 1", "Hello 2", "Hello 3"]</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd0bf3fa">
+<h3 id="orgd0bf3fa">A Burrito?</h3>
+
+<div class="figure">
+<p><img src="./img/burrito.png" alt="burrito.png" />
+</p>
+</div>
+
+<p>
+(Source: <a href="https://chrisdone.com/posts/monads-are-burritos">https://chrisdone.com/posts/monads-are-burritos</a>)
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgdc803fa">
+<h3 id="orgdc803fa">A way of composing certain types of functions</h3>
+<div class="outline-text-3" id="text-orgdc803fa">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org273445c">
+<h4 id="org273445c">Normal Function Composition</h4>
+<div class="org-src-container">
+
+<pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
+<span style="color: #b58900;">String</span> <span style="color: #268bd2;">toUpperCase</span><span style="color: #2aa198;">(</span><span style="color: #b58900;">String</span> <span style="color: #268bd2;">input</span><span style="color: #2aa198;">)</span> <span style="color: #2aa198;">{</span> ... <span style="color: #2aa198;">}</span>
+<span style="color: #b58900;">String</span> <span style="color: #268bd2;">trim</span><span style="color: #2aa198;">(</span><span style="color: #b58900;">String</span> <span style="color: #268bd2;">input</span><span style="color: #2aa198;">)</span> <span style="color: #2aa198;">{</span> ... <span style="color: #2aa198;">}</span>
+
+<span style="color: #b58900;">String</span> <span style="color: #268bd2;">toUpperCaseAndTrim</span><span style="color: #2aa198;">(</span><span style="color: #b58900;">String</span> <span style="color: #268bd2;">input</span><span style="color: #2aa198;">)</span> <span style="color: #2aa198;">{</span>
+  <span style="color: #859900; font-weight: bold;">return</span> compose<span style="color: #b58900;">(</span>toUpperCase, trim<span style="color: #b58900;">)(</span>input<span style="color: #b58900;">)</span>;
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Scala</span>
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">toUpperCase</span><span style="color: #2aa198;">(</span>input<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">String</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">String</span> <span style="color: #859900; font-weight: bold;">=</span> ...
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">trim</span><span style="color: #2aa198;">(</span>input<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">String</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">String</span> <span style="color: #859900; font-weight: bold;">=</span> ...
+
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">toUpperCaseAndTrim</span> <span style="color: #859900; font-weight: bold;">=</span> compose<span style="color: #2aa198;">(</span>toUpperCase, trim<span style="color: #2aa198;">)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Haskell</span>
+<span style="color: #268bd2;">toUpperCase</span> <span style="color: #268bd2;">::</span> <span style="color: #b58900;">String</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">String</span>
+<span style="color: #268bd2;">trim</span> <span style="color: #268bd2;">::</span> <span style="color: #b58900;">String</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">String</span>
+
+<span style="color: #268bd2;">toUpperCaseAndTrim</span> <span style="color: #268bd2;">=</span> toUpperCase <span style="color: #268bd2;">.</span> trim
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org357ed7c">
+<h4 id="org357ed7c">Monadic Function Composition</h4>
+<div class="org-src-container">
+
+<pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
+<span style="color: #b58900;">Promise</span><span style="color: #2aa198;">&lt;</span>String<span style="color: #2aa198;">&gt;</span> <span style="color: #268bd2;">toUpperCase</span><span style="color: #2aa198;">(</span><span style="color: #b58900;">String</span> <span style="color: #268bd2;">input</span><span style="color: #2aa198;">)</span> <span style="color: #2aa198;">{</span> ... <span style="color: #2aa198;">}</span>
+<span style="color: #b58900;">Promise</span><span style="color: #2aa198;">&lt;</span><span style="color: #b58900;">String</span><span style="color: #2aa198;">&gt;</span> <span style="color: #268bd2;">trim</span><span style="color: #2aa198;">(</span><span style="color: #b58900;">String</span> <span style="color: #268bd2;">input</span><span style="color: #2aa198;">)</span> <span style="color: #2aa198;">{</span> ... <span style="color: #2aa198;">}</span>
+
+<span style="color: #b58900;">Promise</span><span style="color: #2aa198;">&lt;</span><span style="color: #b58900;">String</span><span style="color: #2aa198;">&gt;</span> <span style="color: #268bd2;">toUpperCaseAndTrimService</span><span style="color: #2aa198;">(</span><span style="color: #b58900;">String</span> <span style="color: #268bd2;">input</span><span style="color: #2aa198;">)</span> <span style="color: #2aa198;">{</span>
+  <span style="color: #859900; font-weight: bold;">return</span> monadCompose<span style="color: #b58900;">(</span>toUpperCaseService, trimService<span style="color: #b58900;">)(</span>input<span style="color: #b58900;">)</span>;
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Scala</span>
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">toUpperCase</span><span style="color: #2aa198;">(</span>input<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">String</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Promise</span><span style="color: #2aa198;">[</span><span style="color: #268bd2; font-weight: bold;">String</span><span style="color: #2aa198;">]</span> <span style="color: #859900; font-weight: bold;">=</span> ...
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">trim</span><span style="color: #2aa198;">(</span>input<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">String</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Promise</span><span style="color: #2aa198;">[</span><span style="color: #268bd2; font-weight: bold;">String</span><span style="color: #2aa198;">]</span> <span style="color: #859900; font-weight: bold;">=</span> ...
+
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">toUpperCaseAndTrim</span> <span style="color: #859900; font-weight: bold;">=</span> monadCompose<span style="color: #2aa198;">(</span>toUpperCaseService, trimService<span style="color: #2aa198;">)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Haskell</span>
+<span style="color: #268bd2;">toUpperCase</span> <span style="color: #268bd2;">::</span> <span style="color: #b58900;">String</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">Promise</span> <span style="color: #b58900;">String</span>
+<span style="color: #268bd2;">trim</span> <span style="color: #268bd2;">::</span> <span style="color: #b58900;">String</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">Promise</span> <span style="color: #b58900;">String</span>
+
+<span style="color: #586e75;">-- </span><span style="color: #586e75;">The "fish" operator or Kleisil arrow does monad composition in Haskell</span>
+<span style="color: #268bd2;">toUpperCaseAndTrim</span> <span style="color: #268bd2;">=</span> toUpperCase <span style="color: #268bd2;">&gt;=&gt;</span> trim
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf7f0f30">
+<h3 id="orgf7f0f30">Something to do with Sequential Computations?</h3>
+<p class="fragment (appear)">
+In most languages sequence is implied:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="fragment (appear)"><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">main</span><span style="color: #2aa198;">()</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">{</span>
+  <span style="color: #586e75;">// </span><span style="color: #586e75;">Executes doA then doB then doC and then returns a result</span>
+  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #268bd2;">a</span> <span style="color: #859900; font-weight: bold;">=</span> doA<span style="color: #b58900;">()</span>;
+  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #268bd2;">b</span> <span style="color: #859900; font-weight: bold;">=</span> doB<span style="color: #b58900;">()</span>;
+  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #268bd2;">c</span> <span style="color: #859900; font-weight: bold;">=</span> doC<span style="color: #b58900;">()</span>;
+  a + b + c
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orge6de8fd">
+<h4 id="orge6de8fd">But in some languages that isn't the case</h4>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Executes in an arbitrary order as everything is lazy</span>
+<span style="color: #268bd2;">main</span> <span style="color: #268bd2;">=</span>
+  <span style="color: #859900; font-weight: bold;">let</span> a <span style="color: #268bd2;">=</span> doA
+      b <span style="color: #268bd2;">=</span> doB
+      c <span style="color: #268bd2;">=</span> doC
+  <span style="color: #859900; font-weight: bold;">in</span> a <span style="color: #268bd2;">+</span> b <span style="color: #268bd2;">+</span> c
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org4ed9e79">
+<h4 id="org4ed9e79">Monads imply sequential computation</h4>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Executes doA then doB then doC and then returns a result</span>
+<span style="color: #268bd2;">main</span> <span style="color: #268bd2;">=</span> <span style="color: #859900; font-weight: bold;">do</span>
+  a <span style="color: #268bd2;">&lt;-</span> doA
+  b <span style="color: #268bd2;">&lt;-</span> doB
+  c <span style="color: #268bd2;">&lt;-</span> doC
+  pure a <span style="color: #268bd2;">+</span> b <span style="color: #268bd2;">+</span> c
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orga2eb2d0">
+<h3 id="orga2eb2d0">Something for managing side effects?</h3>
+<div class="outline-text-3" id="text-orga2eb2d0">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgb5d9fdb">
+<h4 id="orgb5d9fdb">In some languages we can freely mix side-effects into normal code:</h4>
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">add</span><span style="color: #2aa198;">(</span>a<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span>, b<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">{</span>
+  println<span style="color: #b58900;">(</span><span style="color: #2aa198;">"Hello World!"</span><span style="color: #b58900;">)</span>
+  a + b
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org7ff35c7">
+<h4 id="org7ff35c7">But not in all languages</h4>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><span style="color: #268bd2;">add</span> <span style="color: #268bd2;">::</span> <span style="color: #b58900;">Int</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">Int</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">Int</span>
+<span style="color: #268bd2;">add</span> a b <span style="color: #268bd2;">=</span> <span style="color: #859900; font-weight: bold;">do</span>
+  println <span style="color: #2aa198;">"Hello World"</span> <span style="color: #586e75;">-- </span><span style="color: #586e75;">ERROR! Doesn't compile</span>
+  a <span style="color: #268bd2;">+</span> b
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orga8a6860">
+<h4 id="orga8a6860">Instead we have to mark side effecting functions with a type</h4>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><span style="color: #268bd2;">add</span> <span style="color: #268bd2;">::</span> <span style="color: #b58900;">Int</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">Int</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">IO</span> <span style="color: #b58900;">Int</span>
+<span style="color: #268bd2;">add</span> a b <span style="color: #268bd2;">=</span> <span style="color: #859900; font-weight: bold;">do</span>
+  println <span style="color: #2aa198;">"Hello World"</span> <span style="color: #586e75;">-- </span><span style="color: #586e75;">Compiles</span>
+  pure <span style="color: #268bd2;">$</span> a <span style="color: #268bd2;">+</span> b
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgaf8fa08">
+<h4 id="orgaf8fa08">Those types are Monadic which makes them easy to compose!</h4>
+
+</section>
+</section>
+<section>
+<section id="slide-org29a6c70">
+<h3 id="org29a6c70">"A Monoid in the category of Endofunctors"</h3>
+
+
+</section>
+</section>
+<section>
+<section id="slide-org2641649">
+<h2 id="org2641649">Wait&#x2026; Something is missing!</h2>
+<div class="outline-text-2" id="text-org2641649">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org675db96">
+<h3 id="org675db96">What about Maybe/List/Promise/Reader/Writer/State/Eff?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orged82dab">
+<h3 id="orged82dab">Well&#x2026;</h3>
+<p class="fragment (appear)">
+They are Monads!
+</p>
+
+<p class="fragment (appear)">
+But that's the boring bit about them.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org722e74c">
+<h3 id="org722e74c">Each of those types do something unique and valuable!</h3>
+<p class="fragment (appear)">
+And it has <span class="underline">nothing</span> to do with Monads!
+</p>
+
+<ul>
+<li class="fragment appear">Maybe implements the "Null" pattern</li>
+<li class="fragment appear">List handles multiple values</li>
+<li class="fragment appear">Promise handles asynchronous values</li>
+<li class="fragment appear">Reader handles dependency injection</li>
+<li class="fragment appear">Writer handles logging</li>
+<li class="fragment appear">State handles arbitrary state</li>
+<li class="fragment appear">Eff handles side effects</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgae4fbd7">
+<h3 id="orgae4fbd7">But they're all generic types</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgabe1321">
+<h3 id="orgabe1321">And we want to be able to compose them&#x2026;</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf07d494">
+<h3 id="orgf07d494">And <span class="underline">that's</span> when Monads are useful</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orge713601">
+<h2 id="orge713601">So why should I care?</h2>
+<div class="outline-text-2" id="text-orge713601">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgc9f1fa7">
+<h3 id="orgc9f1fa7">Something something design pattern</h3>
+</section>
+</section>
+<section>
+<section id="slide-org1295f05">
+<h3 id="org1295f05">Something something learn one apply to lots of different types</h3>
+</section>
+</section>
+<section>
+<section id="slide-org95002dd">
+<h3 id="org95002dd">The core definition of Monads is bind and pure</h3>
+</section>
+</section>
+<section>
+<section id="slide-orge0168ec">
+<h3 id="orge0168ec">Everything else is clever tricks that use Monads t</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org724f2ab">
+<h2 id="org724f2ab">In Summary</h2>
+<div class="outline-text-2" id="text-org724f2ab">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org6bc3627">
+<h3 id="org6bc3627">A Monad implies something that:</h3>
+<ul>
+<li>Can use <code>flatMap</code>, <code>bind</code> and <code>pure</code></li>
+<li>f</li>
+<li></li>
+
+<li></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org6197027">
+<h2 id="org6197027">Thanks!</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-org79195d6">
+<h2 id="org79195d6">Questions?</h2>
+
+<div class="figure">
+<p><img src="./img/mindblown.gif" alt="mindblown.gif" height="200%," width="200%" />
+</p>
+</div>
+</section>
+</section>
+</div>
+</div>
+<script src="http://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/head.min.js"></script>
+<script src="http://cdn.jsdelivr.net/reveal.js/3.0.0/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>

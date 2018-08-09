@@ -1,0 +1,367 @@
+#+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
+#+REVEAL_HLEVEL: 3
+#+REVEAL_TRANS: linear
+#+REVEAL_EXTRA_CSS: ./talk.css
+
+#+OPTIONS: reveal_title_slide:"<h1>%t</h1><h2>%a</h2>"
+#+OPTIONS: toc:nil
+#+OPTIONS: num:nil
+
+#+MACRO: color @@html:<font color="$1">$2</font>@@
+
+#+Title: What's a Monad?
+#+Author: Jake Woods
+
+* What's this talk about?
+  #+ATTR_REVEAL: :frag (appear)
+  Monads!
+
+  #+ATTR_REVEAL: :frag (appear)
+  Notoriously tricky to understand.
+
+  #+ATTR_REVEAL: :frag (appear)
+  Impossible to explain!
+
+  #+ATTR_REVEAL: :frag (appear)
+  ... I'm {{{color(red, not)}}} going to teach you how to use them.
+
+* What's this talk about?
+  #+ATTR_REVEAL: :frag (appear)
+  Monads?
+
+  #+ATTR_REVEAL: :frag (appear)
+  What {{{color(green, are)}}} they?
+
+  #+ATTR_REVEAL: :frag (appear)
+  What {{{color(red, aren't)}}} they?
+
+  #+ATTR_REVEAL: :frag (appear)
+  Should I care?
+
+* So what's a Monad?
+
+** Something that's hard to learn!
+
+** Why?
+
+** "Monad" refers to _lots_ of different concepts.
+
+** It's an overloaded term!
+
+** It's like trying to learn "Science"
+
+  #+ATTR_REVEAL: :frag (appear)
+  You need to learn it bit-by-bit
+
+* Let's look at some types of "Monads"
+
+** An object with a flatMap method
+
+    #+BEGIN_SRC javascript
+    [1,2,3].flatMap(a => [a, a])
+    // Returns [1,1,2,2,3,3]
+    #+END_SRC
+
+** A type with a bind function
+
+    #+BEGIN_SRC haskell
+    -- >>= is pronounced bind in Haskell. Wat!
+    [1,2,3] >>= \a -> [a, a]
+    -- Returns [1,1,2,2,3,3]
+    #+END_SRC
+
+** Something I can use For/Do comprehension on
+
+    #+BEGIN_SRC scala
+    // Scala
+    for {
+      a <- Some(5)
+      b <- Some(10)
+    } yield a + b
+
+    // Returns: Some(15)
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    do
+      a <- Just 5
+      b <- Just 10
+      pure a + b
+
+    -- Returns: Just 15
+    #+END_SRC
+
+** An interface/typeclass defining: join and pure
+    #+BEGIN_SRC c++
+    // Java-ish
+    Monad<A> join(Monad<Monad<A>> nested);
+    Monad<A> pure(A a);
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    def join(nested: Monad[Monad[A]]): Monad[A]
+    def pure(a: A): Monad[A]
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    join :: (Monad m) => m (m a) -> m a
+    pure :: (Monad m) => a -> m a
+    #+END_SRC
+
+*** Example
+
+    For any Monad:
+    #+BEGIN_SRC javascript
+    pure(1)             // type: Monad<Int>
+
+    pure(pure(1))       // type: Monad<Monad<Int>>
+
+    join(pure(pure(1))) // type: Monad<Int>
+    #+END_SRC
+
+    For a concrete Monad:
+    #+BEGIN_SRC javascript
+    List.pure(1)                        // type: List<Int>
+
+    List.pure(List.pure(1))             // type: List<List<Int>>
+
+    List.join(List.pure(List.pure(1))   // type: List<Int>
+    #+END_SRC
+
+** An interface/typeclass defining: bind and pure
+    #+BEGIN_SRC c++
+    // Java-ish
+    Monad<B> bind<A,B>(Monad<A> a, Function<A, Monad<B>> fn);
+    Monad<A> pure<A>(A a)
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    def bind[A,B](m: Monad[A], fn: A => Monad[B]): Monad[B]
+    def pure[A](a: A): Monad[A]
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    bind :: (Monad m) => m a -> (a -> m b) -> m b
+    pure :: (Monad m) => a -> m a
+    #+END_SRC
+
+*** Example
+
+    For any Monad:
+    #+BEGIN_SRC javascript
+    bind(pure(1), function(value) {
+      return pure(value + 1)
+    });
+
+    // Returns Monad(2)
+    #+END_SRC
+
+    For a concrete Monad:
+    #+BEGIN_SRC javascript
+    List.bind(List.pure(1), function(value) {
+      return List.pure("Hello");
+    });
+    // Returns ["Hello"]
+
+    List.bind([1, 2, 3], function(value) {
+      return pure("Hello " + value.toString)
+    });
+    // Returns ["Hello 1", "Hello 2", "Hello 3"]
+    #+END_SRC
+
+** A Burrito?
+
+  [[./img/burrito.png]]
+
+  (Source: https://chrisdone.com/posts/monads-are-burritos)
+
+** A way of composing certain types of functions
+
+*** Normal Function Composition
+
+    #+BEGIN_SRC c++
+    // Java-ish
+    String toUpperCase(String input) { ... }
+    String trim(String input) { ... }
+
+    String toUpperCaseAndTrim(String input) {
+      return compose(toUpperCase, trim)(input);
+    }
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    def toUpperCase(input: String): String = ...
+    def trim(input: String): String = ...
+
+    def toUpperCaseAndTrim = compose(toUpperCase, trim)
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    toUpperCase :: String -> String
+    trim :: String -> String
+
+    toUpperCaseAndTrim = toUpperCase . trim
+    #+END_SRC
+
+*** Monadic Function Composition
+
+    #+BEGIN_SRC c++
+    // Java-ish
+    Promise<String> toUpperCase(String input) { ... }
+    Promise<String> trim(String input) { ... }
+
+    Promise<String> toUpperCaseAndTrimService(String input) {
+      return monadCompose(toUpperCaseService, trimService)(input);
+    }
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    def toUpperCase(input: String): Promise[String] = ...
+    def trim(input: String): Promise[String] = ...
+
+    def toUpperCaseAndTrim = monadCompose(toUpperCaseService, trimService)
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    toUpperCase :: String -> Promise String
+    trim :: String -> Promise String
+
+    -- The "fish" operator or Kleisil arrow does monad composition in Haskell
+    toUpperCaseAndTrim = toUpperCase >=> trim
+    #+END_SRC
+
+** Something to do with Sequential Computations?
+
+    #+ATTR_REVEAL: :frag (appear)
+    In most languages sequence is implied:
+
+    #+ATTR_REVEAL: :frag (appear)
+    #+BEGIN_SRC scala
+    def main() = {
+      // Executes doA then doB then doC and then returns a result
+      val a = doA();
+      val b = doB();
+      val c = doC();
+      a + b + c
+    }
+    #+END_SRC
+
+*** But in some languages that isn't the case
+
+    #+BEGIN_SRC haskell
+    -- Executes in an arbitrary order as everything is lazy
+    main =
+      let a = doA
+          b = doB
+          c = doC
+      in a + b + c
+    #+END_SRC
+
+*** Monads imply sequential computation
+
+    #+BEGIN_SRC haskell
+    -- Executes doA then doB then doC and then returns a result
+    main = do
+      a <- doA
+      b <- doB
+      c <- doC
+      pure a + b + c
+    #+END_SRC
+
+** Something for managing side effects?
+
+*** In some languages we can freely mix side-effects into normal code:
+
+    #+BEGIN_SRC scala
+    def add(a: Int, b: Int): Int = {
+      println("Hello World!")
+      a + b
+    }
+    #+END_SRC
+
+*** But not in all languages
+
+    #+BEGIN_SRC haskell
+    add :: Int -> Int -> Int
+    add a b = do
+      println "Hello World" -- ERROR! Doesn't compile
+      a + b
+    #+END_SRC
+
+*** Instead we have to mark side effecting functions with a type
+
+    #+BEGIN_SRC haskell
+    add :: Int -> Int -> IO Int
+    add a b = do
+      println "Hello World" -- Compiles
+      pure $ a + b
+    #+END_SRC
+
+*** Those types are Monadic which makes them easy to compose!
+
+** "A Monoid in the category of Endofunctors"
+
+* They're all Monads!
+
+** No wonder they're so hard to learn...
+
+* Wait... Something is missing!
+
+** What about Maybe/List/Promise/Reader/Writer/State/Eff?
+
+** Well...
+  #+ATTR_REVEAL: :frag (appear)
+  They are Monads!
+
+  #+ATTR_REVEAL: :frag (appear)
+  But that's the boring bit about them.
+
+** Each of those types do something unique and valuable!
+  #+ATTR_REVEAL: :frag (appear)
+  And it has _nothing_ to do with Monads!
+
+  #+ATTR_REVEAL: :frag (appear)
+  - Maybe implements the "Null" pattern
+  - List handles multiple values
+  - Promise handles asynchronous values
+  - Reader handles dependency injection
+  - Writer handles logging
+  - State handles arbitrary state
+  - Eff handles side effects
+
+** But they're all generic types
+
+** And we want to be able to compose them...
+
+** And _that's_ when Monads are useful
+
+* So why should I care?
+
+** Something something design pattern
+** Something something learn one apply to lots of different types
+** The core definition of Monads is bind and pure
+** Everything else is clever tricks that use Monads t
+
+* In Summary
+
+** A Monad implies something that:
+  - Can use ~flatMap~, ~bind~ and ~pure~
+  - f
+  -
+  -
+
+* Thanks!
+
+*  Questions?
+
+#+ATTR_HTML: :height 200%, :width 200%
+[[./img/mindblown.gif]]
