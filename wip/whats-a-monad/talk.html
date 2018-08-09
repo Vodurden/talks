@@ -7,9 +7,9 @@
 <style type="text/css">
 .underline { text-decoration: underline; }
 </style>
-<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/reveal.css"/>
+<link rel="stylesheet" href="../../lib/reveal.js-3.0.0/css/reveal.css"/>
 
-<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/theme/moon.css" id="theme"/>
+<link rel="stylesheet" href="../../lib/reveal.js-3.0.0/css/theme/moon.css" id="theme"/>
 
 <link rel="stylesheet" href="./talk.css"/>
 
@@ -19,7 +19,7 @@
         var link = document.createElement( 'link' );
         link.rel = 'stylesheet';
         link.type = 'text/css';
-        link.href = 'http://cdn.jsdelivr.net/reveal.js/3.0.0/css/print/pdf.css';
+        link.href = '../../lib/reveal.js-3.0.0/css/print/pdf.css';
         document.getElementsByTagName( 'head' )[0].appendChild( link );
     }
 </script>
@@ -31,8 +31,8 @@
 </section>
 
 <section>
-<section id="slide-org88a0eef">
-<h2 id="org88a0eef">What's this talk about?</h2>
+<section id="slide-orgb3e695f">
+<h2 id="orgb3e695f">What's this talk about?</h2>
 <p class="fragment (appear)">
 Monads!
 </p>
@@ -52,8 +52,8 @@ Impossible to explain!
 </section>
 </section>
 <section>
-<section id="slide-orge989490">
-<h2 id="orge989490">What's this talk about?</h2>
+<section id="slide-orgf101f3d">
+<h2 id="orgf101f3d">What's this talk about?</h2>
 <p class="fragment (appear)">
 Monads?
 </p>
@@ -73,39 +73,39 @@ Should I care?
 </section>
 </section>
 <section>
-<section id="slide-org0ca062c">
-<h2 id="org0ca062c">So what's a Monad?</h2>
-<div class="outline-text-2" id="text-org0ca062c">
+<section id="slide-org0b47584">
+<h2 id="org0b47584">So what's a Monad?</h2>
+<div class="outline-text-2" id="text-org0b47584">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org870850f">
-<h3 id="org870850f">Something that's hard to learn!</h3>
+<section id="slide-orge3ace96">
+<h3 id="orge3ace96">Something that's hard to learn!</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-orgf852bb9">
-<h3 id="orgf852bb9">Why?</h3>
+<section id="slide-org97948ae">
+<h3 id="org97948ae">Why?</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org3f1c3db">
-<h3 id="org3f1c3db">"Monad" refers to <span class="underline">lots</span> of different concepts.</h3>
+<section id="slide-orga0c91b0">
+<h3 id="orga0c91b0">"Monad" refers to <span class="underline">lots</span> of different concepts.</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org2fd587e">
-<h3 id="org2fd587e">It's an overloaded term!</h3>
+<section id="slide-orgcf9dbee">
+<h3 id="orgcf9dbee">It's an overloaded term!</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org2c9f97c">
-<h3 id="org2c9f97c">It's like trying to learn "Science"</h3>
+<section id="slide-orgf698885">
+<h3 id="orgf698885">It's like trying to learn "Science"</h3>
 <p class="fragment (appear)">
 You need to learn it bit-by-bit
 </p>
@@ -113,15 +113,15 @@ You need to learn it bit-by-bit
 </section>
 </section>
 <section>
-<section id="slide-org6699234">
-<h2 id="org6699234">Let's look at some types of "Monads"</h2>
-<div class="outline-text-2" id="text-org6699234">
+<section id="slide-org6eceabc">
+<h2 id="org6eceabc">Let's look at some types of "Monads"</h2>
+<div class="outline-text-2" id="text-org6eceabc">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org54546ef">
-<h3 id="org54546ef">An object with a flatMap method</h3>
+<section id="slide-org05c2bfe">
+<h3 id="org05c2bfe">An object with a flatMap method</h3>
 <div class="org-src-container">
 
 <pre  class="src src-javascript"><span style="color: #2aa198;">[</span><span style="color: #6c71c4;">1</span>,<span style="color: #6c71c4;">2</span>,<span style="color: #6c71c4;">3</span><span style="color: #2aa198;">]</span>.flatMap<span style="color: #2aa198;">(</span>a =&gt; <span style="color: #b58900;">[</span>a, a<span style="color: #b58900;">]</span><span style="color: #2aa198;">)</span>
@@ -132,8 +132,8 @@ You need to learn it bit-by-bit
 </section>
 </section>
 <section>
-<section id="slide-org208c497">
-<h3 id="org208c497">A type with a bind function</h3>
+<section id="slide-org7b5ecb8">
+<h3 id="org7b5ecb8">A type with a bind function</h3>
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">&gt;&gt;= is pronounced bind in Haskell. Wat!</span>
@@ -145,8 +145,8 @@ You need to learn it bit-by-bit
 </section>
 </section>
 <section>
-<section id="slide-org8216dfc">
-<h3 id="org8216dfc">Something I can use For/Do comprehension on</h3>
+<section id="slide-orgf047802">
+<h3 id="orgf047802">Something I can use For/Do comprehension on</h3>
 <div class="org-src-container">
 
 <pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Scala</span>
@@ -174,8 +174,8 @@ You need to learn it bit-by-bit
 </section>
 </section>
 <section>
-<section id="slide-orgc32af47">
-<h3 id="orgc32af47">An interface/typeclass defining: join and pure</h3>
+<section id="slide-org065b20a">
+<h3 id="org065b20a">An interface/typeclass defining: join and pure</h3>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -203,8 +203,8 @@ You need to learn it bit-by-bit
 </section>
 </section>
 <section>
-<section id="slide-orgfcd8fd4">
-<h4 id="orgfcd8fd4">Example</h4>
+<section id="slide-org3a9a344">
+<h4 id="org3a9a344">Example</h4>
 <p>
 For any Monad:
 </p>
@@ -234,8 +234,8 @@ List.join<span style="color: #2aa198;">(</span>List.pure<span style="color: #b58
 </section>
 </section>
 <section>
-<section id="slide-org5d95cfc">
-<h3 id="org5d95cfc">An interface/typeclass defining: bind and pure</h3>
+<section id="slide-org8c5df02">
+<h3 id="org8c5df02">An interface/typeclass defining: bind and pure</h3>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -263,8 +263,8 @@ List.join<span style="color: #2aa198;">(</span>List.pure<span style="color: #b58
 </section>
 </section>
 <section>
-<section id="slide-org3d916f0">
-<h4 id="org3d916f0">Example</h4>
+<section id="slide-orgca36562">
+<h4 id="orgca36562">Example</h4>
 <p>
 For any Monad:
 </p>
@@ -298,8 +298,8 @@ List.bind<span style="color: #2aa198;">(</span><span style="color: #b58900;">[</
 </section>
 </section>
 <section>
-<section id="slide-orgd0bf3fa">
-<h3 id="orgd0bf3fa">A Burrito?</h3>
+<section id="slide-org4140059">
+<h3 id="org4140059">A Burrito?</h3>
 
 <div class="figure">
 <p><img src="./img/burrito.png" alt="burrito.png" />
@@ -313,15 +313,15 @@ List.bind<span style="color: #2aa198;">(</span><span style="color: #b58900;">[</
 </section>
 </section>
 <section>
-<section id="slide-orgdc803fa">
-<h3 id="orgdc803fa">A way of composing certain types of functions</h3>
-<div class="outline-text-3" id="text-orgdc803fa">
+<section id="slide-orgd374282">
+<h3 id="orgd374282">A way of composing certain types of functions</h3>
+<div class="outline-text-3" id="text-orgd374282">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org273445c">
-<h4 id="org273445c">Normal Function Composition</h4>
+<section id="slide-org5b9f6ef">
+<h4 id="org5b9f6ef">Normal Function Composition</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -357,8 +357,8 @@ List.bind<span style="color: #2aa198;">(</span><span style="color: #b58900;">[</
 </section>
 </section>
 <section>
-<section id="slide-org357ed7c">
-<h4 id="org357ed7c">Monadic Function Composition</h4>
+<section id="slide-org327bbe7">
+<h4 id="org327bbe7">Monadic Function Composition</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -395,8 +395,8 @@ List.bind<span style="color: #2aa198;">(</span><span style="color: #b58900;">[</
 </section>
 </section>
 <section>
-<section id="slide-orgf7f0f30">
-<h3 id="orgf7f0f30">Something to do with Sequential Computations?</h3>
+<section id="slide-org04898fb">
+<h3 id="org04898fb">Something to do with Sequential Computations?</h3>
 <p class="fragment (appear)">
 In most languages sequence is implied:
 </p>
@@ -416,8 +416,8 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-orge6de8fd">
-<h4 id="orge6de8fd">But in some languages that isn't the case</h4>
+<section id="slide-org2be3864">
+<h4 id="org2be3864">But in some languages that isn't the case</h4>
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Executes in an arbitrary order as everything is lazy</span>
@@ -432,8 +432,8 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-org4ed9e79">
-<h4 id="org4ed9e79">Monads imply sequential computation</h4>
+<section id="slide-org1855152">
+<h4 id="org1855152">Monads imply sequential computation</h4>
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Executes doA then doB then doC and then returns a result</span>
@@ -448,15 +448,15 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-orga2eb2d0">
-<h3 id="orga2eb2d0">Something for managing side effects?</h3>
-<div class="outline-text-3" id="text-orga2eb2d0">
+<section id="slide-org16c7e1e">
+<h3 id="org16c7e1e">Something for managing side effects?</h3>
+<div class="outline-text-3" id="text-org16c7e1e">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-orgb5d9fdb">
-<h4 id="orgb5d9fdb">In some languages we can freely mix side-effects into normal code:</h4>
+<section id="slide-orgb7a01cd">
+<h4 id="orgb7a01cd">In some languages we can freely mix side-effects into normal code:</h4>
 <div class="org-src-container">
 
 <pre  class="src src-scala"><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">add</span><span style="color: #2aa198;">(</span>a<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span>, b<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">{</span>
@@ -469,8 +469,8 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-org7ff35c7">
-<h4 id="org7ff35c7">But not in all languages</h4>
+<section id="slide-org10247f2">
+<h4 id="org10247f2">But not in all languages</h4>
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><span style="color: #268bd2;">add</span> <span style="color: #268bd2;">::</span> <span style="color: #b58900;">Int</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">Int</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">Int</span>
@@ -483,8 +483,8 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-orga8a6860">
-<h4 id="orga8a6860">Instead we have to mark side effecting functions with a type</h4>
+<section id="slide-org79b2905">
+<h4 id="org79b2905">Instead we have to mark side effecting functions with a type</h4>
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><span style="color: #268bd2;">add</span> <span style="color: #268bd2;">::</span> <span style="color: #b58900;">Int</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">Int</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">IO</span> <span style="color: #b58900;">Int</span>
@@ -497,34 +497,46 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-orgaf8fa08">
-<h4 id="orgaf8fa08">Those types are Monadic which makes them easy to compose!</h4>
+<section id="slide-orgc26facc">
+<h4 id="orgc26facc">Those types are Monadic which makes them easy to compose!</h4>
 
 </section>
 </section>
 <section>
-<section id="slide-org29a6c70">
-<h3 id="org29a6c70">"A Monoid in the category of Endofunctors"</h3>
-
+<section id="slide-orge37295a">
+<h3 id="orge37295a">"A Monoid in the category of Endofunctors"</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org2641649">
-<h2 id="org2641649">Wait&#x2026; Something is missing!</h2>
-<div class="outline-text-2" id="text-org2641649">
+<section id="slide-orgc0251e1">
+<h2 id="orgc0251e1">They're all Monads!</h2>
+<div class="outline-text-2" id="text-orgc0251e1">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org675db96">
-<h3 id="org675db96">What about Maybe/List/Promise/Reader/Writer/State/Eff?</h3>
+<section id="slide-orgb067828">
+<h3 id="orgb067828">No wonder they're so hard to learn&#x2026;</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-orged82dab">
-<h3 id="orged82dab">Well&#x2026;</h3>
+<section id="slide-org19fc75f">
+<h2 id="org19fc75f">Wait&#x2026; Something is missing!</h2>
+<div class="outline-text-2" id="text-org19fc75f">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org9fc3356">
+<h3 id="org9fc3356">What about Maybe/List/Promise/Reader/Writer/State/Eff?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgce3c291">
+<h3 id="orgce3c291">Well&#x2026;</h3>
 <p class="fragment (appear)">
 They are Monads!
 </p>
@@ -536,8 +548,8 @@ But that's the boring bit about them.
 </section>
 </section>
 <section>
-<section id="slide-org722e74c">
-<h3 id="org722e74c">Each of those types do something unique and valuable!</h3>
+<section id="slide-orgf864c17">
+<h3 id="orgf864c17">Each of those types do something unique and valuable!</h3>
 <p class="fragment (appear)">
 And it has <span class="underline">nothing</span> to do with Monads!
 </p>
@@ -556,61 +568,61 @@ And it has <span class="underline">nothing</span> to do with Monads!
 </section>
 </section>
 <section>
-<section id="slide-orgae4fbd7">
-<h3 id="orgae4fbd7">But they're all generic types</h3>
+<section id="slide-org2d4f92a">
+<h3 id="org2d4f92a">But they're all generic types</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-orgabe1321">
-<h3 id="orgabe1321">And we want to be able to compose them&#x2026;</h3>
+<section id="slide-org8057e04">
+<h3 id="org8057e04">And we want to be able to compose them&#x2026;</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-orgf07d494">
-<h3 id="orgf07d494">And <span class="underline">that's</span> when Monads are useful</h3>
+<section id="slide-org4e8e569">
+<h3 id="org4e8e569">And <span class="underline">that's</span> when Monads are useful</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-orge713601">
-<h2 id="orge713601">So why should I care?</h2>
-<div class="outline-text-2" id="text-orge713601">
+<section id="slide-orgc877ad5">
+<h2 id="orgc877ad5">So why should I care?</h2>
+<div class="outline-text-2" id="text-orgc877ad5">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-orgc9f1fa7">
-<h3 id="orgc9f1fa7">Something something design pattern</h3>
+<section id="slide-orgb2a3615">
+<h3 id="orgb2a3615">Something something design pattern</h3>
 </section>
 </section>
 <section>
-<section id="slide-org1295f05">
-<h3 id="org1295f05">Something something learn one apply to lots of different types</h3>
+<section id="slide-org2681501">
+<h3 id="org2681501">Something something learn one apply to lots of different types</h3>
 </section>
 </section>
 <section>
-<section id="slide-org95002dd">
-<h3 id="org95002dd">The core definition of Monads is bind and pure</h3>
+<section id="slide-org42e9804">
+<h3 id="org42e9804">The core definition of Monads is bind and pure</h3>
 </section>
 </section>
 <section>
-<section id="slide-orge0168ec">
-<h3 id="orge0168ec">Everything else is clever tricks that use Monads t</h3>
+<section id="slide-org9d87013">
+<h3 id="org9d87013">Everything else is clever tricks that use Monads t</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org724f2ab">
-<h2 id="org724f2ab">In Summary</h2>
-<div class="outline-text-2" id="text-org724f2ab">
+<section id="slide-orgab8a2a7">
+<h2 id="orgab8a2a7">In Summary</h2>
+<div class="outline-text-2" id="text-orgab8a2a7">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org6bc3627">
-<h3 id="org6bc3627">A Monad implies something that:</h3>
+<section id="slide-org57dc227">
+<h3 id="org57dc227">A Monad implies something that:</h3>
 <ul>
 <li>Can use <code>flatMap</code>, <code>bind</code> and <code>pure</code></li>
 <li>f</li>
@@ -623,14 +635,14 @@ And it has <span class="underline">nothing</span> to do with Monads!
 </section>
 </section>
 <section>
-<section id="slide-org6197027">
-<h2 id="org6197027">Thanks!</h2>
+<section id="slide-org9b364b4">
+<h2 id="org9b364b4">Thanks!</h2>
 
 </section>
 </section>
 <section>
-<section id="slide-org79195d6">
-<h2 id="org79195d6">Questions?</h2>
+<section id="slide-org72a579c">
+<h2 id="org72a579c">Questions?</h2>
 
 <div class="figure">
 <p><img src="./img/mindblown.gif" alt="mindblown.gif" height="200%," width="200%" />
@@ -640,8 +652,8 @@ And it has <span class="underline">nothing</span> to do with Monads!
 </section>
 </div>
 </div>
-<script src="http://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/head.min.js"></script>
-<script src="http://cdn.jsdelivr.net/reveal.js/3.0.0/js/reveal.js"></script>
+<script src="../../lib/reveal.js-3.0.0/lib/js/head.min.js"></script>
+<script src="../../lib/reveal.js-3.0.0/js/reveal.js"></script>
 
 <script>
 // Full list of configuration options available here:
@@ -668,11 +680,11 @@ multiplex: {
 
 // Optional libraries used to extend on reveal.js
 dependencies: [
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+ { src: '../../lib/reveal.js-3.0.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+ { src: '../../lib/reveal.js-3.0.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '../../lib/reveal.js-3.0.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '../../lib/reveal.js-3.0.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: '../../lib/reveal.js-3.0.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
 });
 </script>
 </body>

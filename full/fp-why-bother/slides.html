@@ -7,9 +7,9 @@
 <style type="text/css">
 .underline { text-decoration: underline; }
 </style>
-<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/reveal.css"/>
+<link rel="stylesheet" href="../../lib/reveal.js-3.0.0/css/reveal.css"/>
 
-<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/theme/moon.css" id="theme"/>
+<link rel="stylesheet" href="../../lib/reveal.js-3.0.0/css/theme/moon.css" id="theme"/>
 
 
 <!-- If the query includes 'print-pdf', include the PDF print sheet -->
@@ -18,7 +18,7 @@
         var link = document.createElement( 'link' );
         link.rel = 'stylesheet';
         link.type = 'text/css';
-        link.href = 'http://cdn.jsdelivr.net/reveal.js/3.0.0/css/print/pdf.css';
+        link.href = '../../lib/reveal.js-3.0.0/css/print/pdf.css';
         document.getElementsByTagName( 'head' )[0].appendChild( link );
     }
 </script>
@@ -30,15 +30,15 @@
 </section>
 
 <section>
-<section id="slide-org3a29cc2">
-<h2 id="org3a29cc2">What are we going to learn today?</h2>
-<div class="outline-text-2" id="text-org3a29cc2">
+<section id="slide-orgfca233e">
+<h2 id="orgfca233e">What are we going to learn today?</h2>
+<div class="outline-text-2" id="text-orgfca233e">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org9b040f4">
-<h3 id="org9b040f4">Nothing!</h3>
+<section id="slide-org000be00">
+<h3 id="org000be00">Nothing!</h3>
 <p>
 I'm not going to teach you anything.
 </p>
@@ -50,33 +50,33 @@ No sales pitches!
 </section>
 </section>
 <section>
-<section id="slide-orga4d406a">
-<h2 id="orga4d406a">Instead! We're going to explore</h2>
-<div class="outline-text-2" id="text-orga4d406a">
+<section id="slide-orgc7f10c9">
+<h2 id="orgc7f10c9">Instead! We're going to explore</h2>
+<div class="outline-text-2" id="text-orgc7f10c9">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org4db3f10">
-<h3 id="org4db3f10">How do functional programmers think about problems?</h3>
+<section id="slide-orga82d9a1">
+<h3 id="orga82d9a1">How do functional programmers think about problems?</h3>
 </section>
 </section>
 <section>
-<section id="slide-orge730998">
-<h3 id="orge730998">Why do functional programmers bother with all this arcana?</h3>
+<section id="slide-orgcd006b3">
+<h3 id="orgcd006b3">Why do functional programmers bother with all this arcana?</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org8d881c0">
-<h2 id="org8d881c0">Caveat</h2>
-<div class="outline-text-2" id="text-org8d881c0">
+<section id="slide-orgcfdcf5f">
+<h2 id="orgcfdcf5f">Caveat</h2>
+<div class="outline-text-2" id="text-orgcfdcf5f">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org05c5464">
-<h3 id="org05c5464">My experience is with <b>statically typed</b> FP</h3>
+<section id="slide-org5e3dc46">
+<h3 id="org5e3dc46">My experience is with <b>statically typed</b> FP</h3>
 <p>
 I.e. Haskell and Scala
 </p>
@@ -84,8 +84,8 @@ I.e. Haskell and Scala
 </section>
 </section>
 <section>
-<section id="slide-org44c6725">
-<h3 id="org44c6725">Dynamically typed FP is perfectly valid!</h3>
+<section id="slide-org30db86e">
+<h3 id="org30db86e">Dynamically typed FP is perfectly valid!</h3>
 <p>
 I.e. Clojure and&#x2026; Ruby?
 </p>
@@ -101,15 +101,15 @@ Sorry!
 </section>
 </section>
 <section>
-<section id="slide-org6eabcd1">
-<h2 id="org6eabcd1">Learning FP</h2>
-<div class="outline-text-2" id="text-org6eabcd1">
+<section id="slide-orgedf2684">
+<h2 id="orgedf2684">Learning FP</h2>
+<div class="outline-text-2" id="text-orgedf2684">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org071ffbb">
-<h3 id="org071ffbb">Purity</h3>
+<section id="slide-org7e939e4">
+<h3 id="org7e939e4">Purity</h3>
 <div class="org-src-container">
 
 <pre  class="src src-scala"><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">add</span><span style="color: #2aa198;">(</span>a<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span>, b<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">{</span>
@@ -127,8 +127,8 @@ Sorry!
 </section>
 </section>
 <section>
-<section id="slide-org4fc0f7c">
-<h3 id="org4fc0f7c">Recursion</h3>
+<section id="slide-org59eb230">
+<h3 id="org59eb230">Recursion</h3>
 <div class="org-src-container">
 
 <pre  class="src src-scala"><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">fib</span><span style="color: #2aa198;">(</span>n<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">{</span>
@@ -150,8 +150,8 @@ Sorry!
 </section>
 </section>
 <section>
-<section id="slide-org0bdd459">
-<h3 id="org0bdd459">Currying</h3>
+<section id="slide-orgb05b62d">
+<h3 id="orgb05b62d">Currying</h3>
 <div class="org-src-container">
 
 <pre  class="src src-scala"><span style="color: #859900; font-weight: bold;">val</span> <span style="color: #268bd2;">add</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">(</span>a<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span><span style="color: #2aa198;">)</span> <span style="color: #859900; font-weight: bold;">=&gt;</span> <span style="color: #2aa198;">{</span>
@@ -171,8 +171,8 @@ Sorry!
 </section>
 </section>
 <section>
-<section id="slide-org78ac719">
-<h3 id="org78ac719">List processing</h3>
+<section id="slide-orgfc115c9">
+<h3 id="orgfc115c9">List processing</h3>
 <div class="org-src-container">
 
 <pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">List processing:</span>
@@ -185,8 +185,8 @@ numbers.map<span style="color: #2aa198;">(</span>i <span style="color: #859900; 
 </section>
 </section>
 <section>
-<section id="slide-org6904817">
-<h2 id="org6904817">Back to reality</h2>
+<section id="slide-org5dae770">
+<h2 id="org5dae770">Back to reality</h2>
 <div class="org-src-container">
 
 <pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Making decisions &amp; causing side effects:</span>
@@ -218,31 +218,31 @@ numbers.map<span style="color: #2aa198;">(</span>i <span style="color: #859900; 
 </section>
 </section>
 <section>
-<section id="slide-org948da23">
-<h3 id="org948da23">They look completely different!</h3>
+<section id="slide-org31c47d3">
+<h3 id="org31c47d3">They look completely different!</h3>
 </section>
 </section>
 <section>
-<section id="slide-org78f981a">
-<h3 id="org78f981a">How does this arcana relate to me?</h3>
+<section id="slide-org8a88933">
+<h3 id="org8a88933">How does this arcana relate to me?</h3>
 </section>
 </section>
 <section>
-<section id="slide-org11c3680">
-<h3 id="org11c3680">Why bother!?</h3>
+<section id="slide-org0c0ec7e">
+<h3 id="org0c0ec7e">Why bother!?</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org54ec104">
-<h2 id="org54ec104">Why bother with anything?</h2>
-<div class="outline-text-2" id="text-org54ec104">
+<section id="slide-org426e4f6">
+<h2 id="org426e4f6">Why bother with anything?</h2>
+<div class="outline-text-2" id="text-org426e4f6">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org3d94ef2">
-<h3 id="org3d94ef2">Programming</h3>
+<section id="slide-org2700114">
+<h3 id="org2700114">Programming</h3>
 <ul>
 <li class="fragment appear">Express problems to a computer</li>
 <li class="fragment appear">&#x2026; to make it do stuff</li>
@@ -253,8 +253,8 @@ numbers.map<span style="color: #2aa198;">(</span>i <span style="color: #859900; 
 </section>
 </section>
 <section>
-<section id="slide-org24a78ac">
-<h3 id="org24a78ac">Algorithms</h3>
+<section id="slide-orgbd73d87">
+<h3 id="orgbd73d87">Algorithms</h3>
 <ul>
 <li class="fragment appear">Express problems with math</li>
 <li class="fragment appear">&#x2026; to make it do new things it couldn't do before</li>
@@ -265,8 +265,8 @@ numbers.map<span style="color: #2aa198;">(</span>i <span style="color: #859900; 
 </section>
 </section>
 <section>
-<section id="slide-orgd865330">
-<h3 id="orgd865330">Design patterns</h3>
+<section id="slide-org466ee87">
+<h3 id="org466ee87">Design patterns</h3>
 <ul>
 <li class="fragment appear">Express problems with unthinking cargo cult code copying</li>
 <li class="fragment appear">&#x2026; to suck the fun out of everything</li>
@@ -278,8 +278,8 @@ numbers.map<span style="color: #2aa198;">(</span>i <span style="color: #859900; 
 </section>
 </section>
 <section>
-<section id="slide-org5651bdc">
-<h3 id="org5651bdc">Imperative programming</h3>
+<section id="slide-org923fd80">
+<h3 id="org923fd80">Imperative programming</h3>
 <ul>
 <li class="fragment appear">Express problems in terms of imperative statements</li>
 <li class="fragment appear">&#x2026; to make computers do stuff</li>
@@ -290,8 +290,8 @@ numbers.map<span style="color: #2aa198;">(</span>i <span style="color: #859900; 
 </section>
 </section>
 <section>
-<section id="slide-org3406663">
-<h3 id="org3406663">Object Oriented Programming</h3>
+<section id="slide-orgef585f3">
+<h3 id="orgef585f3">Object Oriented Programming</h3>
 <ul>
 <li class="fragment appear">Express problems in terms of objects</li>
 <li class="fragment appear">&#x2026; to make computers do stuff</li>
@@ -302,8 +302,8 @@ numbers.map<span style="color: #2aa198;">(</span>i <span style="color: #859900; 
 </section>
 </section>
 <section>
-<section id="slide-orgb64397d">
-<h3 id="orgb64397d">Functional Programming</h3>
+<section id="slide-org96dcf19">
+<h3 id="org96dcf19">Functional Programming</h3>
 <ul>
 <li class="fragment appear">Express problems in terms of functions</li>
 <li class="fragment appear">&#x2026; to make computers do stuff</li>
@@ -314,8 +314,8 @@ numbers.map<span style="color: #2aa198;">(</span>i <span style="color: #859900; 
 </section>
 </section>
 <section>
-<section id="slide-org281e830">
-<h3 id="org281e830">It's not a competition</h3>
+<section id="slide-org44c37cd">
+<h3 id="org44c37cd">It's not a competition</h3>
 <p>
 Functional programming <b>is not</b> morally better
 </p>
@@ -334,8 +334,8 @@ We just think it's a great way to:
 </section>
 </section>
 <section>
-<section id="slide-orge843749">
-<h2 id="orge843749">Why bother with FP?</h2>
+<section id="slide-org603a599">
+<h2 id="org603a599">Why bother with FP?</h2>
 <p>
 Short answer: Because we think pure functions are gods gift to the mortal world.
 </p>
@@ -343,8 +343,8 @@ Short answer: Because we think pure functions are gods gift to the mortal world.
 </section>
 </section>
 <section>
-<section id="slide-org8649480">
-<h3 id="org8649480">A totally legitimate description of pure functions</h3>
+<section id="slide-orgfce9102">
+<h3 id="orgfce9102">A totally legitimate description of pure functions</h3>
 <ul>
 <li class="fragment appear">Behavior <b>only</b> depends on parameters</li>
 <li class="fragment appear">Output <b>only</b> by returning a value</li>
@@ -359,8 +359,8 @@ Short answer: Because we think pure functions are gods gift to the mortal world.
 </section>
 </section>
 <section>
-<section id="slide-org5ae1ad4">
-<h3 id="org5ae1ad4">Impure example (Scala)</h3>
+<section id="slide-orgea56de8">
+<h3 id="orgea56de8">Impure example (Scala)</h3>
 <div class="org-src-container">
 
 <pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]</span>
@@ -380,8 +380,8 @@ println<span style="color: #2aa198;">(</span>gameDatabase<span style="color: #2a
 </section>
 </section>
 <section>
-<section id="slide-org1cfd85f">
-<h3 id="org1cfd85f">Impure example (Haskell)</h3>
+<section id="slide-orgf914310">
+<h3 id="orgf914310">Impure example (Haskell)</h3>
 <p>
 I started writing this example and it was so ugly I gave up.
 </p>
@@ -389,8 +389,8 @@ I started writing this example and it was so ugly I gave up.
 </section>
 </section>
 <section>
-<section id="slide-orgbdcba98">
-<h3 id="orgbdcba98">Impure example (JavaScript)</h3>
+<section id="slide-orgd7fce55">
+<h3 id="orgd7fce55">Impure example (JavaScript)</h3>
 <div class="org-src-container">
 
 <pre  class="src src-javascript"><span style="color: #586e75;">// </span><span style="color: #586e75;">Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]</span>
@@ -410,8 +410,8 @@ console.log<span style="color: #2aa198;">(</span>gameDatabase<span style="color:
 </section>
 </section>
 <section>
-<section id="slide-orgd33a2e8">
-<h3 id="orgd33a2e8">Pure Example (Scala)</h3>
+<section id="slide-org7322c82">
+<h3 id="org7322c82">Pure Example (Scala)</h3>
 <div class="org-src-container">
 
 <pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]</span>
@@ -432,8 +432,8 @@ println<span style="color: #2aa198;">(</span>goodGames<span style="color: #2aa19
 </section>
 </section>
 <section>
-<section id="slide-org131c7f9">
-<h3 id="org131c7f9">Pure Example (Haskell)</h3>
+<section id="slide-orgab60831">
+<h3 id="orgab60831">Pure Example (Haskell)</h3>
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]</span>
@@ -455,8 +455,8 @@ println<span style="color: #2aa198;">(</span>goodGames<span style="color: #2aa19
 </section>
 </section>
 <section>
-<section id="slide-org16dde53">
-<h3 id="org16dde53">Pure Example (JavaScript)</h3>
+<section id="slide-orgc19caeb">
+<h3 id="orgc19caeb">Pure Example (JavaScript)</h3>
 <div class="org-src-container">
 
 <pre  class="src src-javascript"><span style="color: #586e75;">// </span><span style="color: #586e75;">Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]</span>
@@ -476,8 +476,8 @@ println<span style="color: #2aa198;">(</span>goodGames<span style="color: #2aa19
 </section>
 </section>
 <section>
-<section id="slide-orgbdac827">
-<h3 id="orgbdac827">Benefits of purify</h3>
+<section id="slide-orgc29d74c">
+<h3 id="orgc29d74c">Benefits of purify</h3>
 <p>
 Super easy to test
 </p>
@@ -503,8 +503,8 @@ Bam!
 </section>
 </section>
 <section>
-<section id="slide-orga87e4ed">
-<h3 id="orga87e4ed">More benefits of purity</h3>
+<section id="slide-orgbc51cd3">
+<h3 id="orgbc51cd3">More benefits of purity</h3>
 <p>
 Everything you need to know is in one place.
 </p>
@@ -530,8 +530,8 @@ I also know it's not going to do something unexpected!
 </section>
 </section>
 <section>
-<section id="slide-orgf2ec862">
-<h3 id="orgf2ec862">Even <span class="underline">more</span> benefits of purity</h3>
+<section id="slide-org5c9c21f">
+<h3 id="org5c9c21f">Even <span class="underline">more</span> benefits of purity</h3>
 <p>
 The static typing is actually telling the truth!
 </p>
@@ -553,8 +553,8 @@ Pure functions are good friends: <b>They keep their promises</b>
 </section>
 </section>
 <section>
-<section id="slide-org8e379e7">
-<h3 id="org8e379e7">Drawbacks</h3>
+<section id="slide-org99d4816">
+<h3 id="org99d4816">Drawbacks</h3>
 <p>
 Pure functions can't do anything!
 </p>
@@ -562,8 +562,8 @@ Pure functions can't do anything!
 </section>
 </section>
 <section>
-<section id="slide-org4ce96e9">
-<h3 id="org4ce96e9">Things of note if you accept pure functions as your lord and saviour</h3>
+<section id="slide-orged81ba9">
+<h3 id="orged81ba9">Things of note if you accept pure functions as your lord and saviour</h3>
 <ul>
 <li class="fragment appear">Immutability becomes an obvious choice</li>
 <li class="fragment appear">Objects start to look a lot less useful</li>
@@ -574,8 +574,8 @@ Pure functions can't do anything!
 </section>
 </section>
 <section>
-<section id="slide-orgf313765">
-<h2 id="orgf313765">Lock the doors, it's <span class="underline">Monad</span> time</h2>
+<section id="slide-org4c4c327">
+<h2 id="org4c4c327">Lock the doors, it's <span class="underline">Monad</span> time</h2>
 <p class="fragment (appear)">
 Just kidding
 </p>
@@ -583,32 +583,32 @@ Just kidding
 </section>
 </section>
 <section>
-<section id="slide-orgcfaeb21">
-<h3 id="orgcfaeb21">How many of you had a fear response just then?</h3>
+<section id="slide-orga38bb4f">
+<h3 id="orga38bb4f">How many of you had a fear response just then?</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-orgaaf4b9d">
-<h3 id="orgaaf4b9d">The functional arcana is scary</h3>
+<section id="slide-org9f9b759">
+<h3 id="org9f9b759">The functional arcana is scary</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-orgfdba605">
-<h3 id="orgfdba605">It looks impenetrable</h3>
+<section id="slide-orgcedc631">
+<h3 id="orgcedc631">It looks impenetrable</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-orgea53d21">
-<h3 id="orgea53d21">So why do we do it?</h3>
+<section id="slide-orgf5ec18d">
+<h3 id="orgf5ec18d">So why do we do it?</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-orgcba36c0">
-<h3 id="orgcba36c0">Each scary buzzword is a <span class="underline">solution to a problem</span></h3>
+<section id="slide-org467177c">
+<h3 id="org467177c">Each scary buzzword is a <span class="underline">solution to a problem</span></h3>
 <p>
 A solution that leverages pure functions
 </p>
@@ -616,8 +616,8 @@ A solution that leverages pure functions
 </section>
 </section>
 <section>
-<section id="slide-org3aa6593">
-<h4 id="org3aa6593">Immutability</h4>
+<section id="slide-org9a3ee77">
+<h4 id="org9a3ee77">Immutability</h4>
 <p>
 Makes it possible to write pure functions
 </p>
@@ -625,8 +625,8 @@ Makes it possible to write pure functions
 </section>
 </section>
 <section>
-<section id="slide-org1ad38d8">
-<h4 id="org1ad38d8">Functors</h4>
+<section id="slide-orgd59c646">
+<h4 id="orgd59c646">Functors</h4>
 <p>
 Makes it easier to apply functions to different types of containers
 </p>
@@ -672,8 +672,8 @@ And lots of other stuff!
 </section>
 </section>
 <section>
-<section id="slide-org9260766">
-<h4 id="org9260766">Applicatives</h4>
+<section id="slide-org99f3a15">
+<h4 id="org99f3a15">Applicatives</h4>
 <p>
 Combine functions in parallel
 </p>
@@ -681,8 +681,8 @@ Combine functions in parallel
 </section>
 </section>
 <section>
-<section id="slide-orga44a7b4">
-<h4 id="orga44a7b4">Monads</h4>
+<section id="slide-org804fd7e">
+<h4 id="org804fd7e">Monads</h4>
 <p>
 Sequence functions together
 </p>
@@ -698,8 +698,8 @@ But Monads are <span class="underline">not</span> the core of FP and you can do 
 </section>
 </section>
 <section>
-<section id="slide-orgc1a3f89">
-<h4 id="orgc1a3f89">Fold</h4>
+<section id="slide-orgedda6b3">
+<h4 id="orgedda6b3">Fold</h4>
 <p>
 Makes it easier to apply functions to recursive data
 </p>
@@ -707,8 +707,8 @@ Makes it easier to apply functions to recursive data
 </section>
 </section>
 <section>
-<section id="slide-org433c04b">
-<h4 id="org433c04b">Traverse</h4>
+<section id="slide-orga15c2c1">
+<h4 id="orga15c2c1">Traverse</h4>
 <p>
 Makes it easier to apply functions to nested data structures
 </p>
@@ -716,8 +716,8 @@ Makes it easier to apply functions to nested data structures
 </section>
 </section>
 <section>
-<section id="slide-orgaa377c8">
-<h4 id="orgaa377c8">Typeclasses</h4>
+<section id="slide-org2224014">
+<h4 id="org2224014">Typeclasses</h4>
 <p>
 Make it easier to pick which function to apply to some data
 </p>
@@ -725,8 +725,8 @@ Make it easier to pick which function to apply to some data
 </section>
 </section>
 <section>
-<section id="slide-org8d102c7">
-<h4 id="org8d102c7">Free/Eff</h4>
+<section id="slide-org6e635f8">
+<h4 id="org6e635f8">Free/Eff</h4>
 <ul>
 <li>Compile functions into more functions</li>
 <li>Compose monads</li>
@@ -736,21 +736,21 @@ Make it easier to pick which function to apply to some data
 </section>
 </section>
 <section>
-<section id="slide-org32892c0">
-<h3 id="org32892c0">They're all solutions to <span class="underline">real world problems</span></h3>
+<section id="slide-org29288aa">
+<h3 id="org29288aa">They're all solutions to <span class="underline">real world problems</span></h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org7bfa3c0">
-<h2 id="org7bfa3c0">But Jake - Why do <span class="underline">you</span> bother!?</h2>
-<div class="outline-text-2" id="text-org7bfa3c0">
+<section id="slide-org0aa72bf">
+<h2 id="org0aa72bf">But Jake - Why do <span class="underline">you</span> bother!?</h2>
+<div class="outline-text-2" id="text-org0aa72bf">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org1bb2269">
-<h3 id="org1bb2269">I wanted to make <b>Video Games</b>!</h3>
+<section id="slide-orgb89ef3a">
+<h3 id="orgb89ef3a">I wanted to make <b>Video Games</b>!</h3>
 <ul>
 <li class="fragment appear">So I learned Visual Basic 6</li>
 <li class="fragment appear">And used it to build crappy games</li>
@@ -760,8 +760,8 @@ Make it easier to pick which function to apply to some data
 </section>
 </section>
 <section>
-<section id="slide-org0f14465">
-<h3 id="org0f14465">Then I learned about <span class="underline">OOP</span>!</h3>
+<section id="slide-orga649e68">
+<h3 id="orga649e68">Then I learned about <span class="underline">OOP</span>!</h3>
 <ul>
 <li class="fragment appear">Lots of C++</li>
 <li class="fragment appear">Lots of objects</li>
@@ -772,8 +772,8 @@ Make it easier to pick which function to apply to some data
 </section>
 </section>
 <section>
-<section id="slide-org32a9e66">
-<h3 id="org32a9e66">And then <span class="underline">it</span> happened</h3>
+<section id="slide-org5797802">
+<h3 id="org5797802">And then <span class="underline">it</span> happened</h3>
 <ul>
 <li class="fragment appear">I had a spaceship game with asteroids, bullets and rocks</li>
 <li class="fragment appear">And I asked the question:</li>
@@ -784,8 +784,8 @@ Make it easier to pick which function to apply to some data
 </section>
 </section>
 <section>
-<section id="slide-orgbcb09fc">
-<h3 id="orgbcb09fc">Boom!</h3>
+<section id="slide-orgf6fc48b">
+<h3 id="orgf6fc48b">Boom!</h3>
 <ul>
 <li class="fragment appear">None of the answers that I had at the time were satisfactory.</li>
 <li class="fragment appear">Double dispatch!? That's insane!</li>
@@ -796,8 +796,8 @@ Make it easier to pick which function to apply to some data
 </section>
 </section>
 <section>
-<section id="slide-org448135b">
-<h3 id="org448135b">Then I learned about Haskell</h3>
+<section id="slide-org71de4e2">
+<h3 id="org71de4e2">Then I learned about Haskell</h3>
 <ul>
 <li class="fragment appear">I install ghc!</li>
 <li class="fragment appear">And I completely fail to become productive</li>
@@ -808,8 +808,8 @@ Make it easier to pick which function to apply to some data
 </section>
 </section>
 <section>
-<section id="slide-org4907852">
-<h3 id="org4907852">A year passes</h3>
+<section id="slide-orgb2d1e64">
+<h3 id="orgb2d1e64">A year passes</h3>
 <ul>
 <li class="fragment appear">"Maybe I should give Haskell another go!"</li>
 <li class="fragment appear">I install ghc!</li>
@@ -822,8 +822,8 @@ Make it easier to pick which function to apply to some data
 </section>
 </section>
 <section>
-<section id="slide-org7401ac9">
-<h3 id="org7401ac9">Scala? I think?</h3>
+<section id="slide-org7876624">
+<h3 id="org7876624">Scala? I think?</h3>
 <ul>
 <li class="fragment appear">At some point I learn about Scala</li>
 <li class="fragment appear">I try to do FP in it</li>
@@ -836,8 +836,8 @@ Make it easier to pick which function to apply to some data
 </section>
 </section>
 <section>
-<section id="slide-org42c45f5">
-<h3 id="org42c45f5">I apply at REA</h3>
+<section id="slide-org8d504e1">
+<h3 id="org8d504e1">I apply at REA</h3>
 <ul>
 <li class="fragment appear">My toy robot is the first Scala code I've ever written. It's fully functional though!</li>
 <li class="fragment appear">I get in somehow</li>
@@ -851,14 +851,14 @@ Make it easier to pick which function to apply to some data
 </section>
 </section>
 <section>
-<section id="slide-org45c6642">
-<h3 id="org45c6642">That's my story!</h3>
+<section id="slide-org2552efe">
+<h3 id="org2552efe">That's my story!</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org52af762">
-<h2 id="org52af762">If you're just getting started</h2>
+<section id="slide-orgbdc9f01">
+<h2 id="orgbdc9f01">If you're just getting started</h2>
 <ul>
 <li class="fragment appear">You <b>don't</b> need to start with monads/functors/applicatives.</li>
 <li class="fragment appear">Just look for opportunities to write more pure functions</li>
@@ -869,8 +869,8 @@ Make it easier to pick which function to apply to some data
 </section>
 </section>
 <section>
-<section id="slide-orgd73cf60">
-<h2 id="orgd73cf60">Thank you!</h2>
+<section id="slide-org36797a7">
+<h2 id="org36797a7">Thank you!</h2>
 <p>
 Questions?
 </p>
@@ -878,8 +878,8 @@ Questions?
 </section>
 </div>
 </div>
-<script src="http://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/head.min.js"></script>
-<script src="http://cdn.jsdelivr.net/reveal.js/3.0.0/js/reveal.js"></script>
+<script src="../../lib/reveal.js-3.0.0/lib/js/head.min.js"></script>
+<script src="../../lib/reveal.js-3.0.0/js/reveal.js"></script>
 
 <script>
 // Full list of configuration options available here:
@@ -906,11 +906,11 @@ multiplex: {
 
 // Optional libraries used to extend on reveal.js
 dependencies: [
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+ { src: '../../lib/reveal.js-3.0.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+ { src: '../../lib/reveal.js-3.0.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '../../lib/reveal.js-3.0.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '../../lib/reveal.js-3.0.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: '../../lib/reveal.js-3.0.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
 });
 </script>
 </body>

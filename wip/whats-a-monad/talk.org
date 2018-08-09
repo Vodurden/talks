@@ -1,4 +1,4 @@
-#+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
+#+REVEAL_ROOT: ../../lib/reveal.js-3.0.0/
 #+REVEAL_HLEVEL: 3
 #+REVEAL_TRANS: linear
 #+REVEAL_EXTRA_CSS: ./talk.css
