@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>FP: why bother?</title>
+<meta name="author" content="(Jake Woods)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/reveal.css"/>
+
+<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/theme/moon.css" id="theme"/>
+
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'http://cdn.jsdelivr.net/reveal.js/3.0.0/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1>FP: why bother?</h1><h2>Jake Woods</h2>
+</section>
+
+<section>
+<section id="slide-org3a29cc2">
+<h2 id="org3a29cc2">What are we going to learn today?</h2>
+<div class="outline-text-2" id="text-org3a29cc2">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org9b040f4">
+<h3 id="org9b040f4">Nothing!</h3>
+<p>
+I'm not going to teach you anything.
+</p>
+
+<p>
+No sales pitches!
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orga4d406a">
+<h2 id="orga4d406a">Instead! We're going to explore</h2>
+<div class="outline-text-2" id="text-orga4d406a">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org4db3f10">
+<h3 id="org4db3f10">How do functional programmers think about problems?</h3>
+</section>
+</section>
+<section>
+<section id="slide-orge730998">
+<h3 id="orge730998">Why do functional programmers bother with all this arcana?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org8d881c0">
+<h2 id="org8d881c0">Caveat</h2>
+<div class="outline-text-2" id="text-org8d881c0">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org05c5464">
+<h3 id="org05c5464">My experience is with <b>statically typed</b> FP</h3>
+<p>
+I.e. Haskell and Scala
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org44c6725">
+<h3 id="org44c6725">Dynamically typed FP is perfectly valid!</h3>
+<p>
+I.e. Clojure and&#x2026; Ruby?
+</p>
+
+<p>
+I just don't do much of it so my examples are going to be biased
+</p>
+
+<p>
+Sorry!
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org6eabcd1">
+<h2 id="org6eabcd1">Learning FP</h2>
+<div class="outline-text-2" id="text-org6eabcd1">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org071ffbb">
+<h3 id="org071ffbb">Purity</h3>
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">add</span><span style="color: #2aa198;">(</span>a<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span>, b<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">{</span>
+  a + b
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (appear)">add<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span>, <span style="color: #6c71c4;">1</span><span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">It returns 2! Purely!!</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org4fc0f7c">
+<h3 id="org4fc0f7c">Recursion</h3>
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">fib</span><span style="color: #2aa198;">(</span>n<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">{</span>
+  <span style="color: #859900; font-weight: bold;">if</span><span style="color: #b58900;">(</span>n == <span style="color: #6c71c4;">0</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+    <span style="color: #6c71c4;">0</span>
+  <span style="color: #b58900;">}</span> <span style="color: #859900; font-weight: bold;">else</span> <span style="color: #b58900;">{</span>
+    n + fib<span style="color: #268bd2;">(</span>n - <span style="color: #6c71c4;">1</span><span style="color: #268bd2;">)</span>
+  <span style="color: #b58900;">}</span>
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (appear)">fib<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">4</span><span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">returns 10!</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org0bdd459">
+<h3 id="org0bdd459">Currying</h3>
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #859900; font-weight: bold;">val</span> <span style="color: #268bd2;">add</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">(</span>a<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span><span style="color: #2aa198;">)</span> <span style="color: #859900; font-weight: bold;">=&gt;</span> <span style="color: #2aa198;">{</span>
+  <span style="color: #b58900;">(</span>b<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span><span style="color: #b58900;">)</span> <span style="color: #859900; font-weight: bold;">=&gt;</span> <span style="color: #b58900;">{</span>
+    a + b
+  <span style="color: #b58900;">}</span>
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (appear)">add<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span><span style="color: #2aa198;">)(</span><span style="color: #6c71c4;">2</span><span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">Returns 3! Cool!</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org78ac719">
+<h3 id="org78ac719">List processing</h3>
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">List processing:</span>
+<span style="color: #859900; font-weight: bold;">val</span> <span style="color: #268bd2;">numbers</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">[</span><span style="color: #6c71c4;">1</span>, <span style="color: #6c71c4;">1</span>, <span style="color: #6c71c4;">1</span><span style="color: #2aa198;">]</span>
+
+numbers.map<span style="color: #2aa198;">(</span>i <span style="color: #859900; font-weight: bold;">=&gt;</span> i + <span style="color: #6c71c4;">1</span><span style="color: #2aa198;">)</span>.sum <span style="color: #586e75;">// </span><span style="color: #586e75;">Returns 6! Cool!</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org6904817">
+<h2 id="org6904817">Back to reality</h2>
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Making decisions &amp; causing side effects:</span>
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">makeLotsOfMoney</span><span style="color: #2aa198;">(</span>database<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">DbConnection</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Unit</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">{</span>
+  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #268bd2;">monies</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Array</span><span style="color: #b58900;">[</span><span style="color: #268bd2; font-weight: bold;">Float</span><span style="color: #b58900;">]</span> <span style="color: #859900; font-weight: bold;">=</span> database.getMoney<span style="color: #b58900;">()</span>
+
+  <span style="color: #859900; font-weight: bold;">val</span> <span style="color: #268bd2;">isThereEnoughMoney</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #268bd2; font-weight: bold;">true</span>
+  monies.foreach <span style="color: #b58900;">{</span> money <span style="color: #859900; font-weight: bold;">=&gt;</span>
+    <span style="color: #859900; font-weight: bold;">if</span><span style="color: #268bd2;">(</span>money &lt; <span style="color: #6c71c4;">1000000</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
+      isThereEnoughMoney <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #268bd2; font-weight: bold;">false</span>
+    <span style="color: #268bd2;">}</span>
+  <span style="color: #b58900;">}</span>
+
+  <span style="color: #859900; font-weight: bold;">if</span><span style="color: #b58900;">(</span>!isThereEnoughMoney &amp;&amp; someBusinessThing<span style="color: #268bd2;">()</span> &amp;&amp; !globalVariable<span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+    doSomethingWithAWS<span style="color: #268bd2;">()</span>
+  <span style="color: #b58900;">}</span> <span style="color: #859900; font-weight: bold;">else</span> <span style="color: #b58900;">{</span>
+    globalVariable <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #268bd2; font-weight: bold;">true</span>
+
+    log.error<span style="color: #268bd2;">(</span>
+      <span style="color: #2aa198;">"Something bad happened but it's been happening for years so don't worry!"</span>
+    <span style="color: #268bd2;">)</span>
+
+    doSomethingElseWithAWS<span style="color: #268bd2;">()</span>
+  <span style="color: #b58900;">}</span>
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org948da23">
+<h3 id="org948da23">They look completely different!</h3>
+</section>
+</section>
+<section>
+<section id="slide-org78f981a">
+<h3 id="org78f981a">How does this arcana relate to me?</h3>
+</section>
+</section>
+<section>
+<section id="slide-org11c3680">
+<h3 id="org11c3680">Why bother!?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org54ec104">
+<h2 id="org54ec104">Why bother with anything?</h2>
+<div class="outline-text-2" id="text-org54ec104">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org3d94ef2">
+<h3 id="org3d94ef2">Programming</h3>
+<ul>
+<li class="fragment appear">Express problems to a computer</li>
+<li class="fragment appear">&#x2026; to make it do stuff</li>
+<li class="fragment appear">&#x2026; and maybe have some fun!</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org24a78ac">
+<h3 id="org24a78ac">Algorithms</h3>
+<ul>
+<li class="fragment appear">Express problems with math</li>
+<li class="fragment appear">&#x2026; to make it do new things it couldn't do before</li>
+<li class="fragment appear">&#x2026; to make it easier to solve problems</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd865330">
+<h3 id="orgd865330">Design patterns</h3>
+<ul>
+<li class="fragment appear">Express problems with unthinking cargo cult code copying</li>
+<li class="fragment appear">&#x2026; to suck the fun out of everything</li>
+<li class="fragment appear">&#x2026; to make it easier to solve problems??</li>
+<li class="fragment appear">&#x2026; I'm looking at you ProxyAbstractFactorySingletonBeanManagerDecorator!</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org5651bdc">
+<h3 id="org5651bdc">Imperative programming</h3>
+<ul>
+<li class="fragment appear">Express problems in terms of imperative statements</li>
+<li class="fragment appear">&#x2026; to make computers do stuff</li>
+<li class="fragment appear">&#x2026; to make it easier to solve problems</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org3406663">
+<h3 id="org3406663">Object Oriented Programming</h3>
+<ul>
+<li class="fragment appear">Express problems in terms of objects</li>
+<li class="fragment appear">&#x2026; to make computers do stuff</li>
+<li class="fragment appear">&#x2026; to make it easier to solve problems</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb64397d">
+<h3 id="orgb64397d">Functional Programming</h3>
+<ul>
+<li class="fragment appear">Express problems in terms of functions</li>
+<li class="fragment appear">&#x2026; to make computers do stuff</li>
+<li class="fragment appear">&#x2026; to make it easier to solve problems</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org281e830">
+<h3 id="org281e830">It's not a competition</h3>
+<p>
+Functional programming <b>is not</b> morally better
+</p>
+
+<p>
+We just think it's a great way to:
+</p>
+
+<ul>
+<li>Solve problems</li>
+<li>Have fun</li>
+<li>Express ourselves</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orge843749">
+<h2 id="orge843749">Why bother with FP?</h2>
+<p>
+Short answer: Because we think pure functions are gods gift to the mortal world.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org8649480">
+<h3 id="org8649480">A totally legitimate description of pure functions</h3>
+<ul>
+<li class="fragment appear">Behavior <b>only</b> depends on parameters</li>
+<li class="fragment appear">Output <b>only</b> by returning a value</li>
+<li class="fragment appear">No user-detectable changes to the computer
+<ul>
+<li>No logs, no drawing things, no network access, nothing!</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org5ae1ad4">
+<h3 id="org5ae1ad4">Impure example (Scala)</h3>
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]</span>
+<span style="color: #859900; font-weight: bold;">var</span> <span style="color: #cb4b16; font-weight: bold;">gameDatabase</span> <span style="color: #859900; font-weight: bold;">=</span> gameServer.getGameDatabase
+
+<span style="color: #586e75;">// </span><span style="color: #586e75;">Impure</span>
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">filterBadGames</span><span style="color: #2aa198;">()</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Unit</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">{</span>
+  gameDatabase.remove<span style="color: #b58900;">(</span><span style="color: #2aa198;">"Duke Nukem Forever"</span><span style="color: #b58900;">)</span>
+  gameDatabase.remove<span style="color: #b58900;">(</span><span style="color: #2aa198;">"E.T."</span><span style="color: #b58900;">)</span>
+<span style="color: #2aa198;">}</span>
+
+filterBadGames<span style="color: #2aa198;">()</span>
+println<span style="color: #2aa198;">(</span>gameDatabase<span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">["Dwarf Fortress", "Prey"]!</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org1cfd85f">
+<h3 id="org1cfd85f">Impure example (Haskell)</h3>
+<p>
+I started writing this example and it was so ugly I gave up.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgbdcba98">
+<h3 id="orgbdcba98">Impure example (JavaScript)</h3>
+<div class="org-src-container">
+
+<pre  class="src src-javascript"><span style="color: #586e75;">// </span><span style="color: #586e75;">Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]</span>
+<span style="color: #859900; font-weight: bold;">var</span> <span style="color: #268bd2;">gameDatabase</span> = gameServer.getGameDatabase
+
+<span style="color: #586e75;">// </span><span style="color: #586e75;">Impure</span>
+<span style="color: #859900; font-weight: bold;">function</span> <span style="color: #268bd2;">filterBadGames</span><span style="color: #2aa198;">()</span> <span style="color: #2aa198;">{</span>
+  gameDatabase.remove<span style="color: #b58900;">(</span><span style="color: #2aa198;">"Duke Nukem Forever"</span><span style="color: #b58900;">)</span>;
+  gameDatabase.remove<span style="color: #b58900;">(</span><span style="color: #2aa198;">"E.T."</span><span style="color: #b58900;">)</span>;
+<span style="color: #2aa198;">}</span>
+
+filterBadGames<span style="color: #2aa198;">()</span>
+console.log<span style="color: #2aa198;">(</span>gameDatabase<span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">["Dwarf Fortress", "Prey"]!</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd33a2e8">
+<h3 id="orgd33a2e8">Pure Example (Scala)</h3>
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]</span>
+<span style="color: #859900; font-weight: bold;">val</span> <span style="color: #268bd2;">gameDatabase</span> <span style="color: #859900; font-weight: bold;">=</span> gameServer.getGameDatabase
+
+<span style="color: #586e75;">// </span><span style="color: #586e75;">Pure</span>
+<span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">filterBadGames</span><span style="color: #2aa198;">(</span>games<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Array</span><span style="color: #b58900;">[</span><span style="color: #268bd2; font-weight: bold;">String</span><span style="color: #b58900;">]</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Array</span><span style="color: #2aa198;">[</span><span style="color: #268bd2; font-weight: bold;">String</span><span style="color: #2aa198;">]</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">{</span>
+  games
+    .filter<span style="color: #b58900;">(</span><span style="color: #859900; font-weight: bold;">_</span> ==  <span style="color: #2aa198;">"Duke Nukem Forever"</span><span style="color: #b58900;">)</span>
+    .filter<span style="color: #b58900;">(</span><span style="color: #859900; font-weight: bold;">_</span> == <span style="color: #2aa198;">"E.T."</span><span style="color: #b58900;">)</span>
+<span style="color: #2aa198;">}</span>
+
+<span style="color: #859900; font-weight: bold;">val</span> <span style="color: #268bd2;">goodGames</span> <span style="color: #859900; font-weight: bold;">=</span> filterBadGames<span style="color: #2aa198;">(</span>gameDatabase<span style="color: #2aa198;">)</span>
+println<span style="color: #2aa198;">(</span>goodGames<span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">["Dwarf Fortress", "Prey"]</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org131c7f9">
+<h3 id="org131c7f9">Pure Example (Haskell)</h3>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]</span>
+<span style="color: #268bd2;">gameDatabase</span> <span style="color: #268bd2;">::</span> <span style="color: #b58900;">IO</span> <span style="color: #2aa198;">[</span><span style="color: #b58900;">String</span><span style="color: #2aa198;">]</span>
+<span style="color: #268bd2;">gameDatabase</span> <span style="color: #268bd2;">=</span> getGameDatabase
+
+<span style="color: #586e75;">-- </span><span style="color: #586e75;">Pure</span>
+<span style="color: #268bd2;">filterBadGames</span> <span style="color: #268bd2;">::</span> <span style="color: #2aa198;">[</span><span style="color: #b58900;">String</span><span style="color: #2aa198;">]</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #2aa198;">[</span><span style="color: #b58900;">String</span><span style="color: #2aa198;">]</span>
+<span style="color: #268bd2;">filterBadGames</span> <span style="color: #268bd2;">=</span> <span style="color: #2aa198;">(</span>delete <span style="color: #2aa198;">"Duke Nukem Forever"</span><span style="color: #2aa198;">)</span> <span style="color: #268bd2;">.</span> <span style="color: #2aa198;">(</span>delete <span style="color: #2aa198;">"E.T."</span><span style="color: #2aa198;">)</span>
+
+<span style="color: #268bd2;">main</span> <span style="color: #268bd2;">::</span> <span style="color: #b58900;">IO</span> <span style="color: #2aa198;">()</span>
+<span style="color: #268bd2;">main</span> <span style="color: #268bd2;">=</span> <span style="color: #859900; font-weight: bold;">do</span>
+  games <span style="color: #268bd2;">&lt;-</span> gameDatabase
+  <span style="color: #859900; font-weight: bold;">let</span> goodGames <span style="color: #268bd2;">=</span> filterBadGames games
+  putStrLn goodGames  <span style="color: #586e75;">-- </span><span style="color: #586e75;">["Dwarf Fortress", "prey"]</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org16dde53">
+<h3 id="org16dde53">Pure Example (JavaScript)</h3>
+<div class="org-src-container">
+
+<pre  class="src src-javascript"><span style="color: #586e75;">// </span><span style="color: #586e75;">Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]</span>
+<span style="color: #859900; font-weight: bold;">const</span> <span style="color: #268bd2;">gameDatabase</span> = gameServer.getGameDatabase
+
+<span style="color: #586e75;">// </span><span style="color: #586e75;">Pure</span>
+<span style="color: #859900; font-weight: bold;">function</span> <span style="color: #268bd2;">filterBadGames</span><span style="color: #2aa198;">(</span><span style="color: #268bd2;">games</span><span style="color: #2aa198;">)</span> <span style="color: #2aa198;">{</span>
+  games.filter<span style="color: #b58900;">(</span>_ ==  <span style="color: #2aa198;">"Duke Nukem Forever"</span><span style="color: #b58900;">)</span>
+    .filter<span style="color: #b58900;">(</span>_ == <span style="color: #2aa198;">"E.T."</span><span style="color: #b58900;">)</span>;
+<span style="color: #2aa198;">}</span>
+
+<span style="color: #859900; font-weight: bold;">const</span> <span style="color: #268bd2;">goodGames</span> = filterBadGames<span style="color: #2aa198;">(</span>gameDatabase<span style="color: #2aa198;">)</span>
+println<span style="color: #2aa198;">(</span>goodGames<span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">["Dwarf Fortress", "Prey"]</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgbdac827">
+<h3 id="orgbdac827">Benefits of purify</h3>
+<p>
+Super easy to test
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #2aa198;">"filterBadGames"</span> should <span style="color: #2aa198;">{</span>
+  <span style="color: #2aa198;">"keep Prey"</span> in <span style="color: #b58900;">{</span>
+    filterBadGames<span style="color: #268bd2;">(</span><span style="color: #6c71c4;">[</span><span style="color: #2aa198;">"Prey"</span><span style="color: #6c71c4;">]</span><span style="color: #268bd2;">)</span> must beEqualTo<span style="color: #268bd2;">(</span><span style="color: #6c71c4;">[</span><span style="color: #2aa198;">"Prey"</span><span style="color: #6c71c4;">]</span><span style="color: #268bd2;">)</span>
+  <span style="color: #b58900;">}</span>
+
+  <span style="color: #2aa198;">"filter out Duke Nukem Forever"</span> in <span style="color: #b58900;">{</span>
+    filterBadGames<span style="color: #268bd2;">(</span><span style="color: #6c71c4;">[</span><span style="color: #2aa198;">"Duke Nukem Forever"</span><span style="color: #6c71c4;">]</span><span style="color: #268bd2;">)</span> must beEmpty
+  <span style="color: #b58900;">}</span>
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+<p>
+Bam!
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orga87e4ed">
+<h3 id="orga87e4ed">More benefits of purity</h3>
+<p>
+Everything you need to know is in one place.
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">filterBadGames</span><span style="color: #2aa198;">(</span>games<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Array</span><span style="color: #b58900;">[</span><span style="color: #268bd2; font-weight: bold;">String</span><span style="color: #b58900;">]</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Array</span><span style="color: #2aa198;">[</span><span style="color: #268bd2; font-weight: bold;">String</span><span style="color: #2aa198;">]</span> <span style="color: #859900; font-weight: bold;">=</span> <span style="color: #2aa198;">{</span>
+  games
+    .filter<span style="color: #b58900;">(</span><span style="color: #859900; font-weight: bold;">_</span> ==  <span style="color: #2aa198;">"Duke Nukem Forever"</span><span style="color: #b58900;">)</span>
+    .filter<span style="color: #b58900;">(</span><span style="color: #859900; font-weight: bold;">_</span> == <span style="color: #2aa198;">"E.T."</span><span style="color: #b58900;">)</span>
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+<p>
+I <span class="underline">know</span> for a fact that <code>filterBadGames</code> only uses an array of strings. <b>Nothing else</b>!
+</p>
+
+<p>
+I also know it's not going to do something unexpected!
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf2ec862">
+<h3 id="orgf2ec862">Even <span class="underline">more</span> benefits of purity</h3>
+<p>
+The static typing is actually telling the truth!
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-scala"><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">filterBadGames</span><span style="color: #2aa198;">(</span>games<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Array</span><span style="color: #b58900;">[</span><span style="color: #268bd2; font-weight: bold;">String</span><span style="color: #b58900;">]</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Array</span><span style="color: #2aa198;">[</span><span style="color: #268bd2; font-weight: bold;">String</span><span style="color: #2aa198;">]</span>
+</pre>
+</div>
+
+<p>
+This function is making a promise: Give me some strings and I will give you back some strings. <b>Nothing more, nothing less</b>
+</p>
+
+<p>
+Pure functions are good friends: <b>They keep their promises</b>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org8e379e7">
+<h3 id="org8e379e7">Drawbacks</h3>
+<p>
+Pure functions can't do anything!
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org4ce96e9">
+<h3 id="org4ce96e9">Things of note if you accept pure functions as your lord and saviour</h3>
+<ul>
+<li class="fragment appear">Immutability becomes an obvious choice</li>
+<li class="fragment appear">Objects start to look a lot less useful</li>
+<li class="fragment appear">Since you've got lots of pure functions you need new techniques to manage them</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf313765">
+<h2 id="orgf313765">Lock the doors, it's <span class="underline">Monad</span> time</h2>
+<p class="fragment (appear)">
+Just kidding
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgcfaeb21">
+<h3 id="orgcfaeb21">How many of you had a fear response just then?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgaaf4b9d">
+<h3 id="orgaaf4b9d">The functional arcana is scary</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgfdba605">
+<h3 id="orgfdba605">It looks impenetrable</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgea53d21">
+<h3 id="orgea53d21">So why do we do it?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgcba36c0">
+<h3 id="orgcba36c0">Each scary buzzword is a <span class="underline">solution to a problem</span></h3>
+<p>
+A solution that leverages pure functions
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org3aa6593">
+<h4 id="org3aa6593">Immutability</h4>
+<p>
+Makes it possible to write pure functions
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org1ad38d8">
+<h4 id="org1ad38d8">Functors</h4>
+<p>
+Makes it easier to apply functions to different types of containers
+</p>
+
+<div class="org-src-container">
+
+<pre  class="fragment (appear)"><span style="color: #859900; font-weight: bold;">def</span> <span style="color: #268bd2;">add5</span><span style="color: #2aa198;">(</span>input<span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span><span style="color: #2aa198;">)</span><span style="color: #859900; font-weight: bold;">:</span> <span style="color: #b58900;">Int</span> <span style="color: #859900; font-weight: bold;">=</span> input + <span style="color: #6c71c4;">5</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (appear)"><span style="color: #586e75;">// </span><span style="color: #586e75;">add5 works on ints!</span>
+add5<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">10</span><span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">Returns 15</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (appear)"><span style="color: #586e75;">// </span><span style="color: #586e75;">Functor lets us use it on lists!</span>
+<span style="color: #268bd2; font-weight: bold;">List</span><span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span>,<span style="color: #6c71c4;">2</span>,<span style="color: #6c71c4;">3</span><span style="color: #2aa198;">)</span>.map<span style="color: #2aa198;">(</span>add5<span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">returns List(6,7,8)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (appear)"><span style="color: #586e75;">// </span><span style="color: #586e75;">And Options</span>
+<span style="color: #268bd2; font-weight: bold;">Some</span><span style="color: #2aa198;">(</span><span style="color: #6c71c4;">20</span><span style="color: #2aa198;">)</span>.map<span style="color: #2aa198;">(</span>add5<span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">Returns List(25)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment (appear)"><span style="color: #586e75;">// </span><span style="color: #586e75;">And Future!</span>
+<span style="color: #268bd2; font-weight: bold;">Future</span><span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span><span style="color: #2aa198;">)</span>.map<span style="color: #2aa198;">(</span>add5<span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">Returns Future(6)</span>
+</pre>
+</div>
+
+<p class="fragment (appear)">
+And lots of other stuff!
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org9260766">
+<h4 id="org9260766">Applicatives</h4>
+<p>
+Combine functions in parallel
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orga44a7b4">
+<h4 id="orga44a7b4">Monads</h4>
+<p>
+Sequence functions together
+</p>
+
+<p class="fragment (appear)">
+This is used for IO in FP as IO is sequential!
+</p>
+
+<p class="fragment (appear)">
+But Monads are <span class="underline">not</span> the core of FP and you can do FP without monads.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc1a3f89">
+<h4 id="orgc1a3f89">Fold</h4>
+<p>
+Makes it easier to apply functions to recursive data
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org433c04b">
+<h4 id="org433c04b">Traverse</h4>
+<p>
+Makes it easier to apply functions to nested data structures
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgaa377c8">
+<h4 id="orgaa377c8">Typeclasses</h4>
+<p>
+Make it easier to pick which function to apply to some data
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org8d102c7">
+<h4 id="org8d102c7">Free/Eff</h4>
+<ul>
+<li>Compile functions into more functions</li>
+<li>Compose monads</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org32892c0">
+<h3 id="org32892c0">They're all solutions to <span class="underline">real world problems</span></h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org7bfa3c0">
+<h2 id="org7bfa3c0">But Jake - Why do <span class="underline">you</span> bother!?</h2>
+<div class="outline-text-2" id="text-org7bfa3c0">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org1bb2269">
+<h3 id="org1bb2269">I wanted to make <b>Video Games</b>!</h3>
+<ul>
+<li class="fragment appear">So I learned Visual Basic 6</li>
+<li class="fragment appear">And used it to build crappy games</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org0f14465">
+<h3 id="org0f14465">Then I learned about <span class="underline">OOP</span>!</h3>
+<ul>
+<li class="fragment appear">Lots of C++</li>
+<li class="fragment appear">Lots of objects</li>
+<li class="fragment appear">Everything was great!</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org32a9e66">
+<h3 id="org32a9e66">And then <span class="underline">it</span> happened</h3>
+<ul>
+<li class="fragment appear">I had a spaceship game with asteroids, bullets and rocks</li>
+<li class="fragment appear">And I asked the question:</li>
+<li class="fragment appear">"Where should the collide method go?"</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgbcb09fc">
+<h3 id="orgbcb09fc">Boom!</h3>
+<ul>
+<li class="fragment appear">None of the answers that I had at the time were satisfactory.</li>
+<li class="fragment appear">Double dispatch!? That's insane!</li>
+<li class="fragment appear">Let's change <b>everything</b>. That'll solve it!</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org448135b">
+<h3 id="org448135b">Then I learned about Haskell</h3>
+<ul>
+<li class="fragment appear">I install ghc!</li>
+<li class="fragment appear">And I completely fail to become productive</li>
+<li class="fragment appear">But I learn about the concept of purity and I <b>love</b> it!</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org4907852">
+<h3 id="org4907852">A year passes</h3>
+<ul>
+<li class="fragment appear">"Maybe I should give Haskell another go!"</li>
+<li class="fragment appear">I install ghc!</li>
+<li class="fragment appear">And I learn a <span class="underline">little bit</span> more, apparently Monads are what the cool kids use</li>
+<li class="fragment appear">I fail to become productive again</li>
+<li class="fragment appear">Repeat for several years</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org7401ac9">
+<h3 id="org7401ac9">Scala? I think?</h3>
+<ul>
+<li class="fragment appear">At some point I learn about Scala</li>
+<li class="fragment appear">I try to do FP in it</li>
+<li class="fragment appear">I fail</li>
+<li class="fragment appear">I go back to Haskell again</li>
+<li class="fragment appear">I fail</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org42c45f5">
+<h3 id="org42c45f5">I apply at REA</h3>
+<ul>
+<li class="fragment appear">My toy robot is the first Scala code I've ever written. It's fully functional though!</li>
+<li class="fragment appear">I get in somehow</li>
+<li class="fragment appear"><b>Suckers</b></li>
+<li class="fragment appear">All that failing turns into a modest amount of knowledge!</li>
+<li class="fragment appear">Things happen</li>
+<li class="fragment appear">Now I'm giving this talk</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org45c6642">
+<h3 id="org45c6642">That's my story!</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org52af762">
+<h2 id="org52af762">If you're just getting started</h2>
+<ul>
+<li class="fragment appear">You <b>don't</b> need to start with monads/functors/applicatives.</li>
+<li class="fragment appear">Just look for opportunities to write more pure functions</li>
+<li class="fragment appear">See how they make you feel! :)</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd73cf60">
+<h2 id="orgd73cf60">Thank you!</h2>
+<p>
+Questions?
+</p>
+</section>
+</section>
+</div>
+</div>
+<script src="http://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/head.min.js"></script>
+<script src="http://cdn.jsdelivr.net/reveal.js/3.0.0/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>

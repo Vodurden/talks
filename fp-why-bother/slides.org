@@ -1,5 +1,5 @@
 #+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
-#+REVEAL_HLEVEL: 1
+#+REVEAL_HLEVEL: 3
 
 #+Title: FP: why bother?
 #+Author: Jake Woods
@@ -385,7 +385,7 @@ Combine functions in parallel
 Sequence functions together
 
 #+ATTR_REVEAL: :frag (appear)
-This happens to be used for IO in FP since IO is sequential!
+This is used for IO in FP as IO is sequential!
 
 #+ATTR_REVEAL: :frag (appear)
 But Monads are _not_ the core of FP and you can do FP without monads.

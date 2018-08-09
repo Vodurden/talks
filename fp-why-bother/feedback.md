@@ -16,3 +16,11 @@
 - Consider talking about FP success stories? (Not sure if this one is on-topic for the talk, not trying to sell FP in this talk)
 - Cautionary tale about "not trying to learn everything all at once" was good
 - Buzzwords are a solution to a problem, not a goal to achieve
+
+# 2018-06-13
+
+- Some people don't like questions in the middle since they don't want to ask something I'm about to answer
+- Be consistent with alternating language examples. Maybe show the good/bad examples. I.e bad/good bad/good
+- Lots of requests to see more real-world examples.
+  - One suggestion was to refactor the "real world example" using FP concepts
+- Consider publishing a horizontal version of the slides for people who want to read through them
