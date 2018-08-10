@@ -24,4 +24,3 @@ Overview:
 - Monads are really hard to learn
 - I think that's because "Monad" means a _bunch_ of different things
 - Learning "Monads" actually means learning a huge number of different concepts
--

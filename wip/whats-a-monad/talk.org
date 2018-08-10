@@ -29,15 +29,6 @@
   #+ATTR_REVEAL: :frag (appear)
   Monads?
 
-  #+ATTR_REVEAL: :frag (appear)
-  What {{{color(green, are)}}} they?
-
-  #+ATTR_REVEAL: :frag (appear)
-  What {{{color(red, aren't)}}} they?
-
-  #+ATTR_REVEAL: :frag (appear)
-  Should I care?
-
 * So what's a Monad?
 
 ** Something that's hard to learn!
@@ -55,6 +46,8 @@
 
 * Let's look at some types of "Monads"
 
+** "A Monoid in the category of Endofunctors"
+
 ** An object with a flatMap method
 
     #+BEGIN_SRC javascript
@@ -62,8 +55,10 @@
     // Returns [1,1,2,2,3,3]
     #+END_SRC
 
-** A type with a bind function
+    #+ATTR_REVEAL: :frag (appear)
+    Or with ~bind~:
 
+    #+ATTR_REVEAL: :frag (appear)
     #+BEGIN_SRC haskell
     -- >>= is pronounced bind in Haskell. Wat!
     [1,2,3] >>= \a -> [a, a]
@@ -116,19 +111,22 @@
     For any Monad:
     #+BEGIN_SRC javascript
     pure(1)             // type: Monad<Int>
-
     pure(pure(1))       // type: Monad<Monad<Int>>
-
     join(pure(pure(1))) // type: Monad<Int>
     #+END_SRC
 
     For a concrete Monad:
     #+BEGIN_SRC javascript
     List.pure(1)                        // type: List<Int>
-
     List.pure(List.pure(1))             // type: List<List<Int>>
-
     List.join(List.pure(List.pure(1))   // type: List<Int>
+    #+END_SRC
+
+    For a concrete Monad constructed normally:
+    #+BEGIN_SRC javascript
+    List.join([[1,2], [3,4]]) // Returns [1,2,3,4]
+    Maybe.join(Some(Some(5))  // Returns Some(5)
+    Maybe.join(Some(None))    // Returns None
     #+END_SRC
 
 ** An interface/typeclass defining: bind and pure
@@ -161,17 +159,11 @@
     // Returns Monad(2)
     #+END_SRC
 
-    For a concrete Monad:
+    For a concrete Monad constructed normally:
     #+BEGIN_SRC javascript
-    List.bind(List.pure(1), function(value) {
-      return List.pure("Hello");
-    });
-    // Returns ["Hello"]
-
-    List.bind([1, 2, 3], function(value) {
-      return pure("Hello " + value.toString)
-    });
-    // Returns ["Hello 1", "Hello 2", "Hello 3"]
+    List.bind([1], value => [value + 2])          // Returns [3]
+    Maybe.bind(Some(1), value => Some(value + 2)) // Returns Some(3)
+    Maybe.bind(Some(1), value => None)            // Returns None
     #+END_SRC
 
 ** A Burrito?
@@ -306,17 +298,20 @@
       pure $ a + b
     #+END_SRC
 
-*** Those types are Monadic which makes them easy to compose!
-
-** "A Monoid in the category of Endofunctors"
-
 * They're all Monads!
 
 ** No wonder they're so hard to learn...
 
+** Something something Laws
+
+  #+ATTR_REVEAL: :frag (appear)
+  - There are rules defining how Monads must be implemented
+  - Mostly it's about making them act in a sane way
+  - They're outside the scope of this talk
+
 * Wait... Something is missing!
 
-** What about Maybe/List/Promise/Reader/Writer/State/Eff?
+** What about Maybe/List/Promise/Reader/Writer/State/IO
 
 ** Well...
   #+ATTR_REVEAL: :frag (appear)
@@ -327,37 +322,90 @@
 
 ** Each of those types do something unique and valuable!
   #+ATTR_REVEAL: :frag (appear)
-  And it has _nothing_ to do with Monads!
+  They _enrich_ a type to give it extra functionality
 
   #+ATTR_REVEAL: :frag (appear)
-  - Maybe implements the "Null" pattern
-  - List handles multiple values
-  - Promise handles asynchronous values
-  - Reader handles dependency injection
-  - Writer handles logging
-  - State handles arbitrary state
-  - Eff handles side effects
+  - ~Maybe~ adds ~null~
+  - ~List~ adds multiple values
+  - ~Promise~ adds asynchrony
+  - ~Reader~ adds dependency injection
+  - ~Writer~ adds logging
+  - ~State~ adds arbitrary state
+  - ~IO~ adds the ability to use the computer
 
-** But they're all generic types
+  #+ATTR_REVEAL: :frag (appear)
+  This has _nothing_ to do with Monads!
 
-** And we want to be able to compose them...
+*** Example
 
-** And _that's_ when Monads are useful
+    #+BEGIN_SRC c++
+    // Java-ish
+    int value;          // A boring integer
+    List<int> values;   // An exciting bunch of integers!
+    Promise<int> value; // An exciting potentially asynchronous integer!
+    #+END_SRC
 
-* So why should I care?
+    #+BEGIN_SRC scala
+    // Scala
+    value: Int;          // A boring integer
+    values: List[Int];   // An exciting bunch of integers!
+    value: Promise[Int]; // An exciting potentially asynchronous integer!
+    #+END_SRC
 
-** Something something design pattern
-** Something something learn one apply to lots of different types
-** The core definition of Monads is bind and pure
-** Everything else is clever tricks that use Monads t
+    #+BEGIN_SRC haskell
+    -- Haskell
+    value :: Int         -- A boring integer
+    values :: List Int   -- An exciting bunch of integers!
+    value :: Promise Int -- An exciting potentially asynchronous integer!
+    #+END_SRC
+
+** Then why should I care if they're Monads?
+
+*** They're all Generic types
+
+   #+BEGIN_SRC c++
+   // Java-ish
+   Maybe<T> List<T> Promise<T> Reader<T>
+   Writer<T> State<T> IO<T>
+   #+END_SRC
+
+   #+BEGIN_SRC scala
+   // Scala
+   Maybe[T] List[T] Promise[T] Reader[T]
+   Writer[T] State[T] IO[T]
+   #+END_SRC
+
+   #+BEGIN_SRC haskell
+   -- Haskell
+   Maybe t, List t, Promise t, Reader t
+   Writer t, State t, IO t
+   #+END_SRC
+
+*** We want to compose them...
+
+*** Monads help us compose generic types!
+    #+ATTR_REVEAL: :frag (appear)
+    They're a *Design Pattern* for a specific type of composition.
+
+* One way of thinking about Monads
+
+** When I say "X is a Monad" I know:
+
+    #+ATTR_REVEAL: :frag (appear)
+    - This type is generic
+    - This type enriches normal types with extra behavior
+    - I can compose this type using flatMap/bind
+    - I can compose this type using For/Do comprehension
+
+** It's a design pattern!
+
+*** Learn once, write everywhere!
 
 * In Summary
 
-** A Monad implies something that:
-  - Can use ~flatMap~, ~bind~ and ~pure~
-  - f
-  -
-  -
+  A Monad implies a whole bunch of things
+
+  Try to learn them a little bit at a time!
 
 * Thanks!
 
