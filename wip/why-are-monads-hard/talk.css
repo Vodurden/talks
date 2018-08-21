@@ -1,0 +1,22 @@
+/* .reveal pre { */
+/*   border: none; */
+/*   box-shadow: none; */
+/* } */
+
+.reveal pre {
+  width: 100%;
+  font-size: 1em;
+  border: none;
+  box-shadow: none;
+}
+
+.reveal h1 {
+  font-size: 2.5em;
+}
+
+.reveal h2, .reveal h3, .reveal h4 {
+  /* font-family: 'Helvetica'; */
+  font-family: 'Lato';
+  font-size: 1.8em;
+  text-transform: none;
+}

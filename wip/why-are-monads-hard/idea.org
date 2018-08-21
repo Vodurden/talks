@@ -1,0 +1,25 @@
+* Talk: What's a Monad?
+
+  - Monads are notoriously tricky to understand
+  - This talk isn't going to teach you Monads!
+  - But I'll try to nudge your understanding one extra step
+  - The word "Monad" means a lot of different things:
+    - An object with a ~flatMap~ method
+    - Something I can use ~for-comprehension~ on
+    - A type implementing the Monad typeclass
+    - A typeclass with two functions: ~bind~ and ~pure~ following some laws
+    - A burrito
+    - A way of composing certain types of functions
+    - An interface for defining sequential computations
+    - Something for managing side effects
+    - A Monoid in the category of Endofunctors
+  - So what is it?
+  - All of them!
+  -
+
+
+Overview:
+
+- Monads are really hard to learn
+- I think that's because "Monad" means a _bunch_ of different things
+- Learning "Monads" actually means learning a huge number of different concepts

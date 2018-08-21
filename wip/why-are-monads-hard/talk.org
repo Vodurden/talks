@@ -1,0 +1,635 @@
+#+REVEAL_ROOT: ../../lib/reveal.js-3.0.0/
+#+REVEAL_HLEVEL: 3
+#+REVEAL_TRANS: linear
+#+REVEAL_EXTRA_CSS: ./talk.css
+
+#+OPTIONS: reveal_title_slide:"<h1>%t</h1><h2>%a</h2>"
+#+OPTIONS: toc:nil
+#+OPTIONS: num:nil
+
+#+MACRO: color @@html:<font color="$1">$2</font>@@
+
+#+Title: Why are monads hard?
+#+Author: Jake Woods
+
+* What's this talk about?
+  #+ATTR_REVEAL: :frag (appear)
+  Monads!
+
+  #+ATTR_REVEAL: :frag (appear)
+  Impossible to explain!
+
+  #+ATTR_REVEAL: :frag (appear)
+  ... I'm {{{color(red, not)}}} going to teach you how to use them.
+
+  #+ATTR_REVEAL: :frag (appear)
+  Instead we're going to figure out why they're so hard to learn.
+
+  #+ATTR_REVEAL: :frag (appear)
+  And _maybe_ help you get started.
+
+* So why are they so hard?
+
+** Monad is an overloaded term
+
+** It refers to _lots_ of concepts
+
+** It's like trying to learn "Science"
+
+  #+ATTR_REVEAL: :frag (appear)
+  You need to learn it bit-by-bit
+
+* Let's look at some Monads
+
+** An object with a flatMap method
+
+    #+BEGIN_SRC javascript
+    [1,2,3].flatMap(a => [a, a])
+    // Returns [1,1,2,2,3,3]
+    #+END_SRC
+
+    #+ATTR_REVEAL: :frag (appear)
+    Or with ~bind~:
+
+    #+ATTR_REVEAL: :frag (appear)
+    #+BEGIN_SRC haskell
+    -- >>= is pronounced bind in Haskell. Wat!
+    [1,2,3] >>= \a -> [a, a]
+    -- Returns [1,1,2,2,3,3]
+    #+END_SRC
+
+** Something used with For/Do
+
+    #+BEGIN_SRC scala
+    // Scala
+    for {
+      a <- Some(5)
+      b <- Some(10)
+    } yield a + b
+
+    // Returns: Some(15)
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    do
+      a <- Just 5
+      b <- Just 10
+      pure a + b
+
+    -- Returns: Just 15
+    #+END_SRC
+
+** A type with ~pure~
+
+    #+BEGIN_SRC c++
+    // Java-ish
+    Monad<A> pure(A a);
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    def pure(a: A): Monad[A]
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    pure :: (Monad m) => a -> m a
+    #+END_SRC
+
+*** Example
+
+    #+BEGIN_SRC c++
+    // Java-ish
+    List.pure("Hello") == List("Hello");
+    Option.pure("Hello") == Option.of("Hello");
+    Future.pure("Hello") == Future.completedFuture("Hello");
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    List.pure("Hello") == List("Hello")
+    Option.pure("Hello") = Some("Hello")
+    Future.pure("Hello") = Future.successful("Hello")
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    pure "Hello" :: List String == ["Hello"]
+    pure "Hello" :: Maybe String == Just "Hello"
+    pure "Hello" :: Future String == ...
+    #+END_SRC
+
+*** Pure is also called "Return" in Haskell
+
+    #+BEGIN_SRC haskell
+    myFunction = do
+      a <- getA
+      b <- getB
+      return a + b
+    #+END_SRC
+
+** A type with ~flatten~
+  A.k.a ~join~ or ~concat~
+
+    #+BEGIN_SRC c++
+    // Java-ish
+    Monad<A> flatten(Monad<Monad<A>> a);
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    def pure(a: A): Monad[A]
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    pure :: (Monad m) => a -> m a
+    #+END_SRC
+
+*** Example
+    #+BEGIN_SRC c++
+    // Java-ish
+    List.of(List.of(1,1), List.of(2,2)).flatten == List.of(1,1,2,2);
+    Optional.of(Optional.empty).flatten == Optional.empty
+    Future.of(Future.of("Hello")).flatten == Future.of("Hello");
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    List(List(1,1), List(2,2)).flatten == List(1,1,2,2);
+    Some(None).flatten == None
+    Future.successful(Future.successful("Hello")).flatten = Future.successful("Hello")
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    concat [[1,1],[2,2]] == [1,1,2,2]
+    concat Just Nothing == Nothing
+    concat (pure (pure "Hello")) :: Async String == (pure "Hello")
+    #+END_SRC
+
+** An interface/typeclass defining: join and pure
+    #+BEGIN_SRC c++
+    // Java-ish
+    Monad<A> join(Monad<Monad<A>> nested);
+    Monad<A> pure(A a);
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    def join(nested: Monad[Monad[A]]): Monad[A]
+    def pure(a: A): Monad[A]
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    join :: (Monad m) => m (m a) -> m a
+    pure :: (Monad m) => a -> m a
+    #+END_SRC
+
+*** Example
+
+    For any Monad:
+    #+BEGIN_SRC javascript
+    pure(1)             // type: Monad<Int>
+    pure(pure(1))       // type: Monad<Monad<Int>>
+    join(pure(pure(1))) // type: Monad<Int>
+    #+END_SRC
+
+    For a concrete Monad:
+    #+BEGIN_SRC javascript
+    List.pure(1)                        // type: List<Int>
+    List.pure(List.pure(1))             // type: List<List<Int>>
+    List.join(List.pure(List.pure(1))   // type: List<Int>
+    #+END_SRC
+
+    For a concrete Monad constructed normally:
+    #+BEGIN_SRC javascript
+    List.join([[1,2], [3,4]]) // Returns [1,2,3,4]
+    Maybe.join(Some(Some(5))  // Returns Some(5)
+    Maybe.join(Some(None))    // Returns None
+    #+END_SRC
+
+** An interface/typeclass defining: bind and pure
+    #+BEGIN_SRC c++
+    // Java-ish
+    Monad<B> bind<A,B>(Monad<A> a, Function<A, Monad<B>> fn);
+    Monad<A> pure<A>(A a)
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    def bind[A,B](m: Monad[A], fn: A => Monad[B]): Monad[B]
+    def pure[A](a: A): Monad[A]
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    bind :: (Monad m) => m a -> (a -> m b) -> m b
+    pure :: (Monad m) => a -> m a
+    #+END_SRC
+
+*** Example
+
+    For any Monad:
+    #+BEGIN_SRC javascript
+    bind(pure(1), function(value) {
+      return pure(value + 1)
+    });
+
+    // Returns Monad(2)
+    #+END_SRC
+
+    For a concrete Monad constructed normally:
+    #+BEGIN_SRC javascript
+    List.bind([1], value => [value + 2])          // Returns [3]
+    Maybe.bind(Some(1), value => Some(value + 2)) // Returns Some(3)
+    Maybe.bind(Some(1), value => None)            // Returns None
+    #+END_SRC
+
+** A Burrito?
+
+  [[./img/burrito.png]]
+
+  (Source: https://chrisdone.com/posts/monads-are-burritos)
+
+** A "Container" type
+   #+BEGIN_SRC c++
+   // Java-ish
+   List<String>      // A "Container" of strings
+   Optional<String>  // A "Container" of either a string or nothing
+   Future<String>    // A "Container" of a string that we get from the future
+   #+END_SRC
+
+   #+BEGIN_SRC scala
+   // Scala
+   List[String]    // A "Container" of strings
+   Option[String]  // A "Container" of either a string or nothing
+   Future[String]  // A "Container" of a string that we get from the future
+   #+END_SRC
+
+   #+BEGIN_SRC haskell
+   -- Haskell
+   List String   -- A "Container" of strings
+   Maybe String  -- A "Container" of either a string or nothing
+   Async String  -- A "Container" of a string that we get from the future
+   #+END_SRC
+
+** A way of composing certain types of functions
+
+*** Normal Function Composition
+
+    #+BEGIN_SRC c++
+    // Java-ish
+    String toUpperCase(String input) { ... }
+    String trim(String input) { ... }
+
+    String toUpperCaseAndTrim(String input) {
+      return compose(toUpperCase, trim)(input);
+    }
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    def toUpperCase(input: String): String = ...
+    def trim(input: String): String = ...
+
+    def toUpperCaseAndTrim = compose(toUpperCase, trim)
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    toUpperCase :: String -> String
+    trim :: String -> String
+
+    toUpperCaseAndTrim = toUpperCase . trim
+    #+END_SRC
+
+*** Monadic Function Composition
+
+    #+BEGIN_SRC c++
+    // Java-ish
+    Promise<String> toUpperCase(String input) { ... }
+    Promise<String> trim(String input) { ... }
+
+    Promise<String> toUpperCaseAndTrimService(String input) {
+      return monadCompose(toUpperCaseService, trimService)(input);
+    }
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    def toUpperCase(input: String): Promise[String] = ...
+    def trim(input: String): Promise[String] = ...
+
+    def toUpperCaseAndTrim = monadCompose(toUpperCaseService, trimService)
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    toUpperCase :: String -> Promise String
+    trim :: String -> Promise String
+
+    -- The "fish" operator or Kleisil arrow does monad composition in Haskell
+    toUpperCaseAndTrim = toUpperCase >=> trim
+    #+END_SRC
+
+** Something to do with Sequential Computations?
+
+    #+ATTR_REVEAL: :frag (appear)
+    In most languages sequence is implied:
+
+    #+ATTR_REVEAL: :frag (appear)
+    #+BEGIN_SRC scala
+    def main() = {
+      // Executes doA then doB then doC and then returns a result
+      val a = doA();
+      val b = doB();
+      val c = doC();
+      a + b + c
+    }
+    #+END_SRC
+
+*** But in some languages that isn't the case
+
+    #+BEGIN_SRC haskell
+    -- Executes in an arbitrary order as everything is lazy
+    main =
+      let a = doA
+          b = doB
+          c = doC
+      in a + b + c
+    #+END_SRC
+
+*** Monads imply sequential computation
+
+    #+BEGIN_SRC haskell
+    -- Executes doA then doB then doC and then returns a result
+    main = do
+      a <- doA
+      b <- doB
+      c <- doC
+      pure a + b + c
+    #+END_SRC
+
+** Something for managing side effects?
+
+*** In some languages we can freely mix side-effects into normal code:
+
+    #+BEGIN_SRC c++
+    // Java-ish
+    Integer add(Integer a, Integer b) {
+        System.out.println("Hello World!");
+        return a + b;
+    }
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    def add(a: Int, b: Int): Int = {
+      println("Hello World!")
+      a + b
+    }
+    #+END_SRC
+
+*** But not in all languages
+
+    #+BEGIN_SRC haskell
+    add :: Int -> Int -> Int
+    add a b = do
+      println "Hello World" -- ERROR! Doesn't compile
+      a + b
+    #+END_SRC
+
+*** Instead we have to mark side effecting functions with a type
+
+    #+BEGIN_SRC haskell
+    add :: Int -> Int -> IO Int
+    add a b = do
+      println "Hello World" -- Compiles
+      pure $ a + b
+    #+END_SRC
+
+
+* They're all Monads!
+
+** No wonder they're so hard to learn...
+
+** Something something Laws
+
+  #+ATTR_REVEAL: :frag (appear)
+  - There are rules defining how Monads must be implemented
+  - Mostly it's about making them act in a sane way
+  - They're outside the scope of this talk
+
+* Wait... Something is missing!
+
+** What about Maybe/List/Promise/Reader/Writer/State/IO
+
+** Well...
+  #+ATTR_REVEAL: :frag (appear)
+  They are Monads!
+
+  #+ATTR_REVEAL: :frag (appear)
+  But that's the boring bit about them.
+
+** Each of those types do something unique and valuable!
+  #+ATTR_REVEAL: :frag (appear)
+  They _enrich_ a type to give it extra functionality
+
+  #+ATTR_REVEAL: :frag (appear)
+  - ~Maybe~ adds ~null~
+  - ~List~ adds multiple values
+  - ~Promise~ adds asynchrony
+  - ~Reader~ adds dependency injection
+  - ~Writer~ adds logging
+  - ~State~ adds arbitrary state
+  - ~IO~ adds the ability to use the computer
+
+  #+ATTR_REVEAL: :frag (appear)
+  This has _nothing_ to do with Monads!
+
+*** Example
+
+    #+BEGIN_SRC c++
+    // Java-ish
+    Integer value;          // A boring integer
+    List<Integer> values;   // An exciting bunch of integers!
+    Future<Integer> value;  // An exciting potentially asynchronous integer!
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    value: Int;          // A boring integer
+    values: List[Int];   // An exciting bunch of integers!
+    value: Future[Int];  // An exciting potentially asynchronous integer!
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    value :: Int         -- A boring integer
+    values :: List Int   -- An exciting bunch of integers!
+    value :: Async Int   -- An exciting potentially asynchronous integer!
+    #+END_SRC
+
+** Then why should I care if they're Monads?
+
+*** They're all Generic types
+
+   #+BEGIN_SRC c++
+   // Java-ish
+   Maybe<T> List<T> Promise<T> Reader<T>
+   Writer<T> State<T> IO<T>
+   #+END_SRC
+
+   #+BEGIN_SRC scala
+   // Scala
+   Maybe[T] List[T] Promise[T] Reader[T]
+   Writer[T] State[T] IO[T]
+   #+END_SRC
+
+   #+BEGIN_SRC haskell
+   -- Haskell
+   Maybe t, List t, Promise t, Reader t
+   Writer t, State t, IO t
+   #+END_SRC
+
+*** We want to compose them...
+
+*** Monads help us compose generic types!
+    #+ATTR_REVEAL: :frag (appear)
+    They're a *Design Pattern* for a specific type of composition.
+
+* One way of thinking about Monads
+
+** When I say "X is a Monad" I know:
+
+    #+ATTR_REVEAL: :frag (appear)
+    - This type is generic
+    - This type enriches normal types with extra behavior
+    - I can compose this type using flatMap/bind
+    - I can compose this type using For/Do comprehension
+
+** It's a design pattern!
+
+*** Learn once, write everywhere!
+
+* In Summary
+
+  #+ATTR_REVEAL: :frag (appear)
+  A Monad implies a whole bunch of things
+
+  #+ATTR_REVEAL: :frag (appear)
+  Try to learn them a little bit at a time!
+
+  #+ATTR_REVEAL: :frag (appear)
+  It's ok to be overwhelmed!
+
+  #+ATTR_REVEAL: :frag (appear)
+  This stuff takes time to learn.
+
+* Thanks!
+
+*  Questions?
+
+#+ATTR_HTML: :height 200%, :width 200%
+[[./img/mindblown.gif]]
+
+* Test: Pure and Flatten
+#+BEGIN_SRC dot :file pure_and_flatten.png :cmdline -Kdot -Tpng
+  digraph {
+    # Palette from http://ethanschoonover.com/solarized
+    # YELLOW = '#b58900'
+    # ORANGE = '#cb4b16'
+    # VIOLET = '#6c71c4'
+    # RED = '#dc323f'
+    # BLUE = '#268bd2'
+    # MAGENTA = '#d33682'
+    # CYAN = '#2aa198'
+    # GREEN = '#859900'
+    # GREY = '#939393'
+
+    // graph from left to right
+    rankdir=LR;
+    splines=true;
+    bgcolor="transparent";
+    node [shape=box fontname="Hack" color="#859900" fontcolor="#859900"];
+    edge [color="#268bd2" fontname="Hack" fontcolor="#268bd2" ]
+
+    a [label="A"]
+    ma [label="M[A]"]
+    mma [label="M[M[A]]"]
+
+    a -> ma [label="pure"]
+    ma -> mma [label="flatten" dir=back]
+  }
+#+END_SRC
+
+#+RESULTS:
+[[file:pure_and_flatten.png]]
+
+* Test: FlatMap
+#+BEGIN_SRC dot :file flatmap.png :cmdline -Kdot -Tpng
+  digraph {
+    # Palette from http://ethanschoonover.com/solarized
+    # YELLOW = '#b58900'
+    # ORANGE = '#cb4b16'
+    # VIOLET = '#6c71c4'
+    # RED = '#dc323f'
+    # BLUE = '#268bd2'
+    # MAGENTA = '#d33682'
+    # CYAN = '#2aa198'
+    # GREEN = '#859900'
+    # GREY = '#939393'
+
+    // graph from left to right
+    rankdir=LR;
+    splines=true;
+    bgcolor="transparent";
+    node [shape=box fontname="Hack" color="#859900" fontcolor="#859900"];
+    edge [color="#268bd2" fontname="Hack" fontcolor="#268bd2" ]
+
+    ma [label="M[A]"]
+    mmb [label="M[M[B]]"]
+    mb [label="M[B]"]
+
+    ma -> mmb [label="map(...)"]
+    mmb -> mb [label="flatten"]
+    ma -> mb [label="flatMap"]
+  }
+#+END_SRC
+
+#+RESULTS:
+[[file:flatmap.png]]
+
+* Example: List FlatMap
+    #+BEGIN_SRC dot :file list_flatMap_example.png :cmdline -Kdot -Tpng
+      digraph {
+        # Palette from http://ethanschoonover.com/solarized
+        # YELLOW = '#b58900'
+        # ORANGE = '#cb4b16'
+        # VIOLET = '#6c71c4'
+        # RED = '#dc323f'
+        # BLUE = '#268bd2'
+        # MAGENTA = '#d33682'
+        # CYAN = '#2aa198'
+        # GREEN = '#859900'
+        # GREY = '#939393'
+
+        // graph from left to right
+        rankdir=LR;
+        splines=true;
+        bgcolor="transparent";
+        node [shape=box fontsize="28" fontname="Hack" color="#859900" fontcolor="#859900"];
+        edge [color="#268bd2" fontsize="28" fontname="Hack" fontcolor="#268bd2" ];
+
+        list       [label="List(1,2,3)"]
+        listOfList [label="List(List(1,1), List(2, 2), List(3, 3))"]
+        result     [label="List(1,1,2,2,3,3)"]
+
+        list -> listOfList [label="map(x => List(x, x))"]
+        listOfList -> result [label="flatten"]
+        list -> result [label="flatMap(x => List(x, x))"]
+      }
+    #+END_SRC
