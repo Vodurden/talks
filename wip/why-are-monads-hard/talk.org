@@ -9,24 +9,48 @@
 
 #+MACRO: color @@html:<font color="$1">$2</font>@@
 
+
+
 #+Title: Why are monads hard?
 #+Author: Jake Woods
 
+# Solarized palette from http://ethanschoonover.com/solarized
+# used as reference for digraph
+# YELLOW = '#b58900'
+# ORANGE = '#cb4b16'
+# VIOLET = '#6c71c4'
+# RED = '#dc323f'
+# BLUE = '#268bd2'
+# MAGENTA = '#d33682'
+# CYAN = '#2aa198'
+# GREEN = '#859900'
+# GREY = '#939393'
+
+#+NAME: digraph-settings
+#+BEGIN_SRC dot :noweb yes :exports none
+  rankdir=LR;
+  splines=true;
+  bgcolor="transparent";
+  graph[dpi=140];
+  node [fontsize=38 shape=box fontname="Hack" color="#859900" fontcolor="#859900"];
+  edge [fontsize=28 color="#268bd2" fontname="Hack" fontcolor="#268bd2" ]
+#+END_SRC
+
 * What's this talk about?
-  #+ATTR_REVEAL: :frag (appear)
-  Monads!
+#+ATTR_REVEAL: :frag (appear)
+Monads!
 
-  #+ATTR_REVEAL: :frag (appear)
-  Impossible to explain!
+#+ATTR_REVEAL: :frag (appear)
+Impossible to explain!
 
-  #+ATTR_REVEAL: :frag (appear)
-  ... I'm {{{color(red, not)}}} going to teach you how to use them.
+#+ATTR_REVEAL: :frag (appear)
+... I'm {{{color(red, not)}}} going to teach you how to use them.
 
-  #+ATTR_REVEAL: :frag (appear)
-  Instead we're going to figure out why they're so hard to learn.
+#+ATTR_REVEAL: :frag (appear)
+Instead we're going to figure out why they're so hard to learn.
 
-  #+ATTR_REVEAL: :frag (appear)
-  And _maybe_ help you get started.
+#+ATTR_REVEAL: :frag (appear)
+And _maybe_ help you get started.
 
 * So why are they so hard?
 
@@ -41,50 +65,75 @@
 
 * Let's look at some Monads
 
-** An object with a flatMap method
+** A "Container" type?
+   #+BEGIN_SRC c++
+   // Java-ish
+   List<String>     // Contains many strings
+   Optional<String> // Contains a string or nothing
+   Future<String>   // Contains a value from the future
+   #+END_SRC
 
-    #+BEGIN_SRC javascript
-    [1,2,3].flatMap(a => [a, a])
-    // Returns [1,1,2,2,3,3]
-    #+END_SRC
+   #+BEGIN_SRC scala
+   // Scala
+   List[String]     // Contains many strings
+   Optional[String] // Contains a string or nothing
+   Future[String]   // Contains a value from the future
+   #+END_SRC
 
-    #+ATTR_REVEAL: :frag (appear)
-    Or with ~bind~:
+   #+BEGIN_SRC haskell
+   -- Haskell
+   List String   -- Contains many strings
+   Maybe String  -- Contains a string or nothing
+   Async String  -- Contains a value from the future
+   #+END_SRC
 
-    #+ATTR_REVEAL: :frag (appear)
-    #+BEGIN_SRC haskell
-    -- >>= is pronounced bind in Haskell. Wat!
-    [1,2,3] >>= \a -> [a, a]
-    -- Returns [1,1,2,2,3,3]
-    #+END_SRC
+** A generic type!
 
-** Something used with For/Do
+   #+BEGIN_SRC c++
+   // Java-ish
+   Monad<A>
+   #+END_SRC
 
-    #+BEGIN_SRC scala
-    // Scala
-    for {
-      a <- Some(5)
-      b <- Some(10)
-    } yield a + b
+   #+BEGIN_SRC scala
+   // Scala
+   Monad[A]
+   #+END_SRC
 
-    // Returns: Some(15)
-    #+END_SRC
+   #+BEGIN_SRC haskell
+   -- Haskell
+   Monad a
+   #+END_SRC
 
-    #+BEGIN_SRC haskell
-    -- Haskell
-    do
-      a <- Just 5
-      b <- Just 10
-      pure a + b
+*** Example
 
-    -- Returns: Just 15
-    #+END_SRC
+   #+BEGIN_SRC c++
+   // Java-ish
+   Integer     // Definitely not a Monad
+   List<A>     // Could be a Monad
+   Optional<A> // Could be a Monad
+   #+END_SRC
+
+   #+BEGIN_SRC scala
+   // Scala
+   Int         // Definitely not a Monad
+   List[A]     // Could be a Monad
+   Optional[A] // Could be a Monad
+   #+END_SRC
+
+   #+BEGIN_SRC haskell
+   -- Haskell
+   Int         -- Definitely not a Monad
+   List a      -- Could be a Monad
+   Optional a  -- Could be a Monad
+   #+END_SRC
 
 ** A type with ~pure~
 
     #+BEGIN_SRC c++
     // Java-ish
-    Monad<A> pure(A a);
+    interface Monad<A> {
+      static Monad<A> pure(A a);
+    }
     #+END_SRC
 
     #+BEGIN_SRC scala
@@ -97,37 +146,90 @@
     pure :: (Monad m) => a -> m a
     #+END_SRC
 
-*** Example
+*** It works on Lists!
 
     #+BEGIN_SRC c++
     // Java-ish
-    List.pure("Hello") == List("Hello");
-    Option.pure("Hello") == Option.of("Hello");
-    Future.pure("Hello") == Future.completedFuture("Hello");
+    List.pure("Hello") == List.of("Hello");
     #+END_SRC
 
     #+BEGIN_SRC scala
     // Scala
     List.pure("Hello") == List("Hello")
-    Option.pure("Hello") = Some("Hello")
-    Future.pure("Hello") = Future.successful("Hello")
     #+END_SRC
 
     #+BEGIN_SRC haskell
     -- Haskell
     pure "Hello" :: List String == ["Hello"]
-    pure "Hello" :: Maybe String == Just "Hello"
-    pure "Hello" :: Future String == ...
     #+END_SRC
 
-*** Pure is also called "Return" in Haskell
+*** And Optionals!
+    #+BEGIN_SRC c++
+    // Java-ish
+    Optional.pure("Hello") == Optional.of("Hello");
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    Option.pure("Hello") == Some("Hello")
+    #+END_SRC
 
     #+BEGIN_SRC haskell
-    myFunction = do
-      a <- getA
-      b <- getB
-      return a + b
+    -- Haskell
+    pure "Hello" :: Maybe String == Just "Hello"
     #+END_SRC
+
+*** And Future!
+    #+BEGIN_SRC c++
+    // Java-ish
+    Future.pure("Hello") == Future.completedFuture("Hello");
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    Future.pure("Hello") == Future.successful("Hello")
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    pure "Hello" :: Async String == CompletedFuture "Hello"
+    #+END_SRC
+
+*** Same interface, different implementation
+
+  #+BEGIN_SRC dot :noweb yes :file pure_visual_example_concrete.png :cmdline -Kdot -Tpng
+    digraph {
+      <<digraph-settings>>
+
+      a [label="A"]
+      list_of_a [label="List[A]"]
+      maybe_of_a [label="Maybe[A]"]
+      future_of_a [label="Future[A]"]
+
+      a -> list_of_a [label="List.pure"]
+      a -> maybe_of_a [label="Maybe.pure"]
+      a -> future_of_a [label="\nFuture.pure"]
+    }
+  #+END_SRC
+
+  #+RESULTS:
+  [[file:pure_visual_example_concrete.png]]
+
+*** Generalised
+
+  #+BEGIN_SRC dot :noweb yes :file pure_visual_example_abstract.png :cmdline -Kdot -Tpng
+    digraph {
+      <<digraph-settings>>
+
+      a [label="A"]
+      ma [label="M[A]"]
+
+      a -> ma [label="pure"]
+    }
+  #+END_SRC
+
+  #+RESULTS:
+  [[file:pure_visual_example_abstract.png]]
 
 ** A type with ~flatten~
   A.k.a ~join~ or ~concat~
@@ -139,142 +241,246 @@
 
     #+BEGIN_SRC scala
     // Scala
-    def pure(a: A): Monad[A]
+    def flatten(a: Monad[Monad[A]]): Monad[A]
     #+END_SRC
 
     #+BEGIN_SRC haskell
     -- Haskell
-    pure :: (Monad m) => a -> m a
+    concat :: (Monad m) => m (m a) -> m a
     #+END_SRC
 
-*** Example
+*** Like Lists
     #+BEGIN_SRC c++
     // Java-ish
-    List.of(List.of(1,1), List.of(2,2)).flatten == List.of(1,1,2,2);
-    Optional.of(Optional.empty).flatten == Optional.empty
-    Future.of(Future.of("Hello")).flatten == Future.of("Hello");
+    List.of(List.of(1,1), List.of(2,2)).flatten
+      == List.of(1,1,2,2);
     #+END_SRC
 
     #+BEGIN_SRC scala
     // Scala
     List(List(1,1), List(2,2)).flatten == List(1,1,2,2);
-    Some(None).flatten == None
-    Future.successful(Future.successful("Hello")).flatten = Future.successful("Hello")
     #+END_SRC
 
     #+BEGIN_SRC haskell
     -- Haskell
     concat [[1,1],[2,2]] == [1,1,2,2]
-    concat Just Nothing == Nothing
-    concat (pure (pure "Hello")) :: Async String == (pure "Hello")
     #+END_SRC
 
-** An interface/typeclass defining: join and pure
+*** Or Optionals!
     #+BEGIN_SRC c++
     // Java-ish
-    Monad<A> join(Monad<Monad<A>> nested);
-    Monad<A> pure(A a);
+    Optional.of(Optional.of("Hi")).flatten
+      == Optional.of("Hi");
+    Optional.of(Optional.empty).flatten
+      == Optional.empty;
     #+END_SRC
 
     #+BEGIN_SRC scala
     // Scala
-    def join(nested: Monad[Monad[A]]): Monad[A]
-    def pure(a: A): Monad[A]
+    Some(Some("Hi")).flatten == Some("Hi")
+    Some(None).flatten == None
     #+END_SRC
 
     #+BEGIN_SRC haskell
     -- Haskell
-    join :: (Monad m) => m (m a) -> m a
-    pure :: (Monad m) => a -> m a
+    concat Just (Just "Hi") == Just "Hi"
+    concat Just Nothing == Nothing
     #+END_SRC
 
-*** Example
-
-    For any Monad:
-    #+BEGIN_SRC javascript
-    pure(1)             // type: Monad<Int>
-    pure(pure(1))       // type: Monad<Monad<Int>>
-    join(pure(pure(1))) // type: Monad<Int>
-    #+END_SRC
-
-    For a concrete Monad:
-    #+BEGIN_SRC javascript
-    List.pure(1)                        // type: List<Int>
-    List.pure(List.pure(1))             // type: List<List<Int>>
-    List.join(List.pure(List.pure(1))   // type: List<Int>
-    #+END_SRC
-
-    For a concrete Monad constructed normally:
-    #+BEGIN_SRC javascript
-    List.join([[1,2], [3,4]]) // Returns [1,2,3,4]
-    Maybe.join(Some(Some(5))  // Returns Some(5)
-    Maybe.join(Some(None))    // Returns None
-    #+END_SRC
-
-** An interface/typeclass defining: bind and pure
+*** Or Futures
     #+BEGIN_SRC c++
     // Java-ish
-    Monad<B> bind<A,B>(Monad<A> a, Function<A, Monad<B>> fn);
-    Monad<A> pure<A>(A a)
+    Future.of(Future.of("Hello")).flatten
+      == Future.of("Hello");
     #+END_SRC
 
     #+BEGIN_SRC scala
     // Scala
-    def bind[A,B](m: Monad[A], fn: A => Monad[B]): Monad[B]
-    def pure[A](a: A): Monad[A]
+    Future.successful(Future.successful("Hello")).flatten
+      == Future.successful("Hello")
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    concat (Async (Async "Hello")) :: Async (Async String)
+      == (Async "Hello")
+    #+END_SRC
+
+*** Same interface, different implementation
+    #+BEGIN_SRC dot :noweb yes :file flatten_example_concrete.png :cmdline -Kdot -Tpng
+      digraph {
+        <<digraph-settings>>
+
+        result [label="List[A]"]
+        listOfList [label="List[List[A]]"]
+
+        result -> listOfList [label="flatten" dir=back]
+      }
+    #+END_SRC
+
+    #+RESULTS:
+    [[file:flatten_example_concrete.png]]
+
+*** Generalised
+
+    #+BEGIN_SRC dot :noweb yes :file flatten_example_abstract.png :cmdline -Kdot -Tpng
+      digraph {
+        <<digraph-settings>>
+
+        result [label="M[A]"]
+        listOfList [label="M[M[A]]"]
+
+        result -> listOfList [label="flatten" dir=back]
+      }
+    #+END_SRC
+
+    #+RESULTS:
+    [[file:flatten_example_abstract.png]]
+
+** A type that can be nested
+
+    #+BEGIN_SRC dot :noweb yes :file nesting_example.png :cmdline -Kdot -Tpng
+      digraph {
+        <<digraph-settings>>
+
+        result [label="M[A]"]
+        listOfList [label="M[M[A]]"]
+
+        result -> listOfList [label="flatten" dir=back]
+        result -> listOfList [label="pure"]
+      }
+    #+END_SRC
+
+** A type that can be arbitrarily nested
+
+  #+BEGIN_SRC dot :noweb yes :file nesting_example_pure_and_flatten.png :cmdline -Kdot -Tpng
+    digraph {
+      <<digraph-settings>>
+
+      a [label="A"]
+      ma [label="M[A]"]
+      mma [label="M[M[A]]"]
+      mmma [label="..."]
+
+      a -> ma [label="pure"]
+
+      ma -> mma [label="pure"]
+      ma -> mma [label="flatten" dir=back]
+
+      mma -> mmma [label = "pure"]
+      mma -> mmma [label = "flatten" dir=back]
+    }
+  #+END_SRC
+
+  #+RESULTS:
+  [[file:nesting_example_pure_and_flatten.png]]
+
+** A type with ~flatMap~
+
+   Also known as ~bind~ or ~>>=~
+
+    #+BEGIN_SRC c++
+    // Java-ish
+    interface Monad<A> {
+      Monad<B> flatMap(Function<A, Monad,B>> fn);
+    }
+    #+END_SRC
+
+    #+BEGIN_SRC scala
+    // Scala
+    trait Monad[A] {
+      Monad[B] flatMap(fn: A => Monad[B]): Monad[B]
+    }
     #+END_SRC
 
     #+BEGIN_SRC haskell
     -- Haskell
     bind :: (Monad m) => m a -> (a -> m b) -> m b
-    pure :: (Monad m) => a -> m a
     #+END_SRC
 
 *** Example
 
-    For any Monad:
     #+BEGIN_SRC javascript
-    bind(pure(1), function(value) {
-      return pure(value + 1)
-    });
+    [1,2,3].flatMap(a => [a, a])
+    // Returns [1,1,2,2,3,3]
 
-    // Returns Monad(2)
+    Maybe(1).flatMap(value => Some(value+2))
+    // Returns Maybe(3)
+
+    Maybe(1).flatMap(value => None)
+    // Returns None
     #+END_SRC
 
-    For a concrete Monad constructed normally:
-    #+BEGIN_SRC javascript
-    List.bind([1], value => [value + 2])          // Returns [3]
-    Maybe.bind(Some(1), value => Some(value + 2)) // Returns Some(3)
-    Maybe.bind(Some(1), value => None)            // Returns None
+*** flatMap using map and flatten
+    #+BEGIN_SRC dot :noweb yes :file list_flatMap_example.png :cmdline -Kdot -Tpng
+      digraph {
+        <<digraph-settings>>
+
+        list       [label="[1,2,3]"]
+        listOfList [label="[[1,1], [2, 2], [3, 3]]"]
+        result     [label="[1,1,2,2,3,3]"]
+
+        list -> listOfList [label="map(x => [x, x])"]
+        listOfList -> result [label="flatten"]
+        list -> result [label="flatMap(x => [x, x])"]
+      }
     #+END_SRC
 
-** A Burrito?
+    #+RESULTS:
+    [[file:list_flatMap_example.png]]
 
-  [[./img/burrito.png]]
+*** Generalised
+    #+BEGIN_SRC dot :noweb yes :file flatmap.png :cmdline -Kdot -Tpng
+      digraph {
+        <<digraph-settings>>
 
-  (Source: https://chrisdone.com/posts/monads-are-burritos)
+        ma [label="M[A]"]
+        mmb [label="M[M[B]]"]
+        mb [label="M[B]"]
 
-** A "Container" type
-   #+BEGIN_SRC c++
-   // Java-ish
-   List<String>      // A "Container" of strings
-   Optional<String>  // A "Container" of either a string or nothing
-   Future<String>    // A "Container" of a string that we get from the future
-   #+END_SRC
+        ma -> mmb [label="map(...)"]
+        mmb -> mb [label="flatten"]
+        ma -> mb [label="flatMap"]
+      }
+    #+END_SRC
 
-   #+BEGIN_SRC scala
-   // Scala
-   List[String]    // A "Container" of strings
-   Option[String]  // A "Container" of either a string or nothing
-   Future[String]  // A "Container" of a string that we get from the future
-   #+END_SRC
+    #+RESULTS:
+    [[file:flatmap.png]]
 
-   #+BEGIN_SRC haskell
-   -- Haskell
-   List String   -- A "Container" of strings
-   Maybe String  -- A "Container" of either a string or nothing
-   Async String  -- A "Container" of a string that we get from the future
-   #+END_SRC
+*** Also known as ~bind~
+
+    #+ATTR_REVEAL: :frag (appear)
+    #+BEGIN_SRC haskell
+    -- >>= is pronounced bind in Haskell. Wat!
+    [1,2,3] >>= \a -> [a, a]
+    -- Returns [1,1,2,2,3,3]
+
+    Just 1 >>= \value -> Just (value+2)
+    -- Returns Just 3
+
+    Just 1 >>= \value -> Nothing
+    -- Returns Nothing
+    #+END_SRC
+
+** Something used with For/Do
+
+    #+BEGIN_SRC scala
+    // Scala
+    for {
+      a <- Some(5)
+      b <- Some(10)
+    } yield a + b
+    // Returns: Some(15)
+    #+END_SRC
+
+    #+BEGIN_SRC haskell
+    -- Haskell
+    do
+      a <- Just 5
+      b <- Just 10
+      pure a + b
+    -- Returns: Just 15
+    #+END_SRC
 
 ** A way of composing certain types of functions
 
@@ -282,27 +488,23 @@
 
     #+BEGIN_SRC c++
     // Java-ish
-    String toUpperCase(String input) { ... }
-    String trim(String input) { ... }
-
-    String toUpperCaseAndTrim(String input) {
-      return compose(toUpperCase, trim)(input);
-    }
+    Function<String, String> toUpperCase = ...;
+    Function<String, String> trim = ...;
+    Function<String, String> toUpperCaseAndtrim =
+      toUpperCase.compose(trim);
     #+END_SRC
 
     #+BEGIN_SRC scala
     // Scala
     def toUpperCase(input: String): String = ...
     def trim(input: String): String = ...
-
-    def toUpperCaseAndTrim = compose(toUpperCase, trim)
+    def toUpperCaseAndTrim = toUpperCase.compose(trim)
     #+END_SRC
 
     #+BEGIN_SRC haskell
     -- Haskell
     toUpperCase :: String -> String
     trim :: String -> String
-
     toUpperCaseAndTrim = toUpperCase . trim
     #+END_SRC
 
@@ -310,28 +512,24 @@
 
     #+BEGIN_SRC c++
     // Java-ish
-    Promise<String> toUpperCase(String input) { ... }
-    Promise<String> trim(String input) { ... }
-
-    Promise<String> toUpperCaseAndTrimService(String input) {
-      return monadCompose(toUpperCaseService, trimService)(input);
-    }
+    Function<String, Promise<String>> toUpperCase = ...;
+    Function<String, Promise<String>> trim  = ...;
+    Function<String, Promise<String>> toUpperCaseAndTrim =
+      toUpperCase.monadCompose(trim);
     #+END_SRC
 
     #+BEGIN_SRC scala
     // Scala
     def toUpperCase(input: String): Promise[String] = ...
     def trim(input: String): Promise[String] = ...
-
-    def toUpperCaseAndTrim = monadCompose(toUpperCaseService, trimService)
+    def toUpperCaseAndTrim =
+      monadCompose(toUpperCaseService, trimService)
     #+END_SRC
 
     #+BEGIN_SRC haskell
     -- Haskell
     toUpperCase :: String -> Promise String
     trim :: String -> Promise String
-
-    -- The "fish" operator or Kleisil arrow does monad composition in Haskell
     toUpperCaseAndTrim = toUpperCase >=> trim
     #+END_SRC
 
@@ -343,7 +541,7 @@
     #+ATTR_REVEAL: :frag (appear)
     #+BEGIN_SRC scala
     def main() = {
-      // Executes doA then doB then doC and then returns a result
+      // Executes doA then doB then doC and then returns
       val a = doA();
       val b = doB();
       val c = doC();
@@ -411,6 +609,9 @@
       pure $ a + b
     #+END_SRC
 
+*** ~flatMap~ lets us compose that type.
+
+*** And we get ~flatMap~ from Monad!
 
 * They're all Monads!
 
@@ -423,9 +624,9 @@
   - Mostly it's about making them act in a sane way
   - They're outside the scope of this talk
 
-* Wait... Something is missing!
+* But wait! There's more!
 
-** What about Maybe/List/Promise/Reader/Writer/State/IO
+** We need to talk about Maybe/List/Promise/Reader/Writer/State/IO
 
 ** Well...
   #+ATTR_REVEAL: :frag (appear)
@@ -456,22 +657,24 @@
     // Java-ish
     Integer value;          // A boring integer
     List<Integer> values;   // An exciting bunch of integers!
-    Future<Integer> value;  // An exciting potentially asynchronous integer!
+    Future<Integer> value;  // An exciting asynchronous integer!
     #+END_SRC
 
     #+BEGIN_SRC scala
     // Scala
     value: Int;          // A boring integer
     values: List[Int];   // An exciting bunch of integers!
-    value: Future[Int];  // An exciting potentially asynchronous integer!
+    value: Future[Int];  // An exciting asynchronous integer!
     #+END_SRC
 
     #+BEGIN_SRC haskell
     -- Haskell
     value :: Int         -- A boring integer
     values :: List Int   -- An exciting bunch of integers!
-    value :: Async Int   -- An exciting potentially asynchronous integer!
+    value :: Async Int   -- An exciting asynchronous integer!
     #+END_SRC
+
+** You have to learn each one individually, Monads won't help you here!
 
 ** Then why should I care if they're Monads?
 
@@ -501,9 +704,8 @@
     #+ATTR_REVEAL: :frag (appear)
     They're a *Design Pattern* for a specific type of composition.
 
-* One way of thinking about Monads
 
-** When I say "X is a Monad" I know:
+* When I say "X is a Monad" I know:
 
     #+ATTR_REVEAL: :frag (appear)
     - This type is generic
@@ -529,107 +731,13 @@
   #+ATTR_REVEAL: :frag (appear)
   This stuff takes time to learn.
 
+* Extra Reading
+
+- [[http://tomasp.net/academic/papers/monads/monads-programming.pdf][What we talk about when we talk about Monads]]
+
 * Thanks!
 
 *  Questions?
 
 #+ATTR_HTML: :height 200%, :width 200%
 [[./img/mindblown.gif]]
-
-* Test: Pure and Flatten
-#+BEGIN_SRC dot :file pure_and_flatten.png :cmdline -Kdot -Tpng
-  digraph {
-    # Palette from http://ethanschoonover.com/solarized
-    # YELLOW = '#b58900'
-    # ORANGE = '#cb4b16'
-    # VIOLET = '#6c71c4'
-    # RED = '#dc323f'
-    # BLUE = '#268bd2'
-    # MAGENTA = '#d33682'
-    # CYAN = '#2aa198'
-    # GREEN = '#859900'
-    # GREY = '#939393'
-
-    // graph from left to right
-    rankdir=LR;
-    splines=true;
-    bgcolor="transparent";
-    node [shape=box fontname="Hack" color="#859900" fontcolor="#859900"];
-    edge [color="#268bd2" fontname="Hack" fontcolor="#268bd2" ]
-
-    a [label="A"]
-    ma [label="M[A]"]
-    mma [label="M[M[A]]"]
-
-    a -> ma [label="pure"]
-    ma -> mma [label="flatten" dir=back]
-  }
-#+END_SRC
-
-#+RESULTS:
-[[file:pure_and_flatten.png]]
-
-* Test: FlatMap
-#+BEGIN_SRC dot :file flatmap.png :cmdline -Kdot -Tpng
-  digraph {
-    # Palette from http://ethanschoonover.com/solarized
-    # YELLOW = '#b58900'
-    # ORANGE = '#cb4b16'
-    # VIOLET = '#6c71c4'
-    # RED = '#dc323f'
-    # BLUE = '#268bd2'
-    # MAGENTA = '#d33682'
-    # CYAN = '#2aa198'
-    # GREEN = '#859900'
-    # GREY = '#939393'
-
-    // graph from left to right
-    rankdir=LR;
-    splines=true;
-    bgcolor="transparent";
-    node [shape=box fontname="Hack" color="#859900" fontcolor="#859900"];
-    edge [color="#268bd2" fontname="Hack" fontcolor="#268bd2" ]
-
-    ma [label="M[A]"]
-    mmb [label="M[M[B]]"]
-    mb [label="M[B]"]
-
-    ma -> mmb [label="map(...)"]
-    mmb -> mb [label="flatten"]
-    ma -> mb [label="flatMap"]
-  }
-#+END_SRC
-
-#+RESULTS:
-[[file:flatmap.png]]
-
-* Example: List FlatMap
-    #+BEGIN_SRC dot :file list_flatMap_example.png :cmdline -Kdot -Tpng
-      digraph {
-        # Palette from http://ethanschoonover.com/solarized
-        # YELLOW = '#b58900'
-        # ORANGE = '#cb4b16'
-        # VIOLET = '#6c71c4'
-        # RED = '#dc323f'
-        # BLUE = '#268bd2'
-        # MAGENTA = '#d33682'
-        # CYAN = '#2aa198'
-        # GREEN = '#859900'
-        # GREY = '#939393'
-
-        // graph from left to right
-        rankdir=LR;
-        splines=true;
-        bgcolor="transparent";
-        node [shape=box fontsize="28" fontname="Hack" color="#859900" fontcolor="#859900"];
-        edge [color="#268bd2" fontsize="28" fontname="Hack" fontcolor="#268bd2" ];
-
-        list       [label="List(1,2,3)"]
-        listOfList [label="List(List(1,1), List(2, 2), List(3, 3))"]
-        result     [label="List(1,1,2,2,3,3)"]
-
-        list -> listOfList [label="map(x => List(x, x))"]
-        listOfList -> result [label="flatten"]
-        list -> result [label="flatMap(x => List(x, x))"]
-      }
-    #+END_SRC
