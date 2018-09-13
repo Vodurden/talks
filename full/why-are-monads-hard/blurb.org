@@ -1,19 +1,19 @@
-It's time to ask the really hard questions: *What's a Monad?*
+It's time to ask the really hard questions: *Why are Monads so hard?*
 
 No topic has inspired so much *confusion*, *fear* and *anger* as the humble Monad. Indeed, upon learning of the truth
 they are known to warp the mind of the beholder, preventing their secrets from spreading further!
 
-So, how can I even give this talk? We're going to have to cheat!
+But why! Why are they so hard? Functor and Applicative don't inspire so much panic, so why Monad?
 
-I have a theory: Monads are especially difficult to learn because the word "Monad" can refer to a huge number of
-different concepts and ways of thinking.
+I have a theory: Monads are especially difficult to learn because the word "Monad" can refer to a huge
+number of different concepts and ways of thinking.
 
-So instead of teaching precisely what a Monad is, we're going to explore a bunch of different ways to think about
-the concept. Approaching it from different mindsets and languages.
+So instead of trying to explain what a Monad is, I'm going to talk about all the things someone _could_
+be talking about when they say "Monad".
 
 This is the part of the synopsis where I lower your expectations:
 
 - This talk will *not* teach you how to use Monads. But it _might_ give you a tiny bit more insight, no promises!
-- This talk will use a mixture of languages and syntax but most of the examples won't compile
+- This talk will use a mixture of languages and syntax but most of the examples probably won't compile
 
 This talk is aimed at *Beginners*, *Advanced FP Folk* and anyone who's wondering *What's the hype with this Monad thing?*
