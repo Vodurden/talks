@@ -65,7 +65,7 @@ And _maybe_ help you get started.
 
 * Let's look at some Monads
 
-** A "Container" type?
+** Monads are: A "Container"?
    #+BEGIN_SRC c++
    // Java-ish
    List<String>     // Contains many strings
@@ -87,7 +87,7 @@ And _maybe_ help you get started.
    Async String  -- Contains a value from the future
    #+END_SRC
 
-** A generic type!
+** Monads are: A generic type!
 
    #+BEGIN_SRC c++
    // Java-ish
@@ -127,7 +127,7 @@ And _maybe_ help you get started.
    Optional a  -- Could be a Monad
    #+END_SRC
 
-** A type with ~pure~
+** Monads have: ~pure~
 
     #+BEGIN_SRC c++
     // Java-ish
@@ -231,7 +231,7 @@ And _maybe_ help you get started.
   #+RESULTS:
   [[file:pure_visual_example_abstract.png]]
 
-** A type with ~flatten~
+** Monads have: ~flatten~
   A.k.a ~join~ or ~concat~
 
     #+BEGIN_SRC c++
@@ -337,7 +337,7 @@ And _maybe_ help you get started.
     #+RESULTS:
     [[file:flatten_example_abstract.png]]
 
-** A type that can be nested
+** Monads are: A type that can be nested
 
     #+BEGIN_SRC dot :noweb yes :file nesting_example.png :cmdline -Kdot -Tpng
       digraph {
@@ -351,7 +351,7 @@ And _maybe_ help you get started.
       }
     #+END_SRC
 
-** A type that can be arbitrarily nested
+** Monads are: A type that can be arbitrarily nested
 
   #+BEGIN_SRC dot :noweb yes :file nesting_example_pure_and_flatten.png :cmdline -Kdot -Tpng
     digraph {
@@ -375,7 +375,7 @@ And _maybe_ help you get started.
   #+RESULTS:
   [[file:nesting_example_pure_and_flatten.png]]
 
-** A type with ~flatMap~
+** Monads have: ~flatMap~
 
    Also known as ~bind~ or ~>>=~
 
@@ -462,7 +462,7 @@ And _maybe_ help you get started.
     -- Returns Nothing
     #+END_SRC
 
-** Something used with For/Do
+** Monads can: be used with For/Do
 
     #+BEGIN_SRC scala
     // Scala
@@ -482,7 +482,7 @@ And _maybe_ help you get started.
     -- Returns: Just 15
     #+END_SRC
 
-** A way of composing certain types of functions
+** Monads are: A way of composing certain types of functions
 
 *** Normal Function Composition
 
@@ -533,7 +533,7 @@ And _maybe_ help you get started.
     toUpperCaseAndTrim = toUpperCase >=> trim
     #+END_SRC
 
-** Something to do with Sequential Computations?
+** Monads are: Something to do with Sequential Computations?
 
     #+ATTR_REVEAL: :frag (appear)
     In most languages sequence is implied:
@@ -571,7 +571,7 @@ And _maybe_ help you get started.
       pure a + b + c
     #+END_SRC
 
-** Something for managing side effects?
+** Monads are: Something for managing side effects?
 
 *** In some languages we can freely mix side-effects into normal code:
 
