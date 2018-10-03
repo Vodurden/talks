@@ -31,8 +31,8 @@
 </section>
 
 <section>
-<section id="slide-org5dac125">
-<h2 id="org5dac125">What's this talk about?</h2>
+<section id="slide-org830ff1c">
+<h2 id="org830ff1c">What's this talk about?</h2>
 <p class="fragment (appear)">
 Monads!
 </p>
@@ -56,27 +56,27 @@ And <span class="underline">maybe</span> help you get started.
 </section>
 </section>
 <section>
-<section id="slide-orgde058d3">
-<h2 id="orgde058d3">So why are they so hard?</h2>
-<div class="outline-text-2" id="text-orgde058d3">
+<section id="slide-org2b98530">
+<h2 id="org2b98530">So why are they so hard?</h2>
+<div class="outline-text-2" id="text-org2b98530">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org1b05d71">
-<h3 id="org1b05d71">Monad is an overloaded term</h3>
+<section id="slide-org0eef94b">
+<h3 id="org0eef94b">Monad is an overloaded term</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-orgcfda29b">
-<h3 id="orgcfda29b">It refers to <span class="underline">lots</span> of concepts</h3>
+<section id="slide-orgd39db3e">
+<h3 id="orgd39db3e">It refers to <span class="underline">lots</span> of concepts</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org7e7793a">
-<h3 id="org7e7793a">It's like trying to learn "Science"</h3>
+<section id="slide-org2a30805">
+<h3 id="org2a30805">It's like trying to learn "Science"</h3>
 <p class="fragment (appear)">
 You need to learn it bit-by-bit
 </p>
@@ -84,15 +84,15 @@ You need to learn it bit-by-bit
 </section>
 </section>
 <section>
-<section id="slide-orge19a8ab">
-<h2 id="orge19a8ab">Let's look at some Monads</h2>
-<div class="outline-text-2" id="text-orge19a8ab">
+<section id="slide-org46eb2b3">
+<h2 id="org46eb2b3">Let's look at some Monads</h2>
+<div class="outline-text-2" id="text-org46eb2b3">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org812377c">
-<h3 id="org812377c">A "Container" type?</h3>
+<section id="slide-org667219a">
+<h3 id="org667219a">A "Container" type?</h3>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -123,8 +123,8 @@ You need to learn it bit-by-bit
 </section>
 </section>
 <section>
-<section id="slide-orgd9fa6ca">
-<h3 id="orgd9fa6ca">A generic type!</h3>
+<section id="slide-orga882fbe">
+<h3 id="orga882fbe">A generic type!</h3>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -149,8 +149,8 @@ You need to learn it bit-by-bit
 </section>
 </section>
 <section>
-<section id="slide-orgb45e07a">
-<h4 id="orgb45e07a">Example</h4>
+<section id="slide-org4e57317">
+<h4 id="org4e57317">Example</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -181,8 +181,8 @@ Integer     <span style="color: #586e75;">// </span><span style="color: #586e75;
 </section>
 </section>
 <section>
-<section id="slide-org4cf9242">
-<h3 id="org4cf9242">A type with <code>pure</code></h3>
+<section id="slide-orge19a47f">
+<h3 id="orge19a47f">A type with <code>pure</code></h3>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -209,8 +209,8 @@ Integer     <span style="color: #586e75;">// </span><span style="color: #586e75;
 </section>
 </section>
 <section>
-<section id="slide-org099e79d">
-<h4 id="org099e79d">It works on Lists!</h4>
+<section id="slide-orge00eaf6">
+<h4 id="orge00eaf6">It works on Lists!</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -235,8 +235,8 @@ List.pure<span style="color: #2aa198;">(</span><span style="color: #2aa198;">"He
 </section>
 </section>
 <section>
-<section id="slide-org44f4736">
-<h4 id="org44f4736">And Optionals!</h4>
+<section id="slide-orgae389ca">
+<h4 id="orgae389ca">And Optionals!</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -261,8 +261,8 @@ Optional.pure<span style="color: #2aa198;">(</span><span style="color: #2aa198;"
 </section>
 </section>
 <section>
-<section id="slide-org16027ec">
-<h4 id="org16027ec">And Future!</h4>
+<section id="slide-orgac2cb0a">
+<h4 id="orgac2cb0a">And Future!</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -287,8 +287,8 @@ Future.pure<span style="color: #2aa198;">(</span><span style="color: #2aa198;">"
 </section>
 </section>
 <section>
-<section id="slide-orgafda5fa">
-<h4 id="orgafda5fa">Same interface, different implementation</h4>
+<section id="slide-orge0d2891">
+<h4 id="orge0d2891">Same interface, different implementation</h4>
 
 <div class="figure">
 <p><img src="pure_visual_example_concrete.png" alt="pure_visual_example_concrete.png" />
@@ -298,8 +298,8 @@ Future.pure<span style="color: #2aa198;">(</span><span style="color: #2aa198;">"
 </section>
 </section>
 <section>
-<section id="slide-orgbb12af2">
-<h4 id="orgbb12af2">Generalised</h4>
+<section id="slide-org6fd61b1">
+<h4 id="org6fd61b1">Generalised</h4>
 
 <div class="figure">
 <p><img src="pure_visual_example_abstract.png" alt="pure_visual_example_abstract.png" />
@@ -309,8 +309,8 @@ Future.pure<span style="color: #2aa198;">(</span><span style="color: #2aa198;">"
 </section>
 </section>
 <section>
-<section id="slide-org2b7b052">
-<h3 id="org2b7b052">A type with <code>flatten</code></h3>
+<section id="slide-orgcb8f47f">
+<h3 id="orgcb8f47f">A type with <code>flatten</code></h3>
 <p>
 A.k.a <code>join</code> or <code>concat</code>
 </p>
@@ -339,8 +339,8 @@ A.k.a <code>join</code> or <code>concat</code>
 </section>
 </section>
 <section>
-<section id="slide-org0b9dacf">
-<h4 id="org0b9dacf">Like Lists</h4>
+<section id="slide-org69a1d6e">
+<h4 id="org69a1d6e">Like Lists</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -366,8 +366,8 @@ List.of<span style="color: #2aa198;">(</span>List.of<span style="color: #b58900;
 </section>
 </section>
 <section>
-<section id="slide-orga0404fc">
-<h4 id="orga0404fc">Or Optionals!</h4>
+<section id="slide-org14656d7">
+<h4 id="org14656d7">Or Optionals!</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -397,8 +397,8 @@ Optional.of<span style="color: #2aa198;">(</span>Optional.empty<span style="colo
 </section>
 </section>
 <section>
-<section id="slide-org5c9b7eb">
-<h4 id="org5c9b7eb">Or Futures</h4>
+<section id="slide-org874ff58">
+<h4 id="org874ff58">Or Futures</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -426,8 +426,8 @@ Future.of<span style="color: #2aa198;">(</span>Future.of<span style="color: #b58
 </section>
 </section>
 <section>
-<section id="slide-org5061aa1">
-<h4 id="org5061aa1">Same interface, different implementation</h4>
+<section id="slide-org8886c84">
+<h4 id="org8886c84">Same interface, different implementation</h4>
 
 <div class="figure">
 <p><img src="flatten_example_concrete.png" alt="flatten_example_concrete.png" />
@@ -437,8 +437,8 @@ Future.of<span style="color: #2aa198;">(</span>Future.of<span style="color: #b58
 </section>
 </section>
 <section>
-<section id="slide-org5bc65dc">
-<h4 id="org5bc65dc">Generalised</h4>
+<section id="slide-org909749f">
+<h4 id="org909749f">Generalised</h4>
 
 <div class="figure">
 <p><img src="flatten_example_abstract.png" alt="flatten_example_abstract.png" />
@@ -448,8 +448,8 @@ Future.of<span style="color: #2aa198;">(</span>Future.of<span style="color: #b58
 </section>
 </section>
 <section>
-<section id="slide-org33b58bb">
-<h3 id="org33b58bb">A type that can be nested</h3>
+<section id="slide-org3507eb3">
+<h3 id="org3507eb3">A type that can be nested</h3>
 
 <div class="figure">
 <p><img src="nesting_example.png" alt="nesting_example.png" />
@@ -459,8 +459,8 @@ Future.of<span style="color: #2aa198;">(</span>Future.of<span style="color: #b58
 </section>
 </section>
 <section>
-<section id="slide-org8f8572d">
-<h3 id="org8f8572d">A type that can be arbitrarily nested</h3>
+<section id="slide-org1a1aa34">
+<h3 id="org1a1aa34">A type that can be arbitrarily nested</h3>
 
 <div class="figure">
 <p><img src="nesting_example_pure_and_flatten.png" alt="nesting_example_pure_and_flatten.png" />
@@ -470,8 +470,8 @@ Future.of<span style="color: #2aa198;">(</span>Future.of<span style="color: #b58
 </section>
 </section>
 <section>
-<section id="slide-orgef087bf">
-<h3 id="orgef087bf">A type with <code>flatMap</code></h3>
+<section id="slide-org65ca18a">
+<h3 id="org65ca18a">A type with <code>flatMap</code></h3>
 <p>
 Also known as <code>bind</code> or <code>&gt;&gt;=</code>
 </p>
@@ -504,8 +504,8 @@ Also known as <code>bind</code> or <code>&gt;&gt;=</code>
 </section>
 </section>
 <section>
-<section id="slide-org205d7df">
-<h4 id="org205d7df">Example</h4>
+<section id="slide-orgb5f675a">
+<h4 id="orgb5f675a">Example</h4>
 <div class="org-src-container">
 
 <pre  class="src src-javascript"><span style="color: #2aa198;">[</span><span style="color: #6c71c4;">1</span>,<span style="color: #6c71c4;">2</span>,<span style="color: #6c71c4;">3</span><span style="color: #2aa198;">]</span>.flatMap<span style="color: #2aa198;">(</span>a =&gt; <span style="color: #b58900;">[</span>a, a<span style="color: #b58900;">]</span><span style="color: #2aa198;">)</span>
@@ -522,8 +522,8 @@ Maybe<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span
 </section>
 </section>
 <section>
-<section id="slide-org6772199">
-<h4 id="org6772199">flatMap using map and flatten</h4>
+<section id="slide-orgc50947f">
+<h4 id="orgc50947f">flatMap using map and flatten</h4>
 
 <div class="figure">
 <p><img src="list_flatMap_example.png" alt="list_flatMap_example.png" />
@@ -533,8 +533,8 @@ Maybe<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span
 </section>
 </section>
 <section>
-<section id="slide-org042f2e6">
-<h4 id="org042f2e6">Generalised</h4>
+<section id="slide-org31655c2">
+<h4 id="org31655c2">Generalised</h4>
 
 <div class="figure">
 <p><img src="flatmap.png" alt="flatmap.png" />
@@ -544,8 +544,8 @@ Maybe<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span
 </section>
 </section>
 <section>
-<section id="slide-org5e82002">
-<h4 id="org5e82002">Also known as <code>bind</code></h4>
+<section id="slide-org61a43f8">
+<h4 id="org61a43f8">Also known as <code>bind</code></h4>
 <div class="org-src-container">
 
 <pre  class="fragment (appear)"><span style="color: #586e75;">-- </span><span style="color: #586e75;">&gt;&gt;= is pronounced bind in Haskell. Wat!</span>
@@ -563,8 +563,8 @@ Maybe<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span
 </section>
 </section>
 <section>
-<section id="slide-orgc31a3b5">
-<h3 id="orgc31a3b5">Something used with For/Do</h3>
+<section id="slide-org2317595">
+<h3 id="org2317595">Something used with For/Do</h3>
 <div class="org-src-container">
 
 <pre  class="src src-scala"><span style="color: #586e75;">// </span><span style="color: #586e75;">Scala</span>
@@ -590,15 +590,15 @@ Maybe<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span
 </section>
 </section>
 <section>
-<section id="slide-orgb3b847e">
-<h3 id="orgb3b847e">A way of composing certain types of functions</h3>
-<div class="outline-text-3" id="text-orgb3b847e">
+<section id="slide-org7d40163">
+<h3 id="org7d40163">A way of composing certain types of functions</h3>
+<div class="outline-text-3" id="text-org7d40163">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org053adb1">
-<h4 id="org053adb1">Normal Function Composition</h4>
+<section id="slide-orgecadcb9">
+<h4 id="orgecadcb9">Normal Function Composition</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -630,8 +630,8 @@ Maybe<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span
 </section>
 </section>
 <section>
-<section id="slide-org7328f88">
-<h4 id="org7328f88">Monadic Function Composition</h4>
+<section id="slide-orga98180c">
+<h4 id="orga98180c">Monadic Function Composition</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -664,8 +664,8 @@ Maybe<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span
 </section>
 </section>
 <section>
-<section id="slide-org356973d">
-<h3 id="org356973d">Something to do with Sequential Computations?</h3>
+<section id="slide-org012f193">
+<h3 id="org012f193">Something to do with Sequential Computations?</h3>
 <p class="fragment (appear)">
 In most languages sequence is implied:
 </p>
@@ -685,8 +685,8 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-org2f4852b">
-<h4 id="org2f4852b">But in some languages that isn't the case</h4>
+<section id="slide-org8f01a2f">
+<h4 id="org8f01a2f">But in some languages that isn't the case</h4>
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Executes in an arbitrary order as everything is lazy</span>
@@ -701,8 +701,8 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-orge5fa733">
-<h4 id="orge5fa733">Monads imply sequential computation</h4>
+<section id="slide-org06c13bc">
+<h4 id="org06c13bc">Monads imply sequential computation</h4>
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><span style="color: #586e75;">-- </span><span style="color: #586e75;">Executes doA then doB then doC and then returns a result</span>
@@ -717,15 +717,15 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-org29f1253">
-<h3 id="org29f1253">Something for managing side effects?</h3>
-<div class="outline-text-3" id="text-org29f1253">
+<section id="slide-orga9fe22b">
+<h3 id="orga9fe22b">Something for managing side effects?</h3>
+<div class="outline-text-3" id="text-orga9fe22b">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org59248cc">
-<h4 id="org59248cc">In some languages we can freely mix side-effects into normal code:</h4>
+<section id="slide-org928407a">
+<h4 id="org928407a">In some languages we can freely mix side-effects into normal code:</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -749,8 +749,8 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-orgc01a858">
-<h4 id="orgc01a858">But not in all languages</h4>
+<section id="slide-orgd36d2f1">
+<h4 id="orgd36d2f1">But not in all languages</h4>
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><span style="color: #268bd2;">add</span> <span style="color: #268bd2;">::</span> <span style="color: #b58900;">Int</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">Int</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">Int</span>
@@ -763,8 +763,8 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-orga0280fa">
-<h4 id="orga0280fa">Instead we have to mark side effecting functions with a type</h4>
+<section id="slide-org9e00e80">
+<h4 id="org9e00e80">Instead we have to mark side effecting functions with a type</h4>
 <div class="org-src-container">
 
 <pre  class="src src-haskell"><span style="color: #268bd2;">add</span> <span style="color: #268bd2;">::</span> <span style="color: #b58900;">Int</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">Int</span> <span style="color: #268bd2;">-&gt;</span> <span style="color: #b58900;">IO</span> <span style="color: #b58900;">Int</span>
@@ -777,33 +777,33 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-orgae0afcd">
-<h4 id="orgae0afcd"><code>flatMap</code> lets us compose that type.</h4>
+<section id="slide-orgd3c1e0b">
+<h4 id="orgd3c1e0b"><code>flatMap</code> lets us compose that type.</h4>
 
 </section>
 </section>
 <section>
-<section id="slide-org009f975">
-<h4 id="org009f975">And we get <code>flatMap</code> from Monad!</h4>
+<section id="slide-org2db4932">
+<h4 id="org2db4932">And we get <code>flatMap</code> from Monad!</h4>
 
 </section>
 </section>
 <section>
-<section id="slide-org9188eba">
-<h2 id="org9188eba">They're all Monads!</h2>
-<div class="outline-text-2" id="text-org9188eba">
+<section id="slide-org5307773">
+<h2 id="org5307773">They're all Monads!</h2>
+<div class="outline-text-2" id="text-org5307773">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org0a6f03c">
-<h3 id="org0a6f03c">No wonder they're so hard to learn&#x2026;</h3>
+<section id="slide-orgf150db4">
+<h3 id="orgf150db4">No wonder they're so hard to learn&#x2026;</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org3c810fa">
-<h3 id="org3c810fa">Something something Laws</h3>
+<section id="slide-org8f73b18">
+<h3 id="org8f73b18">Something something Laws</h3>
 <ul>
 <li class="fragment appear">There are rules defining how Monads must be implemented</li>
 <li class="fragment appear">Mostly it's about making them act in a sane way</li>
@@ -814,21 +814,21 @@ In most languages sequence is implied:
 </section>
 </section>
 <section>
-<section id="slide-orgafac730">
-<h2 id="orgafac730">But wait! There's more!</h2>
-<div class="outline-text-2" id="text-orgafac730">
+<section id="slide-org8c43042">
+<h2 id="org8c43042">But wait! There's more!</h2>
+<div class="outline-text-2" id="text-org8c43042">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-orgd8b63c1">
-<h3 id="orgd8b63c1">We need to talk about Maybe/List/Promise/Reader/Writer/State/IO</h3>
+<section id="slide-org50242e1">
+<h3 id="org50242e1">We need to talk about Maybe/List/Promise/Reader/Writer/State/IO</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-orgf0bf078">
-<h3 id="orgf0bf078">Well&#x2026;</h3>
+<section id="slide-org0c8db2c">
+<h3 id="org0c8db2c">Well&#x2026;</h3>
 <p class="fragment (appear)">
 They are Monads!
 </p>
@@ -840,8 +840,8 @@ But that's the boring bit about them.
 </section>
 </section>
 <section>
-<section id="slide-orgce58504">
-<h3 id="orgce58504">Each of those types do something unique and valuable!</h3>
+<section id="slide-org9d2becf">
+<h3 id="org9d2becf">Each of those types do something unique and valuable!</h3>
 <p class="fragment (appear)">
 They <span class="underline">enrich</span> a type to give it extra functionality
 </p>
@@ -864,8 +864,8 @@ This has <span class="underline">nothing</span> to do with Monads!
 </section>
 </section>
 <section>
-<section id="slide-org0fae3b4">
-<h4 id="org0fae3b4">Example</h4>
+<section id="slide-org9becbea">
+<h4 id="org9becbea">Example</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -896,21 +896,21 @@ value<span style="color: #859900; font-weight: bold;">:</span> <span style="colo
 </section>
 </section>
 <section>
-<section id="slide-org3e1bc8b">
-<h3 id="org3e1bc8b">You have to learn each one individually, Monads won't help you here!</h3>
+<section id="slide-org9305f35">
+<h3 id="org9305f35">You have to learn each one individually, Monads won't help you here!</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org948268b">
-<h3 id="org948268b">Then why should I care if they're Monads?</h3>
-<div class="outline-text-3" id="text-org948268b">
+<section id="slide-org4614fa3">
+<h3 id="org4614fa3">Then why should I care if they're Monads?</h3>
+<div class="outline-text-3" id="text-org4614fa3">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org883985f">
-<h4 id="org883985f">They're all Generic types</h4>
+<section id="slide-org3ad43ee">
+<h4 id="org3ad43ee">They're all Generic types</h4>
 <div class="org-src-container">
 
 <pre  class="src src-c++"><span style="color: #586e75;">// </span><span style="color: #586e75;">Java-ish</span>
@@ -938,14 +938,14 @@ value<span style="color: #859900; font-weight: bold;">:</span> <span style="colo
 </section>
 </section>
 <section>
-<section id="slide-orgcfa1684">
-<h4 id="orgcfa1684">We want to compose them&#x2026;</h4>
+<section id="slide-orgc59e597">
+<h4 id="orgc59e597">We want to compose them&#x2026;</h4>
 
 </section>
 </section>
 <section>
-<section id="slide-orgd75ea69">
-<h4 id="orgd75ea69">Monads help us compose generic types!</h4>
+<section id="slide-orgc510996">
+<h4 id="orgc510996">Monads help us compose generic types!</h4>
 <p class="fragment (appear)">
 They're a <b>Design Pattern</b> for a specific type of composition.
 </p>
@@ -954,8 +954,8 @@ They're a <b>Design Pattern</b> for a specific type of composition.
 </section>
 </section>
 <section>
-<section id="slide-orgf1c06b0">
-<h2 id="orgf1c06b0">When I say "X is a Monad" I know:</h2>
+<section id="slide-org45ead52">
+<h2 id="org45ead52">When I say "X is a Monad" I know:</h2>
 <ul>
 <li class="fragment appear">This type is generic</li>
 <li class="fragment appear">This type enriches normal types with extra behavior</li>
@@ -967,21 +967,21 @@ They're a <b>Design Pattern</b> for a specific type of composition.
 </section>
 </section>
 <section>
-<section id="slide-org9194209">
-<h3 id="org9194209">It's a design pattern!</h3>
-<div class="outline-text-3" id="text-org9194209">
+<section id="slide-org86b8207">
+<h3 id="org86b8207">It's a design pattern!</h3>
+<div class="outline-text-3" id="text-org86b8207">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org30f6d34">
-<h4 id="org30f6d34">Learn once, write everywhere!</h4>
+<section id="slide-orge2992f8">
+<h4 id="orge2992f8">Learn once, write everywhere!</h4>
 
 </section>
 </section>
 <section>
-<section id="slide-org1673119">
-<h2 id="org1673119">In Summary</h2>
+<section id="slide-orgc703600">
+<h2 id="orgc703600">In Summary</h2>
 <p class="fragment (appear)">
 A Monad implies a whole bunch of things
 </p>
@@ -1001,8 +1001,8 @@ This stuff takes time to learn.
 </section>
 </section>
 <section>
-<section id="slide-orgc314f70">
-<h2 id="orgc314f70">Extra Reading</h2>
+<section id="slide-orgca2c15a">
+<h2 id="orgca2c15a">Extra Reading</h2>
 <ul>
 <li><a href="http://tomasp.net/academic/papers/monads/monads-programming.pdf">What we talk about when we talk about Monads</a></li>
 
@@ -1011,14 +1011,14 @@ This stuff takes time to learn.
 </section>
 </section>
 <section>
-<section id="slide-org64aca7c">
-<h2 id="org64aca7c">Thanks!</h2>
+<section id="slide-org6c507ce">
+<h2 id="org6c507ce">Thanks!</h2>
 
 </section>
 </section>
 <section>
-<section id="slide-org262ff5f">
-<h2 id="org262ff5f">Questions?</h2>
+<section id="slide-org4f80826">
+<h2 id="org4f80826">Questions?</h2>
 
 <div class="figure">
 <p><img src="./img/mindblown.gif" alt="mindblown.gif" height="200%," width="200%" />

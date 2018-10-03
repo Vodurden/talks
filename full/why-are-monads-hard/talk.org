@@ -438,9 +438,9 @@ And _maybe_ help you get started.
         mmb [label="M[M[B]]"]
         mb [label="M[B]"]
 
-        ma -> mmb [label="map(...)"]
+        ma -> mmb [label="map(A => M[B])"]
         mmb -> mb [label="flatten"]
-        ma -> mb [label="flatMap"]
+        ma -> mb [label="flatMap(A => M[B])"]
       }
     #+END_SRC
 

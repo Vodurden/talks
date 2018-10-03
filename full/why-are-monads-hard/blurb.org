@@ -5,7 +5,7 @@ they are known to warp the mind of the beholder, preventing their secrets from s
 
 But why! Why are they so hard? Functor and Applicative don't inspire so much panic, so why Monad?
 
-I have a theory: Monads are especially difficult to learn because the word "Monad" can refer to a huge
+I have a theory: Monads are difficult to learn because the word "Monad" can refer to a huge
 number of different concepts and ways of thinking.
 
 So instead of trying to explain what a Monad is, I'm going to talk about all the things someone _could_
