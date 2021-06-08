@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>FP: why bother?</title>
+<meta name="author" content="Jake Woods"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="../../lib/reveal.js-4.1.1/dist/reveal.css"/>
+
+<link rel="stylesheet" href="../../lib/reveal.js-4.1.1/dist/theme/black.css" id="theme"/>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide">
+<h1>FP: why bother?</h1><h2>Jake Woods</h2>
+</section>
+
+<section>
+<section id="slide-orgd733338">
+<h2 id="orgd733338">What are we going to learn today?</h2>
+<div class="outline-text-2" id="text-orgd733338">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org0899c5a">
+<h3 id="org0899c5a">Nothing!</h3>
+<aside class="notes">
+<ul>
+<li>I&rsquo;m not going to teach you anything.</li>
+<li>No sales pitches!</li>
+
+</ul>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-orgdecb8e2">
+<h2 id="orgdecb8e2">Instead! We&rsquo;re going to explore</h2>
+<aside class="notes">
+<ul>
+<li>Two things</li>
+
+</ul>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf461c9e">
+<h3 id="orgf461c9e">How do functional programmers think about problems?</h3>
+</section>
+</section>
+<section>
+<section id="slide-org3c766f1">
+<h3 id="org3c766f1">Why do functional programmers bother with all this arcana?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgecb38bf">
+<h2 id="orgecb38bf">Caveat</h2>
+<div class="outline-text-2" id="text-orgecb38bf">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgd295099">
+<h3 id="orgd295099">My experience is with <b>statically typed</b> FP</h3>
+<aside class="notes">
+<ul>
+<li>I.e. Haskell, Scala</li>
+<li>And now Kotlin</li>
+
+</ul>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-org58d5176">
+<h3 id="org58d5176">Dynamically typed FP is perfectly valid!</h3>
+<aside class="notes">
+<ul>
+<li>I.e. Clojure and&#x2026; Ruby?</li>
+<li>I just don&rsquo;t do much of it so my examples are going to be biased</li>
+<li>Sorry!</li>
+
+</ul>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-orge09ba1a">
+<h2 id="orge09ba1a">Learning FP</h2>
+<div class="outline-text-2" id="text-orge09ba1a">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org0c19fbd">
+<h3 id="org0c19fbd">Purity</h3>
+<div class="org-src-container">
+
+<pre class="src src-kotlin">    <span style="color: #0000FF;">fun</span> <span style="color: #006699;">add</span>(a: <span style="color: #6434A3;">Int</span>, b: <span style="color: #6434A3;">Int</span>): <span style="color: #6434A3;">Int</span> = a + b
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment (appear)">    add(<span style="color: #D0372D;">1</span>, <span style="color: #D0372D;">1</span>) <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">It returns 2! Purely!!</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orge392202">
+<h3 id="orge392202">Recursion</h3>
+<div class="org-src-container">
+
+<pre class="src src-kotlin">    <span style="color: #0000FF;">fun</span> <span style="color: #006699;">fib</span>(n: <span style="color: #6434A3;">Int</span>): <span style="color: #6434A3;">Int</span> =
+      <span style="color: #0000FF;">if</span>(n == <span style="color: #D0372D;">0</span>) {
+        <span style="color: #D0372D;">0</span>
+      } <span style="color: #0000FF;">else</span> {
+        n + fib(n - <span style="color: #D0372D;">1</span>)
+      }
+    }
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment (appear)">    fib(<span style="color: #D0372D;">4</span>) <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">returns 10!</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org1b4c3fe">
+<h3 id="org1b4c3fe">Currying</h3>
+<div class="org-src-container">
+
+<pre class="src src-kotlin">    <span style="color: #0000FF;">val</span> <span style="color: #BA36A5;">add</span>: (<span style="color: #6434A3;">Int</span>) -&gt; (<span style="color: #6434A3;">Int</span>) -&gt; <span style="color: #6434A3;">Int</span> = { a -&gt;
+      { b -&gt;
+        a + b
+      }
+    }
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment (appear)">    <span style="color: #0000FF;">val</span> <span style="color: #BA36A5;">add1</span> = add(<span style="color: #D0372D;">1</span>)
+    add1(<span style="color: #D0372D;">2</span>) <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">Returns 3! Cool!</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org092904b">
+<h3 id="org092904b">List processing</h3>
+<div class="org-src-container">
+
+<pre class="src src-kotlin">    <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">List processing:</span>
+    <span style="color: #0000FF;">val</span> <span style="color: #BA36A5;">numbers</span> = listOf(<span style="color: #D0372D;">1</span>, <span style="color: #D0372D;">1</span>, <span style="color: #D0372D;">1</span>)
+
+    numbers.map(i =&gt; i + <span style="color: #D0372D;">1</span>).sum <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">Returns 6! Cool!</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org813f179">
+<h2 id="org813f179">Back to reality</h2>
+<div class="org-src-container">
+
+<pre class="src src-kotlin">    <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">Making decisions &amp; causing side effects:</span>
+    <span style="color: #0000FF;">fun</span> <span style="color: #006699;">makeLotsOfMoney</span>(database: <span style="color: #6434A3;">DbConnection</span>) {
+      <span style="color: #0000FF;">val</span> <span style="color: #BA36A5;">monies</span>: <span style="color: #6434A3;">Array&lt;Float&gt;</span> = database.getMoney()
+
+      <span style="color: #0000FF;">var</span> <span style="color: #BA36A5;">isThereEnoughMoney</span> = <span style="color: #D0372D;">true</span>
+      monies.forEach { money =&gt;
+        <span style="color: #0000FF;">if</span>(money &lt; <span style="color: #D0372D;">1000000</span>) {
+          isThereEnoughMoney = <span style="color: #D0372D;">false</span>
+        }
+      }
+
+      <span style="color: #0000FF;">if</span>(!isThereEnoughMoney &amp;&amp; someBusinessThing() &amp;&amp; !globalVariable) {
+        doSomethingWithAWS()
+      } <span style="color: #0000FF;">else</span> {
+        globalVariable = <span style="color: #D0372D;">true</span>
+
+        log.error(
+          <span style="color: #008000;">"Something bad happened but it's been happening for years so don't worry!"</span>
+        )
+
+        doSomethingElseWithAWS()
+      }
+    }
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org0509898">
+<h3 id="org0509898">They look completely different!</h3>
+</section>
+</section>
+<section>
+<section id="slide-orgc9bc564">
+<h3 id="orgc9bc564">How does this arcana relate to me?</h3>
+</section>
+</section>
+<section>
+<section id="slide-orgda9ed75">
+<h3 id="orgda9ed75">Why bother!?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org7eb0681">
+<h2 id="org7eb0681">Why bother with anything?</h2>
+<div class="outline-text-2" id="text-org7eb0681">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org3753c8e">
+<h3 id="org3753c8e">Programming</h3>
+<ul>
+<li class="fragment appear">Express problems to a computer</li>
+<li class="fragment appear">&#x2026; to make it do stuff</li>
+<li class="fragment appear">&#x2026; and maybe have some fun!</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org446c458">
+<h3 id="org446c458">Algorithms</h3>
+<ul>
+<li class="fragment appear">Express problems with math</li>
+<li class="fragment appear">&#x2026; to make it do new things it couldn&rsquo;t do before</li>
+<li class="fragment appear">&#x2026; to make it easier to solve problems</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org81c32bf">
+<h3 id="org81c32bf">Design patterns</h3>
+<ul>
+<li class="fragment appear">Express problems with cargo cult code copying</li>
+<li class="fragment appear">&#x2026; to suck the fun out of everything</li>
+<li class="fragment appear">&#x2026; to make it easier to solve problems??</li>
+<li class="fragment appear">&#x2026; I&rsquo;m looking at you ProxyAbstractFactorySingletonBeanManagerDecorator!</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb9c0033">
+<h3 id="orgb9c0033">Imperative programming</h3>
+<ul>
+<li class="fragment appear">Express problems in terms of imperative statements</li>
+<li class="fragment appear">&#x2026; to make computers do stuff</li>
+<li class="fragment appear">&#x2026; to make it easier to solve problems</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd64a40a">
+<h3 id="orgd64a40a">Object Oriented Programming</h3>
+<ul>
+<li class="fragment appear">Express problems in terms of objects</li>
+<li class="fragment appear">&#x2026; to make computers do stuff</li>
+<li class="fragment appear">&#x2026; to make it easier to solve problems</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc2c85be">
+<h3 id="orgc2c85be">Functional Programming</h3>
+<ul>
+<li class="fragment appear">Express problems in terms of functions</li>
+<li class="fragment appear">&#x2026; to make computers do stuff</li>
+<li class="fragment appear">&#x2026; to make it easier to solve problems</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org4c537f4">
+<h3 id="org4c537f4">It&rsquo;s not a competition</h3>
+<div class="outline-text-3" id="text-org4c537f4">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org9de0fa6">
+<h4 id="org9de0fa6">Functional programming <b>is not</b> morally better</h4>
+</section>
+</section>
+<section>
+<section id="slide-orgc4c5fca">
+<h4 id="orgc4c5fca">But we enjoy it</h4>
+
+</section>
+</section>
+<section>
+<section id="slide-org0a32c01">
+<h2 id="org0a32c01">Why bother with FP?</h2>
+<div class="outline-text-2" id="text-org0a32c01">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgdce11e2">
+<h3 id="orgdce11e2">Because pure functions are gods gift to the mortal world.</h3>
+</section>
+</section>
+<section>
+<section id="slide-org243d95e">
+<h3 id="org243d95e">Because <span class="underline">we believe</span> pure functions are gods gift to the mortal world.</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org569383c">
+<h3 id="org569383c">A totally legitimate description of pure functions</h3>
+<ul>
+<li class="fragment appear">Behavior <b>only</b> depends on parameters</li>
+<li class="fragment appear">Output <b>only</b> by returning a value</li>
+<li class="fragment appear">No user-detectable changes to the computer
+<ul>
+<li>No logs, no drawing things, no network access, nothing!</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org89125b7">
+<h3 id="org89125b7">Impure example</h3>
+<div class="org-src-container">
+
+<pre class="src src-kotlin">    <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]</span>
+    <span style="color: #0000FF;">var</span> <span style="color: #BA36A5;">gameDatabase</span>: <span style="color: #6434A3;">List&lt;String&gt;</span> = gameServer.getGameDatabase
+
+    <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">Impure</span>
+    <span style="color: #0000FF;">fun</span> <span style="color: #006699;">removeBadGames</span>(): <span style="color: #6434A3;">Unit</span> = {
+      gameDatabase.remove(<span style="color: #008000;">"Duke Nukem Forever"</span>)
+      gameDatabase.remove(<span style="color: #008000;">"E.T."</span>)
+    }
+
+    removeBadGames()
+    println(gameDatabase) <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">["Dwarf Fortress", "Prey"]!</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org73d76e8">
+<h3 id="org73d76e8">Pure Example</h3>
+<div class="org-src-container">
+
+<pre class="src src-kotlin">    <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">Games in the datbase: ["Dwarf Fortress", "Duke Nukem Forever", "Prey", "E.T."]</span>
+    <span style="color: #0000FF;">val</span> <span style="color: #BA36A5;">gameDatabase</span> = gameServer.getGameDatabase
+
+    <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">Pure</span>
+    <span style="color: #0000FF;">fun</span> <span style="color: #006699;">removeBadGames</span>(games: <span style="color: #6434A3;">List&lt;String&gt;</span>): <span style="color: #6434A3;">List&lt;String&gt;</span> = {
+      games
+        .filter(_ ==  <span style="color: #008000;">"Duke Nukem Forever"</span>)
+        .filter(_ == <span style="color: #008000;">"E.T."</span>)
+    }
+
+    <span style="color: #0000FF;">val</span> <span style="color: #BA36A5;">goodGames</span> = filterBadGames(gameDatabase)
+    println(goodGames) <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">["Dwarf Fortress", "Prey"]</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org9af1c13">
+<h3 id="org9af1c13">Benefit - Testing</h3>
+<div class="org-src-container">
+
+<pre class="src src-kotlin">  <span style="color: #0000FF;">class</span> <span style="color: #6434A3;">RemoveBadGamesTest</span> {
+    @<span style="color: #6434A3;">Test</span>
+    <span style="color: #0000FF;">fun</span> <span style="color: #008000;">`do not remove Prey`</span>() {
+      <span style="color: #0000FF;">val</span> <span style="color: #BA36A5;">games</span> = listOf(<span style="color: #008000;">"Prey"</span>)
+      assertThat(removeBadGames(game)).isEqualTo(games)
+    }
+
+    @<span style="color: #6434A3;">Test</span>
+    <span style="color: #0000FF;">fun</span> <span style="color: #008000;">`remove Duke Nukem Forever`</span>() {
+      <span style="color: #0000FF;">val</span> <span style="color: #BA36A5;">games</span> = listOf(<span style="color: #008000;">"Duke Nukem Forever"</span>)
+      assertThat(removeBadGames(games)).isEmpty()
+    }
+
+    @<span style="color: #6434A3;">Test</span>
+    <span style="color: #0000FF;">fun</span> <span style="color: #008000;">`remove E.T.`</span>() {
+      <span style="color: #0000FF;">val</span> <span style="color: #BA36A5;">games</span> = listOf(<span style="color: #008000;">"E.T."</span>)
+    }
+  }
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org724b815">
+<h3 id="org724b815">Benefit - Local Context</h3>
+<aside class="notes">
+<ul>
+<li>Everything you need to know is in one place.</li>
+<li>I <span class="underline">know</span> for a fact that <code>removeBadGames</code> only uses an list of strings. <b>Nothing else</b>!</li>
+<li>I also know it&rsquo;s not going to do something unexpected!</li>
+
+</ul>
+
+</aside>
+
+<div class="org-src-container">
+
+<pre class="src src-kotlin">    <span style="color: #0000FF;">fun</span> <span style="color: #006699;">removeBadGames</span>(games: <span style="color: #6434A3;">List&lt;String&gt;</span>): <span style="color: #6434A3;">List&lt;String&gt;</span> = {
+      games
+        .filter(_ ==  <span style="color: #008000;">"Duke Nukem Forever"</span>)
+        .filter(_ == <span style="color: #008000;">"E.T."</span>)
+    }
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org2e07ec4">
+<h3 id="org2e07ec4">Benefit - Honest Types</h3>
+<aside class="notes">
+<ul>
+<li>The static typing is actually telling the truth!</li>
+<li>This function is making a promise: Give me some strings and I will give you back some strings. <b>Nothing more, nothing less</b></li>
+
+</ul>
+
+</aside>
+
+<div class="org-src-container">
+
+<pre class="src src-kotlin">  <span style="color: #0000FF;">fun</span> <span style="color: #006699;">removeBadGames</span>(games: <span style="color: #6434A3;">List&lt;String&gt;</span>): <span style="color: #6434A3;">List&lt;String&gt;</span>
+</pre>
+</div>
+
+<p class="fragment (appear)">
+Pure functions are good friends: <b>They keep promises</b>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc23e4a6">
+<h3 id="orgc23e4a6">Drawbacks</h3>
+<p class="fragment (appear)">
+Pure functions can&rsquo;t do anything!
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orga35eb8d">
+<h3 id="orga35eb8d">Things of note if you accept pure functions as your lord and saviour</h3>
+<ul>
+<li class="fragment appear">Immutability becomes an obvious choice</li>
+<li class="fragment appear">Objects start to look a lot less useful</li>
+<li class="fragment appear">Since you&rsquo;ve got lots of pure functions you need new techniques to manage them</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org8363755">
+<h2 id="org8363755">Lock the doors, it&rsquo;s <span class="underline">Monad</span> time</h2>
+<p class="fragment (appear)">
+Just kidding
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgdb5cc70">
+<h3 id="orgdb5cc70">How many of you had a fear response just then?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org3e47f06">
+<h3 id="org3e47f06">The functional arcana is scary</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb06ebfa">
+<h3 id="orgb06ebfa">It looks impenetrable</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org4c9e299">
+<h3 id="org4c9e299">So why do we do it?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgddb7dc9">
+<h3 id="orgddb7dc9">Each scary buzzword is a <span class="underline">solution to a problem</span></h3>
+<p>
+A solution that leverages pure functions
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orga309ea8">
+<h4 id="orga309ea8">Immutability</h4>
+<p>
+Makes it possible to write pure functions
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgbb386d6">
+<h4 id="orgbb386d6">Functors</h4>
+<p>
+Makes it easier to apply functions to different types of containers
+</p>
+
+<div class="org-src-container">
+
+<pre class="fragment (appear)"><span style="color: #0000FF;">fun</span> <span style="color: #006699;">add5</span>(input: <span style="color: #6434A3;">Int</span>): <span style="color: #6434A3;">Int</span> = input + <span style="color: #D0372D;">5</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment (appear)"><span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">add5 works on ints!</span>
+add5(<span style="color: #D0372D;">10</span>) <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">Returns 15</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment (appear)"><span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">Functor lets us use it on lists!</span>
+<span style="color: #6434A3;">List</span>(<span style="color: #D0372D;">1</span>,<span style="color: #D0372D;">2</span>,<span style="color: #D0372D;">3</span>).map(add5) <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">returns List(6,7,8)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment (appear)"><span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">?.let is "nullable map"</span>
+<span style="color: #0000FF;">val</span> <span style="color: #BA36A5;">value</span>: <span style="color: #6434A3;">Int?</span> = <span style="color: #D0372D;">20</span>
+value?.let(add5) <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">Returns 25</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment (appear)"><span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">And Future!</span>
+<span style="color: #6434A3;">Future</span>(<span style="color: #D0372D;">1</span>).map(add5) <span style="color: #8D8D84;">// </span><span style="color: #8D8D84; font-style: italic;">Returns Future(6)</span>
+</pre>
+</div>
+
+<p class="fragment (appear)">
+And lots of other stuff!
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc97db77">
+<h4 id="orgc97db77">Applicatives</h4>
+<p>
+Combine functions in parallel
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgfcad8fb">
+<h4 id="orgfcad8fb">Monads</h4>
+<p>
+Sequence functions together
+</p>
+
+<p class="fragment (appear)">
+This is used for IO in FP as IO is sequential!
+</p>
+
+<p class="fragment (appear)">
+Monads are <span class="underline">not</span> the core of FP and you can do FP without monads.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org248362a">
+<h4 id="org248362a">Fold</h4>
+<p>
+Makes it easier to apply functions to recursive data
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org5a1bf5a">
+<h4 id="org5a1bf5a">Traverse</h4>
+<p>
+Makes it easier to apply functions to nested data structures
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org3853830">
+<h4 id="org3853830">Typeclasses</h4>
+<p>
+Make it easier to pick which function to apply to some data
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd51820c">
+<h4 id="orgd51820c">Free/Eff</h4>
+<ul>
+<li>Compile functions into more functions</li>
+<li>Compose monads</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org9caa58d">
+<h3 id="org9caa58d">They&rsquo;re all solutions to <span class="underline">real world problems</span></h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf6a0fb9">
+<h2 id="orgf6a0fb9">But Jake - Why do <span class="underline">you</span> bother!?</h2>
+<div class="outline-text-2" id="text-orgf6a0fb9">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgc202a63">
+<h3 id="orgc202a63">I wanted to make <b>Video Games</b>!</h3>
+<ul>
+<li class="fragment appear">So I learned Visual Basic 6</li>
+<li class="fragment appear">And used it to build crappy games</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org0e2f73c">
+<h3 id="org0e2f73c">Then I learned about <span class="underline">OOP</span>!</h3>
+<ul>
+<li class="fragment appear">Lots of C++</li>
+<li class="fragment appear">Lots of objects</li>
+<li class="fragment appear">Everything was great!</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org6b421d5">
+<h3 id="org6b421d5">And then <span class="underline">it</span> happened</h3>
+<ul>
+<li class="fragment appear">I had a spaceship game with asteroids, bullets and rocks</li>
+<li class="fragment appear">And I asked the question:</li>
+<li class="fragment appear">&ldquo;Where should the collide method go?&rdquo;</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orge6d5da8">
+<h3 id="orge6d5da8">Boom!</h3>
+<ul>
+<li class="fragment appear">None of the answers that I had at the time were satisfactory.</li>
+<li class="fragment appear">Double dispatch!? That&rsquo;s insane!</li>
+<li class="fragment appear">Let&rsquo;s change <b>everything</b>. That&rsquo;ll solve it!</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb012630">
+<h3 id="orgb012630">Then I learned about Haskell</h3>
+<ul>
+<li class="fragment appear">I install ghc!</li>
+<li class="fragment appear">And I completely fail to become productive</li>
+<li class="fragment appear">But I learn about the concept of purity and I <b>love</b> it!</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org2f496bf">
+<h3 id="org2f496bf">A year passes</h3>
+<ul>
+<li class="fragment appear">&ldquo;Maybe I should give Haskell another go!&rdquo;</li>
+<li class="fragment appear">I install ghc!</li>
+<li class="fragment appear">And I learn a <span class="underline">little bit</span> more, apparently Monads are what the cool kids use</li>
+<li class="fragment appear">I fail to become productive again</li>
+<li class="fragment appear">Repeat for several years</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org15cbf1c">
+<h3 id="org15cbf1c">Scala? I think?</h3>
+<ul>
+<li class="fragment appear">At some point I learn about Scala</li>
+<li class="fragment appear">I try to do FP in it</li>
+<li class="fragment appear">I fail</li>
+<li class="fragment appear">I go back to Haskell again</li>
+<li class="fragment appear">I fail</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org755534f">
+<h3 id="org755534f">I write FP at REA</h3>
+<ul>
+<li class="fragment appear">My interview submission is the first Scala code I&rsquo;ve ever written. It&rsquo;s fully functional though!</li>
+<li class="fragment appear">I get in somehow</li>
+<li class="fragment appear"><b>Suckers</b></li>
+<li class="fragment appear">All that failing turns into a modest amount of knowledge!</li>
+<li class="fragment appear">Things happen, I finally build useful software with FP</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org53f05e4">
+<h3 id="org53f05e4">I leave for Cash</h3>
+<ul>
+<li class="fragment appear">I get in somehow</li>
+<li class="fragment appear"><b>Suckers</b></li>
+<li class="fragment appear">I get coerced into giving this talk on my second week</li>
+<li class="fragment appear">And here I am</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orge4a9602">
+<h3 id="orge4a9602">That&rsquo;s my story!</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org9539745">
+<h2 id="org9539745">If you&rsquo;re just getting started</h2>
+<ul>
+<li class="fragment appear">You <b>don&rsquo;t</b> need to start with monads/functors/applicatives.</li>
+<li class="fragment appear">Just look for opportunities to write more pure functions</li>
+<li class="fragment appear">See how they make you feel!</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org13474a6">
+<h2 id="org13474a6">Takeaways</h2>
+<ul>
+<li class="fragment appear">Functional programmers want more pure functions</li>
+<li class="fragment appear">Functional techniques help us use more pure functions</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org4ac5a2c">
+<h2 id="org4ac5a2c">Thank you!</h2>
+<p>
+Questions?
+</p>
+</section>
+</section>
+</div>
+</div>
+<script src="../../lib/reveal.js-4.1.1/dist/reveal.js"></script>
+<script src="../../lib/reveal.js-4.1.1/plugin/markdown/markdown.js"></script>
+<script src="../../lib/reveal.js-4.1.1/plugin/notes/notes.js"></script>
+<script src="../../lib/reveal.js-4.1.1/plugin/search/search.js"></script>
+<script src="../../lib/reveal.js-4.1.1/plugin/zoom/zoom.js"></script>
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+mouseWheel: false,
+fragmentInURL: false,
+hashOneBasedIndex: false,
+pdfSeparateFragments: true,
+
+overview: true,
+
+transition: 'none',
+transitionSpeed: 'default',
+
+// Plugins with reveal.js 4.x
+plugins: [ RevealMarkdown, RevealNotes, RevealSearch, RevealZoom ],
+
+// Optional libraries used to extend reveal.js
+dependencies: [
+]
+
+});
+</script>
+</body>
+</html>
